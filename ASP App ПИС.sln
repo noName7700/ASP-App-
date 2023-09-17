@@ -3,17 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP App ПИС", "ASP App ПИС\ASP App ПИС.csproj", "{F7FC5177-624F-47E2-B84C-B17F36073D54}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{6CF20157-414A-4DCB-BB9B-38994229FB21}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Classes", "Classes\Classes.csproj", "{93418B76-BC30-4452-89B2-90CF5D3562DF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InfraDatabase", "InfraDatabase", "{1DD20BA4-C91A-4823-951E-41EACC05C7C3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseCon", "DatabaseCon\DatabaseCon.csproj", "{74368780-C6D3-4995-9355-022782CBCE82}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{0903CA66-8C24-4911-A945-0FB0BE4AE3AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP App ПИС", "ASP App ПИС\ASP App ПИС.csproj", "{F7FC5177-624F-47E2-B84C-B17F36073D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
