@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Database.TaskMonth>
-
-<div class="content-wrapper">
+﻿<div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
                 <h1 class="page-title">DataTables</h1>
@@ -36,15 +34,15 @@
                                 </tr>
                             </tfoot> *@
                             <tbody>
-                                @foreach (var t in Model)
+                                @*@foreach (var t in Model)
                                     {
                                         <tr role="row" class="odd">
                                             <td>@t.Id</td>
                                             <td>@t.countanimal</td>
                                             <td><a href="/scheduleone/">Просмотр <i class="fa fa-eye font-14"></i></a></td>
                                         </tr>
-                                    }
-                                    @* <tr role="row" class="odd">
+                                    }*@
+                                    <tr role="row" class="odd">
                                 <td>Тюменская область</td>
                                 <td>Тюмень</td>
                                 <td><a href="/scheduleone/">Просмотр <i class="fa fa-eye font-14"></i></a></td>
@@ -53,7 +51,7 @@
                                 <td>Тюменская область</td>
                                 <td>Тобольск</td>
                                 <td><a href="/scheduleone/">Просмотр <i class="fa fa-eye font-14"></i></a></td>
-                            </tr> *@
+                            </tr>
                             </tbody>
                         </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="example-table_info" role="status" aria-live="polite">Showing 1 to 10 of 36 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="example-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="example-table_previous"><a href="#" aria-controls="example-table" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="example-table" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item next" id="example-table_next"><a href="#" aria-controls="example-table" data-dt-idx="5" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
                 
