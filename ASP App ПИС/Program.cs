@@ -1,9 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Database;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// получение данных
+
+//app.MapGet("/schedule/", (ApplicationContext db) => db.Animals.ToList());
+//app.MapGet("/schedule/", async (ApplicationContext db) => await db.taskmonth.ToListAsync());
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

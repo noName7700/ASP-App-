@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Classes
+namespace Domain
 {
-    public class ActCapture
+    public class Municipality
     {
         public int Id { get; set; }
-        public DateTime DateCapture { get; set; }
-        public int AnimalId { get; set; }
-        public Animal Animal { get; set; }
+        public string Name { get; set; }
+        public int ContractId { get; set; }
+        public Contract Contract { get; set; }
         public int LocalityId { get; set; }
         public Locality Locality { get; set; }
     }

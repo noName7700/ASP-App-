@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Classes
+namespace Database
 {
     public class Contract
     {
         public int Id { get; set; }
         public int ScheduleId { get; set; }
         public Schedule Schedule { get; set; }
-        public int ActCaptureId { get; set; }
-        public ActCapture ActCapture { get; set; }
-        public DateTime ValidityPeriod { get; set; }
-        public DateTime DateConclusion { get; set; }
+        public DateTime validityPeriod { get; set; }
+        public DateTime dateConclusion { get; set; }
     }
 }
