@@ -6,7 +6,7 @@ using Server.Application;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("TaskMonth")]
+    [Route("/api/TaskMonth")]
     public class TaskMonthController : Controller
     {
         ApplicationContext _context;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("Schedule")]
+    [Route("/api/Schedule")]
     public class ScheduleController : ControllerBase
     {
         ApplicationContext _context;

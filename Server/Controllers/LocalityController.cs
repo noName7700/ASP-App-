@@ -5,7 +5,7 @@ using Server.Application;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("Locality")]
+    [Route("/api/Locality")]
     public class LocalityController : Controller
     {
         ApplicationContext _context;

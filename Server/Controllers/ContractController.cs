@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("Contract")]
+    [Route("/api/Contract")]
     public class ContractController : Controller
     {
         ApplicationContext _context;

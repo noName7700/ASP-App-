@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("Municipality")]
+    [Route("/api/Municipality")]
     public class MunicipalityController
     {
         ApplicationContext _context;

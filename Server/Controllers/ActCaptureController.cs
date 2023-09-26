@@ -6,7 +6,7 @@ using Server.Application;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("ActCapture")]
+    [Route("/api/ActCapture")]
     public class ActCaptureController : Controller
     {
         ApplicationContext _context;

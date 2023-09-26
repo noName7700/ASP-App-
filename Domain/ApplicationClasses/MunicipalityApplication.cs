@@ -103,6 +103,7 @@ namespace Domain.ApplicationClasses
         //    double totalSum = Contract.GetAmount(startDate, endDate);
         //    return totalSum;
         //}
+
         //public Dictionary<int, int> MakeReportSchedule()
         //{
         //    Dictionary<int, int> counts = new Dictionary<int, int>();

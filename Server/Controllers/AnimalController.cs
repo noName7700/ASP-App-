@@ -6,7 +6,7 @@ using Server.Application;
 namespace Server.Controllers
 {
     [ApiController]
-    [Route("Animal")]
+    [Route("/api/Animal")]
     public class AnimalController : Controller
     {
         ApplicationContext _context;
