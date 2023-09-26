@@ -8,8 +8,8 @@ namespace Domain
 {
     public class Locality
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double Tariph { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public double tariph { get; set; }
     }
 }

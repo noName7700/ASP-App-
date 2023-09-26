@@ -8,11 +8,11 @@ namespace Domain
 {
     public class Municipality
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int ContractId { get; set; }
-        public Contract Contract { get; set; }
-        public int LocalityId { get; set; }
-        public Locality Locality { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public int? contractid { get; set; }
+        public Contract? Contract { get; set; }
+        public int localityid { get; set; }
+        public Locality? Locality { get; set; }
     }
 }

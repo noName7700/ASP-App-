@@ -8,11 +8,11 @@ namespace Domain
 {
     public class ActCapture
     {
-        public int Id { get; set; }
-        public DateTime DateCapture { get; set; }
-        public int AnimalId { get; set; }
-        public Animal Animal { get; set; }
-        public int LocalityId { get; set; }
-        public Locality Locality { get; set; }
+        public int id { get; set; }
+        public DateTime datecapture { get; set; }
+        public int animalid { get; set; }
+        public Animal? Animal { get; set; }
+        public int localityid { get; set; }
+        public Locality? Locality { get; set; }
     }
 }

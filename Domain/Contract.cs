@@ -8,12 +8,12 @@ namespace Domain
 {
     public class Contract
     {
-        public int Id { get; set; }
-        public int ScheduleId { get; set; }
-        public Schedule Schedule { get; set; }
-        public int ActCaptureId { get; set; }
-        public ActCapture ActCapture { get; set; }
-        public DateTime ValidityPeriod { get; set; }
-        public DateTime DateConclusion { get; set; }
+        public int id { get; set; }
+        public int? scheduleid { get; set; }
+        public Schedule? Schedule { get; set; }
+        public int? actcaptureid { get; set; }
+        public ActCapture? ActCapture { get; set; }
+        public DateTime validityperiod { get; set; }
+        public DateTime dateconclusion { get; set; }
     }
 }

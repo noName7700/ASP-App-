@@ -8,15 +8,15 @@ namespace Domain
 {
     public class Animal
     {
-        public string Id { get; set; }
-        public string Category { get; set; }
-        public string Sex { get; set; }
-        public string Breed { get; set; }
-        public string Size { get; set; }
-        public string Wool { get; set; }
-        public string Color { get; set; }
-        public string Ears { get; set; }
-        public string Tail { get; set; }
-        public string SpecSigns { get; set; }
+        public int id { get; set; }
+        public string category { get; set; }
+        public string sex { get; set; }
+        public string breed { get; set; }
+        public string size { get; set; }
+        public string wool { get; set; }
+        public string color { get; set; }
+        public string ears { get; set; }
+        public string tail { get; set; }
+        public string specsigns { get; set; }
     }
 }

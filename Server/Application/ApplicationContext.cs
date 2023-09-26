@@ -5,12 +5,12 @@ namespace Server.Application
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<ActCapture> ActCapture { get; set; } = null!;
+        public DbSet<ActCapture> actcapture { get; set; } = null!;
         public DbSet<Animal> animal { get; set; } = null!;
-        public DbSet<Contract> Contract { get; set; } = null!;
-        public DbSet<Locality> Locality { get; set; } = null!;
-        public DbSet<Municipality> Municipality { get; set; } = null!;
-        public DbSet<Schedule> Schedule { get; set; } = null!;
+        public DbSet<Contract> contract { get; set; } = null!;
+        public DbSet<Locality> locality { get; set; } = null!;
+        public DbSet<Municipality> municipality { get; set; } = null!;
+        public DbSet<Schedule> schedule { get; set; } = null!;
         public DbSet<TaskMonth> taskmonth { get; set; } = null!;
 
         public ApplicationContext()
