@@ -14,5 +14,10 @@ namespace ASP_App_ПИС.Controllers
         {
             return View();
         }
+
+        public IActionResult Add()
+        {
+            return View();
+        }
     }
 }
