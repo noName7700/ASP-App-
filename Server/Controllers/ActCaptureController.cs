@@ -17,55 +17,55 @@ namespace Server.Controllers
 
         // вывести все акты отлова 
         [HttpGet]
-        public IEnumerable<ActCapture> Get()
+        public async Task<IEnumerable<ActCapture>> Get()
         {
-            return _context.actcapture
+            return await _context.actcapture
                 .Include(act => act.Animal)
                 .Include(act => act.Locality)
-                .ToList();
+                .ToListAsync();
         }
 
         // вывести акты отлова в одном нас пункте
         [HttpGet("{locid}")]
-        public IEnumerable<ActCapture> Get(int locid)
+        public async Task<IEnumerable<ActCapture>> Get(int locid)
         {
-            return _context.actcapture
+            return await _context.actcapture
                 .Include(act => act.Animal)
                 .Include(act => act.Locality)
                 .Select(ac => ac)
                 .Where(ac => ac.localityid == locid)
-                .ToList();
+                .ToListAsync();
         }
 
         // тут вывести акты отлова с сортировкой по дате
         [HttpGet("{datestart}/{dateend}/{locid}")]
-        public IEnumerable<ActCapture> Get(DateTime datestart, DateTime dateend, int locid)
+        public async Task<IEnumerable<ActCapture>> Get(DateTime datestart, DateTime dateend, int locid)
         {
-            return _context.actcapture
+            return await _context.actcapture
                 .Include(act => act.Animal)
                 .Include(act => act.Locality)
                 .Select(ac => ac)
                 .Where(ac => ac.datecapture.Kind >= datestart.Kind && ac.datecapture.Kind <= dateend.Kind && ac.localityid == locid)
-                .ToList();
+                .ToListAsync();
         }
 
         // добавить акт отлова (т.е. одну запись с одним животным)
         [HttpPost]
-        public void Post([FromBody] ActCapture value)
+        public async Task Post([FromBody] ActCapture value)
         {
-            _context.actcapture.Add(value);
-            _context.SaveChanges();
+            await _context.actcapture.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // удалить животное 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentAct = _context.actcapture.FirstOrDefault(s => s.animalid == id);
+            var currentAct = await _context.actcapture.FirstOrDefaultAsync(s => s.animalid == id);
             if (currentAct != null)
             {
                 _context.actcapture.Remove(currentAct);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 

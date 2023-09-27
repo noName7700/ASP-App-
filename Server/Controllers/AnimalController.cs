@@ -18,31 +18,31 @@ namespace Server.Controllers
 
         // вывести всех животных
         [HttpGet]
-        public IEnumerable<Animal> Get()
+        public async Task<IEnumerable<Animal>> Get()
         {
-            return _context.animal.ToList();
+            return await _context.animal.ToListAsync();
         }
 
         //вывести одно животное по id
         [HttpGet("{id}")]
-        public Animal Get(int id)
+        public async Task<Animal> Get(int id)
         {
-            return _context.animal.FirstOrDefault(a => a.id == id);
+            return await _context.animal.FirstOrDefaultAsync(a => a.id == id);
         }
 
         // добавить новое животное
         [HttpPost]
-        public void Post([FromBody] Animal value)
+        public async Task Post([FromBody] Animal value)
         {
-            _context.animal.Add(value);
-            _context.SaveChanges();
+            await _context.animal.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // изменить животное
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Animal value)
+        public async Task Put(int id, [FromBody] Animal value)
         {
-            var currentAnimal = _context.animal.FirstOrDefault(a => a.id == id);
+            var currentAnimal = await _context.animal.FirstOrDefaultAsync(a => a.id == id);
             if (currentAnimal != null)
             {
                 currentAnimal.sex = value.sex;
@@ -54,19 +54,19 @@ namespace Server.Controllers
                 currentAnimal.size = value.size;
                 currentAnimal.tail = value.tail;
                 currentAnimal.specsigns = value.specsigns;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
         // удалить животное
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentAnimal = _context.animal.FirstOrDefault(a => a.id == id);
+            var currentAnimal = await _context.animal.FirstOrDefaultAsync(a => a.id == id);
             if (currentAnimal != null)
             {
                 _context.animal.Remove(currentAnimal);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

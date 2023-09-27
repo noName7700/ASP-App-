@@ -28,10 +28,10 @@ namespace Server.Controllers
 
         // создать новый муниципалитет
         [HttpPost]
-        public void Post([FromBody] Municipality value)
+        public async Task Post([FromBody] Municipality value)
         {
-            _context.municipality.Add(value);
-            _context.SaveChanges();
+            await _context.municipality.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
     }
 }

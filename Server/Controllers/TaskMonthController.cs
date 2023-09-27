@@ -17,50 +17,51 @@ namespace Server.Controllers
         }
 
         // вывести все задания на месяц
+
         [HttpGet]
-        public IEnumerable<TaskMonth> Get()
+        public async Task<IEnumerable<TaskMonth>> Get()
         {
-            return _context.taskmonth.ToList();
+            return await _context.taskmonth.ToListAsync();
         }
 
         // вывести одно задание на месяц
         [HttpGet("{id}")]
-        public TaskMonth Get(int id)
+        public async Task<TaskMonth> Get(int id)
         {
-            return _context.taskmonth.FirstOrDefault(t => t.id == id);
+            return await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);
         }
 
         // добавить новое задание на месяц
         [HttpPost]
-        public void Post([FromBody] TaskMonth value)
+        public async Task Post([FromBody] TaskMonth value)
         {
-            _context.taskmonth.Add(value);
-            _context.SaveChanges();
+            await _context.taskmonth.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // изменить задание на месяц
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] TaskMonth value)
+        public async Task Put(int id, [FromBody] TaskMonth value)
         {
-            var currentTask = _context.taskmonth.FirstOrDefault(t => t.id == id);
+            var currentTask = await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);
             if (currentTask != null)
             {
                 currentTask.startdate = value.startdate;
                 currentTask.enddate = value.enddate;
                 currentTask.countanimal = value.countanimal;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
         // удалить задание на месяц
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentTask = _context.taskmonth.FirstOrDefault(t => t.id == id);
+            var currentTask = await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);
             if (currentTask != null)
             {
                 _context.taskmonth.Remove(currentTask);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

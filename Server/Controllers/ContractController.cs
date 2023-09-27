@@ -18,31 +18,31 @@ namespace Server.Controllers
 
         // получить все контракты
         [HttpGet]
-        public IEnumerable<Contract> Get()
+        public async Task<IEnumerable<Contract>> Get()
         {
-            return _context.contract
+            return await _context.contract
                 .Include(c => c.ActCapture)
                 .Include(c => c.Schedule)
-                .ToList();
+                .ToListAsync();
         }
 
         // создать контракт (т.е. одну запись)
         [HttpPost]
-        public void Post([FromBody] Contract value)
+        public async Task Post([FromBody] Contract value)
         {
-            _context.contract.Add(value);
-            _context.SaveChanges();
+            await _context.contract.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // удалить контракт по id
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentCon = _context.contract.FirstOrDefault(c => c.id == id);
+            var currentCon = await _context.contract.FirstOrDefaultAsync(c => c.id == id);
             if (currentCon != null)
             {
                 _context.contract.Remove(currentCon);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

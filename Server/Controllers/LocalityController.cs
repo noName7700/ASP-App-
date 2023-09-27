@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Server.Application;
 
 namespace Server.Controllers
@@ -17,48 +18,48 @@ namespace Server.Controllers
 
         // вывести все населенные пункты
         [HttpGet]
-        public IEnumerable<Locality> Get()
+        public async Task<IEnumerable<Locality>> Get()
         {
-            return _context.locality.ToList();
+            return await _context.locality.ToListAsync();
         }
 
         // вывести один нас пункт
         [HttpGet("{id}")]
-        public Locality Get(int id)
+        public async Task<Locality> Get(int id)
         {
-            return _context.locality.FirstOrDefault(l => l.id == id);
+            return await _context.locality.FirstOrDefaultAsync(l => l.id == id);
         }
 
         // добавить новый нас пункт
         [HttpPost]
-        public void Post([FromBody] Locality value)
+        public async Task Post([FromBody] Locality value)
         {
-            _context.locality.Add(value);
-            _context.SaveChanges();
+            await _context.locality.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // изменить нас пункт
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Locality value)
+        public async Task Put(int id, [FromBody] Locality value)
         {
-            var currentLoc = _context.locality.FirstOrDefault(l => l.id == id);
+            var currentLoc = await _context.locality.FirstOrDefaultAsync(l => l.id == id);
             if (currentLoc != null)
             {
                 currentLoc.name = value.name;
                 currentLoc.tariph = value.tariph;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
         // удалить нас пункт
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentLoc = _context.locality.FirstOrDefault(l => l.id == id);
+            var currentLoc = await _context.locality.FirstOrDefaultAsync(l => l.id == id);
             if (currentLoc != null)
             {
                 _context.locality.Remove(currentLoc);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

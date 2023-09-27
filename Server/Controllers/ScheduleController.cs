@@ -18,50 +18,48 @@ namespace Server.Controllers
 
         // получить все планы-графики
         [HttpGet(Name = "GetSchedules")]
-        public IEnumerable<Schedule> Get()
+        public async Task<IEnumerable<Schedule>> Get()
         {
             // вывод планов графиков в виде: нас.пункт(название) - дата подписи
-            var schedule_exemp = _context.schedule
+            return await _context.schedule
                 .Include(sch => sch.Locality)
                 .GroupBy(sch => new { sch.Locality.name, sch.dateapproval })
                 .OrderByDescending(sch => sch.Key.name)
                 .Select(f => f.First())
-                .ToList();
-
-            return schedule_exemp;
+                .ToListAsync();
         }
 
         // получить планы-графики относящиеся к одному нас. пункту
         [HttpGet("{id}")]
-        public IEnumerable<Schedule> Get(int id)
+        public async Task<IEnumerable<Schedule>> Get(int id)
         {
             // тут возвращаю планы-графики относящиеся к одному нас.пункту
             // несколько, потому что несколько taskmonth у нас
-            return _context.schedule
+            return await _context.schedule
                 .Include(sch => sch.Locality)
                 .Include(sch => sch.TaskMonth)
                 .Select(sch => sch)
                 .Where(s => s.localityid == id)
-                .ToList();
+                .ToListAsync();
         }
 
         // добавить новый план-график
         [HttpPost]
-        public void Post([FromBody] Schedule value)
+        public async Task Post([FromBody] Schedule value)
         {
-            _context.schedule.Add(value);
-            _context.SaveChanges();
+            await _context.schedule.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
 
         // удалить выбранное задание на месяц (т.е. строку из таблицы планов-графиков)
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var currentSch = _context.schedule.FirstOrDefault(s => s.taskmonthid == id);
+            var currentSch = await _context.schedule.FirstOrDefaultAsync(s => s.taskmonthid == id);
             if (currentSch != null)
             {
                 _context.schedule.Remove(currentSch);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
