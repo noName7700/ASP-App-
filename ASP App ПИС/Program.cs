@@ -1,16 +1,16 @@
+using ASP_App_ПИС.Services;
+using ASP_App_ПИС.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri("https://localhost:<PORT NUMBER>/"));
+
 var app = builder.Build();
 
 // получение данных
-
-//app.MapGet("/schedule/", (ApplicationContext db) => db.Animals.ToList());
-//app.MapGet("/schedule/", async (ApplicationContext db) => await db.taskmonth.ToListAsync());
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

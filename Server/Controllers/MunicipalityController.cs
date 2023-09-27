@@ -18,12 +18,12 @@ namespace Server.Controllers
 
         // все муниципалитеты
         [HttpGet]
-        public IEnumerable<Municipality> Get()
+        public async Task<IEnumerable<Municipality>> Get()
         {
-            return _context.municipality
+            return await _context.municipality
                 .Include(m => m.Locality)
                 .Include(m => m.Contract)
-                .ToList();
+                .ToListAsync();
         }
 
         // создать новый муниципалитет
