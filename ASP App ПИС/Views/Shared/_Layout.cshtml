@@ -213,7 +213,7 @@
                                 <a href="/contract/">Контракты</a>
                             </li>
                             <li>
-                                <a href="form_advanced.html">Добавить контракт</a>
+                                <a href="/contract/add">Добавить контракт</a>
                             </li>
                         </ul>
                     </li>
@@ -225,7 +225,7 @@
                                 <a href="/municipality/">Муниципалитеты</a>
                             </li>
                             <li>
-                                <a href="datatables.html">Добавить<br/>муниципалитет</a>
+                                <a href="/municipality/add">Добавить<br/>муниципалитет</a>
                             </li>
                         </ul>
                     </li>
@@ -237,7 +237,7 @@
                                 <a href="/act/">Акты отлова</a>
                             </li>
                             <li>
-                                <a href="charts_morris.html">Добавить акт отлова</a>
+                                <a href="/act/add">Добавить акт отлова</a>
                             </li>
                         </ul>
                     </li>
@@ -277,6 +277,29 @@
     <script src="~/js/app.min.js" type="text/javascript"></script>
     <!-- PAGE LEVEL SCRIPTS-->
     <script src="~/js/scripts/dashboard_1_demo.js" type="text/javascript"></script>
+    <!-- ДЛЯ ДОБАВЛЕНИЯ ПЛАНА-ГРАФИКА-->
+    <script src="~/vendors/jquery.maskedinput/dist/jquery.maskedinput.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#ex-date').mask('99.99.9999', {
+                placeholder: 'dd.mm.yyyy'
+            });
+            $('#ex-phone').mask('(999) 999-9999');
+            $('#ex-phone2').mask('+186 999 999-9999');
+            $('#ex-ext').mask('(999) 999-9999? x9999');
+            $('#ex-credit').mask('****-****-****-****', {
+                placeholder: '*'
+            });
+            $('#ex-tax').mask('99-9999999');
+            $('#ex-currency').mask('$ 99.99');
+            $('#ex-product').mask('a*-999-a999', {
+                placeholder: 'a*-999-a999'
+            });
+
+            $.mask.definitions['~'] = '[+-]';
+            $('#ex-eye').mask('~9.99 ~9.99 999');
+        });
+    </script>
     </div>
 </body>
 

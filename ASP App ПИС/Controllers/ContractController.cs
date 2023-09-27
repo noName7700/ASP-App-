@@ -8,5 +8,17 @@ namespace ASP_App_ПИС.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Add(string s)
+        {
+            return View();
+        }
     }
 }

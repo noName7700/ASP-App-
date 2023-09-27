@@ -1,39 +1,47 @@
 ﻿<div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Добавить план-график</h1>
+        <h1 class="page-title">Добавить акт отлова</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
-            <li class="breadcrumb-item">Form masks</li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Input Masks</div>
+                <div class="ibox-title">Новый акт отлова</div>
             </div>
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Муниципалитет</label>
+                        <label class="col-sm-2 col-form-label">Номер контракта</label>
                         <div class="col-sm-8">
                             <select class="form-control">
-                                <option>Здесь будут вытягиваться муниципалитеты из сервера</option>
+                                <option>Здесь будут вытягиваться из сервера</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Населенный пункт</label>
+                        <label class="col-sm-2 col-form-label">Муниципалитет</label>
                         <div class="col-sm-8">
                             <select class="form-control">
-                                <option>То же самое</option>
+                                <option>будут вытягиваться из сервера</option>
                             </select>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Дата отлова</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="ex-date" type="text">
+                            <span class="help-block">Формат даты dd.mm.yyyy
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
                     <div class="col-sm-10 ml-sm-auto">
-                        <button class="btn btn-info" type="submit">Добавить</button>
+                        <a href="/act/add" ><button class="btn btn-info" type="submit">Добавить</button></a>
                     </div>
                 </form>
             </div>
