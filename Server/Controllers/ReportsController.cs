@@ -1,7 +1,16 @@
 ﻿using Domain;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using Aspose.Cells;
+using Aspose.Cells.Utility;
+using System.Net;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using ClosedXML.Excel;
 
 namespace Server.Controllers
 {
@@ -47,6 +56,33 @@ namespace Server.Controllers
                 .CountAsync();
 
             return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
+        }
+
+        public ActionResult Export(string url)
+        {
+            Workbook workbook = JsontoExcel(url);
+            var stream = new MemoryStream();
+            string fileName = Session.SessionID + "_out.xls";
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0;
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            //Тк библиотека условно бесплатная в файле excel создаётся лист с авторскими правами, думаю для нас это не важно.
+        }
+
+        public Workbook JsontoExcel(string url)
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            string jsonInput = new WebClient().DownloadString(url);
+
+            JsonLayoutOptions options = new JsonLayoutOptions();
+            options.ArrayAsTable = true;
+
+            // Import JSON Data
+            JsonUtility.ImportData(jsonInput, worksheet.Cells, 0, 0, options);
+
+            return workbook;
         }
     }
 }
