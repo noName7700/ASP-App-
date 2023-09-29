@@ -26,6 +26,16 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<Locality>> Get(int id)
+        {
+            return await _context.municipality
+                .Include(m => m.Locality)
+                .Include(m => m.Contract)
+                .Select(m => m.Locality)
+                .ToListAsync();
+        }
+
         // создать новый муниципалитет
         [HttpPost]
         public async Task Post([FromBody] Municipality value)

@@ -24,7 +24,7 @@ namespace Server.Controllers
             return await _context.taskmonth.ToListAsync();
         }
 
-        // вывести одно задание на месяц
+        // вывести задания на месяц
         [HttpGet("{id}")]
         public async Task<TaskMonth> Get(int id)
         {

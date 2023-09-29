@@ -1,12 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ASP_App_ПИС.Services.Interfaces;
 
 namespace ASP_App_ПИС.Controllers
 {
     public class LocalityController : Controller
     {
-        public IActionResult Index()
+        private IWebService _service;
+
+        public LocalityController(IWebService service)
         {
-            return View();
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+        }
+
+        public async Task<IActionResult> Index(int id)
+        {
+            var localities = await _service.GetLocalitiesFromMunId(id);
+            return View(localities);
         }
 
         [HttpGet]

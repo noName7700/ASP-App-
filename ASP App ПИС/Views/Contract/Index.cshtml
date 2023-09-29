@@ -1,4 +1,7 @@
-﻿<div class="content-wrapper">
+﻿@using Domain;
+@model IEnumerable<Contract> 
+
+<div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
                 <h1 class="page-title">DataTables</h1>
@@ -23,7 +26,6 @@
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Номер</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Срок действия</th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Тариф</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата заключения</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
 
@@ -33,32 +35,23 @@
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Номер</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Срок действия</th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Тариф</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата заключения</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                                 </tr>
                             </tfoot>
                             <tbody>
+                            @foreach(var con in Model)
+                            {
                             <tr role="row" class="odd">
-                                <td>48573953</td>
-                                <td>2 года</td>
-                                <td>1250 руб.</td>
-                                <td>12.04.2022</td>
+                                <td>@con.id</td>
+                                <td>@con.validityperiod</td>
+                                <td>@con.dateconclusion</td>
                                 <td>
                                     <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
                                 </td>
                             </tr>
-                            <tr role="row" class="odd">
-                                <td>34634673</td>
-                                <td>1 год, 6 месяцев</td>
-                                <td>1900 руб.</td>
-                                <td>21.09.2023</td>
-                                <td>
-                                    <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
-                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
-                                </td>
-                            </tr>
+                            }
                             </tbody>
                         </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="example-table_info" role="status" aria-live="polite">Showing 1 to 10 of 36 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="example-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="example-table_previous"><a href="#" aria-controls="example-table" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="example-table" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item next" id="example-table_next"><a href="#" aria-controls="example-table" data-dt-idx="5" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
                     </div>

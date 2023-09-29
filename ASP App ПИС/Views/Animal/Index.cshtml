@@ -1,4 +1,7 @@
-﻿<div class="content-wrapper">
+﻿@using Domain;
+@model IEnumerable<Animal> 
+
+<div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
                 <h1 class="page-title">Животные</h1>
@@ -50,36 +53,24 @@
                                 </tr>
                             </tfoot>
                             <tbody>
+                            @foreach(var an in Model)
+                            {
                             <tr role="row" class="odd">
-                                <td>Собака</td>
-                                <td>Мужской</td>
-                                <td>Лабрадор</td>
-                                <td>Средний</td>
-                                <td>Мягкая</td>
-                                <td>Пятнистый</td>
-                                <td>Висячие</td>
-                                <td>Обычный</td>
-                                <td>Нет</td>
+                                <td>@an.category</td>
+                                <td>@an.sex</td>
+                                <td>@an.breed</td>
+                                <td>@an.size</td>
+                                <td>@an.wool</td>
+                                <td>@an.color</td>
+                                <td>@an.ears</td>
+                                <td>@an.tail</td>
+                                <td>@an.specsigns</td>
                                 <td>
                                     <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
                                 </td>
                             </tr>
-                            <tr role="row" class="odd">
-                                <td>Кошка</td>
-                                <td>Женский</td>
-                                <td>Сибирская</td>
-                                <td>Маленький</td>
-                                <td>Мягкая</td>
-                                <td>Серый</td>
-                                <td>Заостренные</td>
-                                <td>Обычный</td>
-                                <td>Нет</td>
-                                <td>
-                                    <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
-                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
-                                </td>
-                            </tr>
+                            }
                             </tbody>
                         </table></div>
                         </div>

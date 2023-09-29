@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using ASP_App_ПИС.Services.Interfaces;
 
 namespace ASP_App_ПИС.Controllers
 {
     public class ScheduleController : Controller
     {
+        private IWebService _service;
 
-        public ScheduleController()
+        public ScheduleController(IWebService service)
         {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var schedules = await _service.GetSchedules();
+            return View(schedules);
         }
 
         [HttpGet]

@@ -1,13 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ASP_App_ПИС.Services.Interfaces;
 
 namespace ASP_App_ПИС.Controllers
 {
     public class ScheduleOneController : Controller
     {
-        public IActionResult Index()
+        private IWebService _service;
+
+        public ScheduleOneController(IWebService service)
         {
-            return View();
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
+
+        public async Task<IActionResult> Index(int id)
+        {
+            var tasks = await _service.GetTaskMonthsFromScheduleId(id);
+            return View(tasks);
+        }
+
         [HttpGet]
         public IActionResult Add()
         {

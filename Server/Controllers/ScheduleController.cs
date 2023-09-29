@@ -29,7 +29,7 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
-        // получить планы-графики относящиеся к одному нас. пункту
+        /*// получить планы-графики относящиеся к одному нас. пункту
         [HttpGet("{id}")]
         public async Task<IEnumerable<Schedule>> Get(int id)
         {
@@ -41,6 +41,13 @@ namespace Server.Controllers
                 .Select(sch => sch)
                 .Where(s => s.localityid == id)
                 .ToListAsync();
+        }*/
+
+        // вывести задания на месяц по id плана-графика
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<TaskMonth>> Get(int id)
+        {
+            return await _context.schedule.Where(sch => sch.id == id).Select(sch => sch.TaskMonth).ToListAsync();
         }
 
         // добавить новый план-график
