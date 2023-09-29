@@ -62,11 +62,13 @@ namespace Server.Controllers
         {
             Workbook workbook = JsontoExcel(url);
             var stream = new MemoryStream();
+
             string fileName = Session.SessionID + "_out.xls";
+
             workbook.Save(stream, SaveFormat.Xlsx);
             stream.Position = 0;
+
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-            //Тк библиотека условно бесплатная в файле excel создаётся лист с авторскими правами, думаю для нас это не важно.
         }
 
         public Workbook JsontoExcel(string url)
