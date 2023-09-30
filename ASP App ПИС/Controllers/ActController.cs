@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
+using Domain;
 
 
 namespace ASP_App_ПИС.Controllers
@@ -26,8 +27,23 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(string s)
+        public IActionResult AddPost()
         {
+            /*Animal animal = new Animal({
+                breed = Request.Form["breed"],
+                wool = Request.Form["wool"],
+                category = Request.Form["category"],
+                color = Request.Form["color"],
+                ears = Request.Form["ears"],
+                sex = Request.Form["sex"],
+                size = Request.Form["size"],
+                tail = Request.Form["tail"],
+                specsigns = Request.Form["specsigns"],
+            });*/
+            /*ActCapture act = new ActCapture({
+                Animal = animal,
+                datecapture = Request.Form["datecapture"],
+            });*/
             return View();
         }
     }

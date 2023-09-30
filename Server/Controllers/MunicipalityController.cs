@@ -21,8 +21,6 @@ namespace Server.Controllers
         public async Task<IEnumerable<Municipality>> Get()
         {
             return await _context.municipality
-                .Include(m => m.Locality)
-                .Include(m => m.Contract)
                 .ToListAsync();
         }
 

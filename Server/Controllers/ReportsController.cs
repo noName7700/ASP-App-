@@ -9,8 +9,8 @@ using System.Net;
 using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
-using ClosedXML.Excel;
+/*using System.Web.Mvc;
+using ClosedXML.Excel;*/
 
 namespace Server.Controllers
 {
@@ -63,7 +63,7 @@ namespace Server.Controllers
             Workbook workbook = JsontoExcel(url);
             var stream = new MemoryStream();
 
-            string fileName = Session.SessionID + "_out.xls";
+            string fileName = DateTime.Now.ToShortDateString() + "_out.xls";
 
             workbook.Save(stream, SaveFormat.Xlsx);
             stream.Position = 0;
