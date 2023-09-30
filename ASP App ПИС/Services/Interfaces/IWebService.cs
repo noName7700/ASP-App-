@@ -4,7 +4,7 @@ namespace ASP_App_ПИС.Services.Interfaces
 {
     public interface IWebService
     {
-        Task<IEnumerable<Municipality>> GetMunicipalities();
+        Task<IEnumerable<MunicipalityName>> GetMunicipalities();
         Task<IEnumerable<ActCapture>> GetActs();
         Task<IEnumerable<Animal>> GetAnimals();
         Task<IEnumerable<Contract>> GetContracts();
