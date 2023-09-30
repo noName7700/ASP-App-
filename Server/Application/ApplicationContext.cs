@@ -12,6 +12,7 @@ namespace Server.Application
         public DbSet<Municipality> municipality { get; set; } = null!;
         public DbSet<Schedule> schedule { get; set; } = null!;
         public DbSet<TaskMonth> taskmonth { get; set; } = null!;
+        public DbSet<MunicipalityName> municipalityname {  get; set; } = null!;
 
         public ApplicationContext()
         {

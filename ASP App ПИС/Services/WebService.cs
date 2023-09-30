@@ -16,10 +16,10 @@ namespace ASP_App_ПИС.Services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<IEnumerable<Municipality>> GetMunicipalities()
+        public async Task<IEnumerable<MunicipalityName>> GetMunicipalities()
         {
             var response = await _client.GetAsync("/api/Municipality");
-            return await response.ReadContentAsync<List<Municipality>>();
+            return await response.ReadContentAsync<List<MunicipalityName>>();
         }
 
         public async Task<IEnumerable<ActCapture>> GetActs()

@@ -18,23 +18,37 @@ namespace Server.Controllers
 
         // все муниципалитеты
         [HttpGet]
-        public async Task<IEnumerable<Municipality>> Get()
+        public async Task<IEnumerable<MunicipalityName>> Get()
         {
-            return await _context.municipality
-                .Include(m => m.Locality)
-                .Include(m => m.Contract)
+           var t = await _context.municipalityname
                 .ToListAsync();
+            return t;
         }
 
+        // вывести нас пункты одного муниципалитета
         [HttpGet("{id}")]
-        public async Task<IEnumerable<Locality>> Get(int id)
+        public async Task<List<Locality>> Get(int id)
         {
             return await _context.municipality
                 .Include(m => m.Locality)
-                .Include(m => m.Contract)
+                .Include(m => m.MunicipalityName)
+                .Where(m => m.munid == id)
                 .Select(m => m.Locality)
                 .ToListAsync();
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<IEnumerable<Locality>> Get(int id)
+        //{
+        //    string nameCurrentMunicipality = _context.municipality.Where(m => m.id == id).Select(m => m.name).FirstOrDefault();
+
+        //    return await _context.municipality
+        //        .Include(m => m.Locality)
+        //        .Include(m => m.Contract)
+        //        .Select(m => m.Locality)
+        //        .Where(m => m.name == nameCurrentMunicipality)
+        //        .ToListAsync();
+        //}
 
         // создать новый муниципалитет
         [HttpPost]
