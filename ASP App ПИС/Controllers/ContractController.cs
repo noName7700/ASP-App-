@@ -26,6 +26,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpPost]
+        [Route("/contract/add")]
         public IActionResult Add(string s)
         {
             return View();

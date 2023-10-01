@@ -44,6 +44,7 @@ namespace Server.Controllers
 
         // добавить новый нас пункт
         [HttpPost]
+        [Route("/api/Locality/add")]
         public async Task Post([FromBody] Locality value)
         {
             await _context.locality.AddAsync(value);

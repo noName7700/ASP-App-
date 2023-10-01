@@ -32,6 +32,7 @@ namespace Server.Controllers
 
         // добавить новое животное
         [HttpPost]
+        [Route("/api/Animal/add")]
         public async Task Post([FromBody] Animal value)
         {
             await _context.animal.AddAsync(value);

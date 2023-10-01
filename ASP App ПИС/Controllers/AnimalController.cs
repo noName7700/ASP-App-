@@ -25,6 +25,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpPost]
+        [Route("/animal/add")]
         public IActionResult Add(string s)
         {
             return View();

@@ -11,5 +11,11 @@ namespace Domain
         public int id { get; set; }
         public string name { get; set; }
         public double tariph { get; set; }
+
+        public Locality(string name, double tariph)
+        {
+            this.name = name;
+            this.tariph = tariph;
+        }
     }
 }

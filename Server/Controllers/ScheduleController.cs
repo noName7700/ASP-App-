@@ -52,6 +52,7 @@ namespace Server.Controllers
 
         // добавить новый план-график
         [HttpPost]
+        [Route("/api/Schedule/add")]
         public async Task Post([FromBody] Schedule value)
         {
             await _context.schedule.AddAsync(value);

@@ -34,6 +34,7 @@ namespace Server.Controllers
 
         // добавить новое задание на месяц
         [HttpPost]
+        [Route("/api/TaskMonth/add")]
         public async Task Post([FromBody] TaskMonth value)
         {
             await _context.taskmonth.AddAsync(value);

@@ -27,6 +27,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpPost]
+        [Route("/act/add")]
         public IActionResult AddPost()
         {
             /*Animal animal = new Animal({

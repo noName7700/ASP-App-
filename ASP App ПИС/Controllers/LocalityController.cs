@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
+using Domain;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -20,16 +21,22 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        [Route("/locality/add")]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Add(string s)
+        [Route("/locality/add")]
+        public async Task<IActionResult> AddPost() // доделать
         {
-            return View();
+            if (Request.Form["name"] != "")
+            {
+                Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
+                await _service.AddLocality(loc);
+                return Redirect("/locality/");
+            }
+            return Redirect("/locality/");
         }
     }
 }

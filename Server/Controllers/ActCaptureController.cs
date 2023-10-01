@@ -51,6 +51,7 @@ namespace Server.Controllers
 
         // добавить акт отлова (т.е. одну запись с одним животным)
         [HttpPost]
+        [Route("/api/ActCapture/add")]
         public async Task Post([FromBody] ActCapture value)
         {
             await _context.actcapture.AddAsync(value);
