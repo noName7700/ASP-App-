@@ -1,5 +1,5 @@
 ﻿@using Domain;
-@model IEnumerable<ActCapture> 
+@model IEnumerable<Locality> 
 
 <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
@@ -42,9 +42,9 @@
                             @foreach(var act in Model)
                             {
                                 <tr role="row" class="odd">
-                                <td>@act.id</td>
-                                <td>@act.Locality.name</td>
-                                <td>@act.datecapture</td>
+                                @* <td>@act.id</td> *@
+                                <td>@act.name</td>
+                                @* <td>@act.datecapture</td> *@
                                 <td>
                                     <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>

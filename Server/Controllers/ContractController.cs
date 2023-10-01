@@ -18,11 +18,9 @@ namespace Server.Controllers
 
         // получить все контракты
         [HttpGet]
-        public async Task<IEnumerable<Contract>> Get()
+        public async Task<IEnumerable<ContractNumber>> Get()
         {
-            return await _context.contract
-                .Include(c => c.ActCapture)
-                .Include(c => c.Schedule)
+            return await _context.contractnumber
                 .ToListAsync();
         }
 

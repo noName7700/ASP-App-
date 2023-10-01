@@ -1,5 +1,5 @@
 ﻿@using Domain;
-@model IEnumerable<Contract> 
+@model IEnumerable<ContractNumber> 
 
 <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
@@ -44,8 +44,8 @@
                             {
                             <tr role="row" class="odd">
                                 <td>@con.id</td>
-                                <td>@con.validityperiod</td>
-                                <td>@con.dateconclusion</td>
+                                <td>@con.validityperiod.ToShortDateString()</td>
+                                <td>@con.dateconclusion.ToShortDateString()</td>
                                 <td>
                                     <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
