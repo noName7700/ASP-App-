@@ -13,7 +13,7 @@ namespace Domain
         public Schedule? Schedule { get; set; }
         public int? actcaptureid { get; set; }
         public ActCapture? ActCapture { get; set; }
-        public DateTime validityperiod { get; set; }
-        public DateTime dateconclusion { get; set; }
+        public int contractid {  get; set; }
+        public ContractNumber? ContractNumber {  get; set; }
     }
 }

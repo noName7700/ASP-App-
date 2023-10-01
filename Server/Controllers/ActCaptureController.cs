@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Linq;
 
 namespace Server.Controllers
 {
@@ -15,26 +16,38 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // вывести все акты отлова 
+        //ЭТО Я ДОБАВИЛА СЕЙЧАС
+        // вывести все акты отлова (т.е. нас пункты:))
         [HttpGet]
-        public async Task<IEnumerable<ActCapture>> Get()
+        public async Task<IEnumerable<Locality>> Get()
         {
-            return await _context.actcapture
-                .Include(act => act.Animal)
-                .Include(act => act.Locality)
+            // выводятся только наши нас пункты
+            return await _context.locality
                 .ToListAsync();
         }
 
+        // ЭТО ИЗМЕНИЛА СЕЙЧАС
         // вывести акты отлова в одном нас пункте
+        // т.е. группировка животных по дате типа (дата - животные в эту дату)
         [HttpGet("{locid}")]
-        public async Task<IEnumerable<ActCapture>> Get(int locid)
+        public async Task<IEnumerable<IGrouping<DateTime, ActCapture>>> Get(int locid)
         {
-            return await _context.actcapture
-                .Include(act => act.Animal)
-                .Include(act => act.Locality)
-                .Select(ac => ac)
-                .Where(ac => ac.localityid == locid)
+            var t = await _context.actcapture
+                .Include(a => a.Animal)
+                .Include(a => a.Locality)
+                .Where(a => a.localityid == locid)
+                .GroupBy(a => a.datecapture )
                 .ToListAsync();
+
+            return t;
+
+            // это открываются акт отлова для одного нас пункта (выводиться будут только дата и кнопка просмотр животного)
+            //return await _context.actcapture
+            //    .Include(act => act.Animal)
+            //    .Include(act => act.Locality)
+            //    .Select(ac => ac)
+            //    .Where(ac => ac.localityid == locid)
+            //    .ToListAsync();
         }
 
         // тут вывести акты отлова с сортировкой по дате
