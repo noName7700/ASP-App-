@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
+using Domain;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -25,9 +26,16 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(string s)
+        [Route("/municipality/add")]
+        public async Task<IActionResult> AddPost()
         {
-            return View();
+            if (Request.Form["name"] != "")
+            {
+                MunicipalityName mun = new MunicipalityName(Request.Form["name"]);
+                await _service.AddMunicipality(mun);
+                return Redirect("/municipality/");
+            }
+            return Redirect("/municipality/");
         }
     }
 }

@@ -52,9 +52,10 @@ namespace Server.Controllers
 
         // создать новый муниципалитет
         [HttpPost]
-        public async Task Post([FromBody] Municipality value)
+        [Route("/api/Municipality/add")]
+        public async Task Post([FromBody] MunicipalityName value)
         {
-            await _context.municipality.AddAsync(value);
+            await _context.municipalityname.AddAsync(value);
             await _context.SaveChangesAsync();
         }
     }

@@ -44,8 +44,8 @@
                     @foreach(var tm in Model)
                     {
                     <tr role="row" class="odd">
-                        <td>@tm.startdate</td>
-                        <td>@tm.enddate</td>
+                        <td>@tm.startdate.ToShortDateString()</td>
+                        <td>@tm.enddate.ToShortDateString()</td>
                         <td>@tm.countanimal</td>
                         <td>
                             <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>

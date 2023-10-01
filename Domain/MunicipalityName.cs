@@ -10,5 +10,10 @@ namespace Domain
     {
         public int id { get; set; }
         public string name { get; set; }
+
+        public MunicipalityName(string name)
+        {
+            this.name = name;
+        }
     }
 }

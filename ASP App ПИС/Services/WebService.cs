@@ -170,7 +170,7 @@ namespace ASP_App_ПИС.Services
             return await _client.DeleteAsync($"/api/Locality/delete/{id}");
         }
 
-        public async Task<HttpResponseMessage> AddMunicipality(Municipality value)
+        public async Task<HttpResponseMessage> AddMunicipality(MunicipalityName value)
         {
             string jsonString = JsonSerializer.Serialize(value);
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
