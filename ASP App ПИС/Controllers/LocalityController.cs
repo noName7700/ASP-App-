@@ -12,6 +12,7 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
+        [Route("/locality/{id}")]
         public async Task<IActionResult> Index(int id)
         {
             var localities = await _service.GetLocalitiesFromMunId(id);
@@ -19,6 +20,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
+        [Route("/locality/add")]
         public IActionResult Add()
         {
             return View();

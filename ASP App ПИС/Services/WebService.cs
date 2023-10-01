@@ -40,11 +40,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Contract>>();
         }
 
-        public async Task<IEnumerable<Locality>> GetLocalities()
+        /*public async Task<IEnumerable<Locality>> GetLocalities()
         {
             var response = await _client.GetAsync("/api/Locality");
             return await response.ReadContentAsync<List<Locality>>();
-        }
+        }*/
 
         public async Task<IEnumerable<Schedule>> GetSchedules()
         {
@@ -70,22 +70,22 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Animal>();
         }
 
-        public async Task<Locality> GetLocality(int id)
+        /*public async Task<Locality> GetLocality(int id)
         {
             var response = await _client.GetAsync($"/api/Locality/{id}");
             return await response.ReadContentAsync<Locality>();
-        }
+        }*/
 
-        public async Task<IEnumerable<Schedule>> GetTaskMonthsFromScheduleId(int id)
-        {
-            var response = await _client.GetAsync($"/api/Schedule/{id}");
-            return await response.ReadContentAsync<IEnumerable<Schedule>>();
-        }
-
-        public async Task<TaskMonth> GetTaskMonth(int id)
+        /*public async Task<IEnumerable<TaskMonth>> GetTaskMonthsFromLocalityId(int id)
         {
             var response = await _client.GetAsync($"/api/TaskMonth/{id}");
-            return await response.ReadContentAsync<TaskMonth>();
+            return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
+        }*/
+
+        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id)
+        {
+            var response = await _client.GetAsync($"/api/TaskMonth/{id}");
+            return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
         }
 
         public async Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid)
@@ -222,7 +222,7 @@ namespace ASP_App_ПИС.Services
 
         public async Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id)
         {
-            var response = await _client.GetAsync($"/api/Municipality/{id}");
+            var response = await _client.GetAsync($"/api/Locality/{id}");
             return await response.ReadContentAsync<List<Locality>>();
         }
     }

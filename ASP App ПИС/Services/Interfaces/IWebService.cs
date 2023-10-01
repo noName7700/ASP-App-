@@ -8,15 +8,15 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<IEnumerable<ActCapture>> GetActs();
         Task<IEnumerable<Animal>> GetAnimals();
         Task<IEnumerable<Contract>> GetContracts();
-        Task<IEnumerable<Locality>> GetLocalities();
+        /*Task<IEnumerable<Locality>> GetLocalities();*/
         Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id);
         Task<IEnumerable<Schedule>> GetSchedules();
         Task<IEnumerable<TaskMonth>> GetTaskMonths();
         Task<ActCapture> GetAct(int locid);
         Task<Animal> GetAnimal(int id);
-        Task<Locality> GetLocality(int id);
-        Task<IEnumerable<Schedule>> GetTaskMonthsFromScheduleId(int id);
-        Task<TaskMonth> GetTaskMonth(int id);
+        /*Task<Locality> GetLocality(int id);*/
+        /*Task<IEnumerable<TaskMonth>> GetTaskMonthsFromLocalityId(int id);*/
+        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id);
         Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid);
         Task<HttpResponseMessage> AddAct(ActCapture value);
         Task<HttpResponseMessage> DeleteAct(int id);

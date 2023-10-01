@@ -9,8 +9,8 @@ using System.Net;
 using System.IO;
 using System.Linq;
 using System.Web;
-/*using System.Web.Mvc;
-using ClosedXML.Excel;*/
+/*using System.Web.Mvc;*/
+/*using ClosedXML.Excel;*/
 
 namespace Server.Controllers
 {
@@ -71,7 +71,7 @@ namespace Server.Controllers
         //    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         //}
 
-        public Workbook JsontoExcel(string url)
+        /*public Workbook JsontoExcel(string url)
         {
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
@@ -85,6 +85,6 @@ namespace Server.Controllers
             JsonUtility.ImportData(jsonInput, worksheet.Cells, 0, 0, options);
 
             return workbook;
-        }
+        }*/
     }
 }

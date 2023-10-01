@@ -26,9 +26,10 @@ namespace Server.Controllers
 
         // вывести задания на месяц
         [HttpGet("{id}")]
-        public async Task<TaskMonth> Get(int id)
+        public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
-            return await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);
+            var t = await _context.schedule.Where(t => t.localityid == id).Include(t => t.TaskMonth).Select(t => t.TaskMonth).ToListAsync();
+            return t;
         }
 
         // добавить новое задание на месяц

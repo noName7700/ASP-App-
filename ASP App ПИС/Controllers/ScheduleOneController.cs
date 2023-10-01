@@ -12,9 +12,10 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
+        [Route("/scheduleone/{id}")]
         public async Task<IActionResult> Index(int id)
         {
-            var tasks = await _service.GetTaskMonthsFromScheduleId(id);
+            var tasks = await _service.GetTaskMonth(id);
             return View(tasks);
         }
 

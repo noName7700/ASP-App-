@@ -12,7 +12,9 @@ namespace ASP_App_ПИС.Helpers
             var result = JsonSerializer.Deserialize<T>(
                 dataAsString, new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
+                    
+                    
                 });
             return result;
         }

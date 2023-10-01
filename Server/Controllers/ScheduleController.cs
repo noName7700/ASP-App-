@@ -17,7 +17,7 @@ namespace Server.Controllers
         }
 
         // получить все планы-графики
-        [HttpGet(Name = "GetSchedules")]
+        [HttpGet]
         public async Task<IEnumerable<Schedule>> Get()
         {
             // вывод планов графиков в виде: нас.пункт(название) - дата подписи

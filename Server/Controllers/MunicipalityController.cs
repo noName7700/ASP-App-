@@ -25,7 +25,7 @@ namespace Server.Controllers
             return t;
         }
 
-        // вывести нас пункты одного муниципалитета
+/*        // вывести нас пункты одного муниципалитета
         [HttpGet("{id}")]
         public async Task<List<Locality>> Get(int id)
         {
@@ -35,7 +35,7 @@ namespace Server.Controllers
                 .Where(m => m.munid == id)
                 .Select(m => m.Locality)
                 .ToListAsync();
-        }
+        }*/
 
         //[HttpGet("{id}")]
         //public async Task<IEnumerable<Locality>> Get(int id)
