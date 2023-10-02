@@ -1,4 +1,7 @@
-﻿<div class="content-wrapper">
+﻿@using Domain;
+@model IEnumerable<Locality>;
+
+<div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
         <h1 class="page-title">Добавить план-график</h1>
@@ -12,14 +15,14 @@
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Input Masks</div>
+                <div class="ibox-title">Новый план-график</div>
             </div>
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Муниципалитет</label>
                         <div class="col-sm-8">
-                            <select class="form-control">
+                            <select class="form-control" name="municipality">
                                 <option>Здесь будут вытягиваться муниципалитеты из сервера</option>
                             </select>
                         </div>
@@ -27,9 +30,51 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Населенный пункт</label>
                         <div class="col-sm-8">
-                            <select class="form-control">
-                                <option>То же самое</option>
+                            <select class="form-control" name="locality">
+                                @foreach(var loc in Model)
+                                {
+                                    <option value="@loc.id">@loc.name</option>
+                                }
                             </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Дата утверждения</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="ex-date" type="text" name="dateapproval">
+                            <span class="help-block">
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="ibox-head">
+                        <div class="ibox-title">Задача на месяц</div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Дата начала</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="ex-date" type="text" name="startdate">
+                            <span class="help-block">Формат даты dd.mm.yyyy
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Дата окончания</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="ex-date" type="text" name="enddate">
+                            <span class="help-block">Формат даты dd.mm.yyyy
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Планируемое количество животных</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="ex-date" type="text" name="count-animal">
+                            <span class="help-block">
+                                <span></span>
+                            </span>
                         </div>
                     </div>
                     <div class="col-sm-10 ml-sm-auto">

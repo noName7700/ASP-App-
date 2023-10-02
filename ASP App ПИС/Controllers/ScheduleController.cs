@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
+using Domain;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -19,16 +20,29 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            IEnumerable<Locality> locs = await _service.GetLocalities();
+            return View(locs);
         }
 
         [HttpPost]
         [Route("/schedule/add")]
-        public IActionResult Add(string s)
+        public async Task<IActionResult> AddPost()
         {
-            return View();
+            if (Request.Form["dateapproval"] != "")
+            {
+                /*TaskMonth tm = new TaskMonth(
+                    DateTime.Parse(Request.Form["startdate"]),
+                    DateTime.Parse(Request.Form["enddate"]),
+                    int.Parse(Request.Form["count-animal"]));*/
+                //await _service.AddTaskMonth(tm);
+                //Locality loc = await _service.GetLocality(Request.Form["locality"]);
+/*                Schedule sch = new Schedule()
+                await _service.AddMunicipality(mun);*/
+                return Redirect("/municipality/");
+            }
+            return Redirect("/municipality/");
         }
     }
 }

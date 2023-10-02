@@ -16,7 +16,14 @@ namespace ASP_App_ПИС.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var acts = await _service.GetActs();
+            var locs = await _service.GetLocalActs();
+            return View(locs);
+        }
+
+        [Route("/act/{id}")]
+        public async Task<IActionResult> ViewActs(int id)
+        {
+            var acts = await _service.GetAct(id);
             return View(acts);
         }
 

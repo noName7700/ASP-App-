@@ -22,15 +22,15 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<MunicipalityName>>();
         }
 
-        public async Task<IEnumerable<Locality>> GetActs()
+        public async Task<IEnumerable<Locality>> GetLocalActs()
         {
             var response = await _client.GetAsync("/api/ActCapture");
             return await response.ReadContentAsync<List<Locality>>();
         }
 
-        public async Task<IEnumerable<Animal>> GetAnimals()
+        public async Task<IEnumerable<Animal>> GetAnimals(int id, string date)
         {
-            var response = await _client.GetAsync("/api/Animal");
+            var response = await _client.GetAsync($"/api/Animal/{id}/{date}");
             return await response.ReadContentAsync<List<Animal>>();
         }
 
@@ -40,11 +40,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<ContractNumber>>();
         }
 
-        /*public async Task<IEnumerable<Locality>> GetLocalities()
+        public async Task<IEnumerable<Locality>> GetLocalities()
         {
             var response = await _client.GetAsync("/api/Locality");
             return await response.ReadContentAsync<List<Locality>>();
-        }*/
+        }
 
         public async Task<IEnumerable<Schedule>> GetSchedules()
         {
@@ -58,10 +58,10 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
-        public async Task<IEnumerable<IGrouping<DateTime, ActCapture>>> GetAct(int locid)
+        public async Task<IEnumerable<ActCapture>> GetAct(int locid)
         {
-            var response = await _client.GetAsync($"/api/TaskMonth/{locid}");
-            return await response.ReadContentAsync<IEnumerable<IGrouping<DateTime, ActCapture>>>();
+            var response = await _client.GetAsync($"/api/ActCapture/{locid}");
+            return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
         public async Task<Animal> GetAnimal(int id)
@@ -70,11 +70,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Animal>();
         }
 
-        /*public async Task<Locality> GetLocality(int id)
+        public async Task<Locality> GetLocality(int id)
         {
             var response = await _client.GetAsync($"/api/Locality/{id}");
             return await response.ReadContentAsync<Locality>();
-        }*/
+        }
 
         /*public async Task<IEnumerable<TaskMonth>> GetTaskMonthsFromLocalityId(int id)
         {

@@ -30,13 +30,15 @@ namespace Server.Controllers
         // вывести акты отлова в одном нас пункте
         // т.е. группировка животных по дате типа (дата - животные в эту дату)
         [HttpGet("{locid}")]
-        public async Task<IEnumerable<IGrouping<DateTime, ActCapture>>> Get(int locid)
+        public async Task<IEnumerable<ActCapture>> Get(int locid)
         {
             var t = await _context.actcapture
                 .Include(a => a.Animal)
                 .Include(a => a.Locality)
                 .Where(a => a.localityid == locid)
-                .GroupBy(a => a.datecapture )
+                .GroupBy(a => a.datecapture)
+                .OrderByDescending(a => a.Key)
+                .Select(f => f.First())
                 .ToListAsync();
 
             return t;

@@ -32,7 +32,7 @@ namespace Server.Controllers
 
         // вывести нас пункты одного муниципалитета
         [HttpGet("{id}")]
-        public async Task<List<Locality>> Get(int id)
+        public async Task<IEnumerable<Locality>> Get(int id)
         {
             return await _context.municipality
                 .Include(m => m.Locality)

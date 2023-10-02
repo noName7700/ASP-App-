@@ -17,11 +17,11 @@ namespace Domain
         public DateTime enddate { get; set; }
         public int countanimal { get; set; }
 
-        //public TaskMonth(DateTime startDate, DateTime endDate, int countAnimal)
-        //{
-        //    startdate = startDate;
-        //    enddate = endDate;
-        //    countanimal = countAnimal;
-        //}
+        /*public TaskMonth(DateTime startDate, DateTime endDate, int countAnimal)
+        {
+            startdate = startDate;
+            enddate = endDate;
+            countanimal = countAnimal;
+        }*/
     }
 }

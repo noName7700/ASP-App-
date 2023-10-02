@@ -20,6 +20,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
+        [Route("/scheduleone/add")]
         public IActionResult Add()
         {
             return View();
@@ -29,6 +30,7 @@ namespace ASP_App_ПИС.Controllers
         [Route("/scheduleone/add")]
         public IActionResult Add(string s)
         {
+
             return View();
         }
     }

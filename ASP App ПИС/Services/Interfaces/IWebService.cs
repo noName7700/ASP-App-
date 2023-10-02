@@ -5,14 +5,14 @@ namespace ASP_App_ПИС.Services.Interfaces
     public interface IWebService
     {
         Task<IEnumerable<MunicipalityName>> GetMunicipalities();
-        Task<IEnumerable<Locality>> GetActs();
-        Task<IEnumerable<Animal>> GetAnimals();
+        Task<IEnumerable<Locality>> GetLocalActs();
+        Task<IEnumerable<Animal>> GetAnimals(int id, string date);
         Task<IEnumerable<ContractNumber>> GetContracts();
-        /*Task<IEnumerable<Locality>> GetLocalities();*/
+        Task<IEnumerable<Locality>> GetLocalities();
         Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id);
         Task<IEnumerable<Schedule>> GetSchedules();
         Task<IEnumerable<TaskMonth>> GetTaskMonths();
-        Task<IEnumerable<IGrouping<DateTime, ActCapture>>> GetAct(int locid);
+        Task<IEnumerable<ActCapture>> GetAct(int locid);
         Task<Animal> GetAnimal(int id);
         /*Task<Locality> GetLocality(int id);*/
         /*Task<IEnumerable<TaskMonth>> GetTaskMonthsFromLocalityId(int id);*/

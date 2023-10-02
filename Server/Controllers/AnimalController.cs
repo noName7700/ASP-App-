@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Linq;
 
 namespace Server.Controllers
 {
@@ -23,11 +24,19 @@ namespace Server.Controllers
             return await _context.animal.ToListAsync();
         }
 
-        //вывести одно животное по id
-        [HttpGet("{id}")]
-        public async Task<Animal> Get(int id)
+        //вывести одно животное по localid и datecapture
+        [HttpGet]
+        [Route("/api/Animal/{id}/{date}")]
+        public async Task<IEnumerable<Animal>> Get(int id, string date)
         {
-            return await _context.animal.FirstOrDefaultAsync(a => a.id == id);
+            var d = DateTime.Parse(date);
+            var res = await _context.actcapture
+                .Include(a => a.Animal)
+                .Where(a => a.localityid == id && a.datecapture.Year == d.Year 
+                && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
+                .Select(a => a.Animal)
+                .ToListAsync();
+            return res;
         }
 
         // добавить новое животное

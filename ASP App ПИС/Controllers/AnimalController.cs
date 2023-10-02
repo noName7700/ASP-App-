@@ -12,9 +12,11 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [Route("/animal/{id}/{date}")]
+        public async Task<IActionResult> Index(int id, string date)
         {
-            var animals = await _service.GetAnimals();
+            var animals = await _service.GetAnimals(id, date);
             return View(animals);
         }
 

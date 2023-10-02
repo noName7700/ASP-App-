@@ -16,5 +16,12 @@ namespace Domain
         public int taskmonthid { get; set; }
         public TaskMonth? TaskMonth { get; set; }
         public DateTime dateapproval { get; set; }
+
+        public Schedule(int localityid, int taskmonthid, DateTime dateapproval)
+        {
+            this.localityid = localityid;
+            this.taskmonthid = taskmonthid;
+            this.dateapproval = dateapproval;
+        }
     }
 }

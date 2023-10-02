@@ -1,10 +1,10 @@
 ﻿@using Domain;
-@model IEnumerable<Schedule> 
+@model IEnumerable<ActCapture>
 
 <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
             <div class="page-heading">
-                <h1 class="page-title">DataTables</h1>
+                <h1 class="page-title">Акты отлова</h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -24,23 +24,30 @@
                                    <label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example-table"></label></div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Населенный пункт</th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата утверждения</th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">План-график</th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата отлова</th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                                 </tr>
                             </thead>
+                            <tfoot>
+                                <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата отлова</th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
+                                </tr>
+                            </tfoot>
                             <tbody>
-                            @foreach(var sch in Model)
+                            @foreach(var act in Model)
                             {
-                            <tr role="row" class="odd">
-                                <td>@sch.Locality.name</td>
-                                <td>@sch.dateapproval.ToShortDateString()</td>
-                                <td><a href="/scheduleone/@sch.localityid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
+                                <tr role="row" class="odd">
+                                <td>@act.datecapture.ToShortDateString()</td>
+                                <td>
+                                    <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button>
+                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
+                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.localityid/@act.datecapture.ToShortDateString()"><i class="fa fa-eye font-14"></i></a></button>
+                                </td>
                             </tr>
                             }
                             </tbody>
                         </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="example-table_info" role="status" aria-live="polite">Showing 1 to 10 of 36 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="example-table_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="example-table_previous"><a href="#" aria-controls="example-table" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="example-table" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="example-table" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item next" id="example-table_next"><a href="#" aria-controls="example-table" data-dt-idx="5" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
-                
                     </div>
                 </div>
             </div>
