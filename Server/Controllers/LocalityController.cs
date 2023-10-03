@@ -36,7 +36,6 @@ namespace Server.Controllers
         {
             return await _context.municipality_locality
                 .Include(m => m.Locality)
-                .Include(m => m.MunicipalityName)
                 .Where(m => m.munid == id)
                 .Select(m => m.Locality)
                 .ToListAsync();

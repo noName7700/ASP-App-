@@ -58,6 +58,8 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
+
+
         public async Task<IEnumerable<ActCapture>> GetAct(int locid)
         {
             var response = await _client.GetAsync($"/api/ActCapture/{locid}");
