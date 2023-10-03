@@ -34,9 +34,8 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<Locality>> Get(int id)
         {
-            return await _context.municipality
+            return await _context.municipality_locality
                 .Include(m => m.Locality)
-                .Include(m => m.MunicipalityName)
                 .Where(m => m.munid == id)
                 .Select(m => m.Locality)
                 .ToListAsync();

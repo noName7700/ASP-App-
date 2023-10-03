@@ -20,9 +20,8 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<MunicipalityName>> Get()
         {
-           var t = await _context.municipalityname
+            return await _context.municipalityname
                 .ToListAsync();
-            return t;
         }
 
 /*        // вывести нас пункты одного муниципалитета

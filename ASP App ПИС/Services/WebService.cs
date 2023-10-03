@@ -58,6 +58,8 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
+
+
         public async Task<IEnumerable<ActCapture>> GetAct(int locid)
         {
             var response = await _client.GetAsync($"/api/ActCapture/{locid}");
@@ -177,7 +179,7 @@ namespace ASP_App_ПИС.Services
             return await _client.PostAsync($"/api/Municipality/add", content);
         }
 
-        public async Task<HttpResponseMessage> EditMunicipality(int id, Municipality value)
+        public async Task<HttpResponseMessage> EditMunicipality(int id, MunicipalityName value)
         {
             string jsonString = JsonSerializer.Serialize(value);
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");

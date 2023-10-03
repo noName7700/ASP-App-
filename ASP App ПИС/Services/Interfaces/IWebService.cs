@@ -31,7 +31,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> EditLocality(int id, Locality value);
         Task<HttpResponseMessage> DeleteLocality(int id);
         Task<HttpResponseMessage> AddMunicipality(MunicipalityName value);
-        Task<HttpResponseMessage> EditMunicipality(int id, Municipality value);
+        Task<HttpResponseMessage> EditMunicipality(int id, MunicipalityName value);
         Task<HttpResponseMessage> DeleteMunicipality(int id);  // нам вообще нужно будет удалять муниципалитет ???
         Task<HttpResponseMessage> AddSchedule(Schedule value);
         Task<HttpResponseMessage> DeleteSchedule(int id);
