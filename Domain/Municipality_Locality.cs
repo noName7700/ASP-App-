@@ -10,7 +10,7 @@ namespace Domain
     {
         public int id { get; set; }
         public int munid { get; set; }
-        public MunicipalityName? MunicipalityName { get; set; }
+        //public MunicipalityName? MunicipalityName { get; set; }
         public int localityid { get; set; }
         public Locality? Locality { get; set; }
 
