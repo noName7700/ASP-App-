@@ -11,5 +11,11 @@ namespace Domain
         public int id { get; set; }
         public DateTime validityperiod {  get; set; }
         public DateTime dateconclusion {  get; set; }
+
+        public ContractNumber(DateTime validityperiod, DateTime dateconclusion)
+        {
+            this.validityperiod = validityperiod;
+            this.dateconclusion = dateconclusion;
+        }
     }
 }

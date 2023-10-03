@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
+using Domain;
 
 
 namespace ASP_App_ПИС.Controllers
@@ -27,9 +28,13 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpPost]
         [Route("/contract/add")]
-        public IActionResult Add(string s)
+        public async Task<IActionResult> AddPost()
         {
-            return View();
+            ContractNumber con = new ContractNumber(
+                DateTime.Parse(Request.Form["validityperiod"]), 
+                DateTime.Parse(Request.Form["dateconclusion"]));
+            await _service.AddContract(con);
+            return Redirect("/contract/");
         }
     }
 }

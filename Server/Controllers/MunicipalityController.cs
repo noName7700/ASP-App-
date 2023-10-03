@@ -58,5 +58,13 @@ namespace Server.Controllers
             await _context.municipalityname.AddAsync(value);
             await _context.SaveChangesAsync();
         }
+
+        [HttpPost]
+        [Route("/api/Municipality/add-loc")]
+        public async Task Post([FromBody] Municipality_Locality value)
+        {
+            await _context.municipality_locality.AddAsync(value);
+            await _context.SaveChangesAsync();
+        }
     }
 }

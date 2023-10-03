@@ -10,8 +10,6 @@ namespace Domain
 {
     public class TaskMonth
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id { get; set; }
         public DateTime startdate { get; set; }
         public DateTime enddate { get; set; }

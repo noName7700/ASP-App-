@@ -28,8 +28,18 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
-            var t = await _context.schedule.Where(t => t.localityid == id).Include(t => t.TaskMonth).Select(t => t.TaskMonth).ToListAsync();
-            return t;
+            return await _context.schedule
+                .Where(t => t.localityid == id)
+                .Include(t => t.TaskMonth)
+                .Select(t => t.TaskMonth)
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/TaskMonth/last")]
+        public async Task<TaskMonth> GetLast()
+        {
+            return await _context.taskmonth.Select(t => t).OrderBy(t => t.id).LastAsync();
         }
 
         // добавить новое задание на месяц

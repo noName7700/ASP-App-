@@ -1,4 +1,7 @@
-﻿<div class="content-wrapper">
+﻿@using Domain;
+@model IEnumerable<Locality>;
+
+<div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
         <h1 class="page-title">Добавить акт отлова</h1>
@@ -16,18 +19,13 @@
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Номер контракта</label>
+                        <label class="col-sm-2 col-form-label">Населенный пункт</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="id">
-                                <option>Здесь будут вытягиваться из сервера</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Муниципалитет</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" name="municipality">
-                                <option>будут вытягиваться из сервера</option>
+                            <select class="form-control" name="locality">
+                                @foreach(var loc in Model)
+                                {
+                                    <option value="@loc.id">@loc.name</option>
+                                }                                
                             </select>
                         </div>
                     </div>
@@ -56,8 +54,8 @@
                         <label class="col-sm-2 col-form-label">Пол</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="sex">
-                                <option>Мужской</option>
-                                <option>Женский</option>
+                                <option value="Муж">Мужской</option>
+                                <option value="Жен">Женский</option>
                             </select>
                         </div>
                     </div>
@@ -125,7 +123,7 @@
                         </div>
                     </div>
                     <div class="col-sm-10 ml-sm-auto">
-                        <a href="/act/add" ><button class="btn btn-info" type="submit">Добавить</button></a>
+                        <button class="btn btn-info" type="submit">Добавить</button>
                     </div>
                 </form>
             </div>

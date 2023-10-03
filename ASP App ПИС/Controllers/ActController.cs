@@ -28,16 +28,18 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        [Route("/act/add")]
+        public async Task<IActionResult> Add()
         {
-            return View();
+            IEnumerable<Locality> locs = await _service.GetLocalities();
+            return View(locs);
         }
 
         [HttpPost]
         [Route("/act/add")]
-        public IActionResult AddPost()
+        public async Task<IActionResult> AddPost()
         {
-            /*Animal animal = new Animal({
+            Animal animal = new Animal{
                 breed = Request.Form["breed"],
                 wool = Request.Form["wool"],
                 category = Request.Form["category"],
@@ -47,12 +49,16 @@ namespace ASP_App_ПИС.Controllers
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
                 specsigns = Request.Form["specsigns"],
-            });*/
-            /*ActCapture act = new ActCapture({
-                Animal = animal,
-                datecapture = Request.Form["datecapture"],
-            });*/
-            return View();
+            };
+            await _service.AddAnimal(animal);
+            Animal lastAni = await _service.GetLastAnimal();
+            ActCapture act = new ActCapture{
+                animalid = lastAni.id,
+                datecapture = DateTime.Parse(Request.Form["datecapture"]),
+                localityid = int.Parse(Request.Form["locality"])
+            };
+            await _service.AddAct(act);
+            return Redirect("/act/");
         }
     }
 }

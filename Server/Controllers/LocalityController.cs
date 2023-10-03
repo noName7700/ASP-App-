@@ -34,13 +34,28 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<Locality>> Get(int id)
         {
-            return await _context.municipality
+            return await _context.municipality_locality
                 .Include(m => m.Locality)
                 .Include(m => m.MunicipalityName)
                 .Where(m => m.munid == id)
                 .Select(m => m.Locality)
                 .ToListAsync();
         }
+
+        [HttpGet]
+        [Route("/api/Locality/one/{id}")]
+        public async Task<Locality> GetOne(int id)
+        {
+            return await _context.locality.Where(l => l.id == id).FirstAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/Locality/last")]
+        public async Task<Locality> GetLast()
+        {
+            return await _context.locality.Select(t => t).OrderBy(t => t.id).LastAsync();
+        }
+
 
         // добавить новый нас пункт
         [HttpPost]

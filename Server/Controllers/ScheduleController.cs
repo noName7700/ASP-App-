@@ -50,6 +50,13 @@ namespace Server.Controllers
             return await _context.schedule.Where(sch => sch.id == id).Select(sch => sch.TaskMonth).ToListAsync();
         }
 
+        [HttpGet]
+        [Route("/api/Schedule/last/{locid}")]
+        public async Task<Schedule> GetLast(int locid)
+        {
+            return await _context.schedule.Where(s => s.localityid == locid).Select(s => s).OrderBy(s => s.id).LastAsync();
+        }
+
         // добавить новый план-график
         [HttpPost]
         [Route("/api/Schedule/add")]

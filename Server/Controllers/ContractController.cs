@@ -27,9 +27,9 @@ namespace Server.Controllers
         // создать контракт (т.е. одну запись)
         [HttpPost]
         [Route("/api/Contract/add")]
-        public async Task Post([FromBody] Contract value)
+        public async Task Post([FromBody] ContractNumber value)
         {
-            await _context.contract.AddAsync(value);
+            await _context.contractnumber.AddAsync(value);
             await _context.SaveChangesAsync();
         }
 

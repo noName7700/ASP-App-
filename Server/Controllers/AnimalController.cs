@@ -39,6 +39,13 @@ namespace Server.Controllers
             return res;
         }
 
+        [HttpGet]
+        [Route("/api/Animal/last")]
+        public async Task<Animal> GetLast()
+        {
+            return await _context.animal.Select(t => t).OrderBy(t => t.id).LastAsync();
+        }
+
         // добавить новое животное
         [HttpPost]
         [Route("/api/Animal/add")]
