@@ -40,6 +40,13 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Animal/one/{id}")]
+        public async Task<Animal> GetOne(int id)
+        {
+            return await _context.animal.Where(l => l.id == id).FirstAsync();
+        }
+
+        [HttpGet]
         [Route("/api/Animal/last")]
         public async Task<Animal> GetLast()
         {
@@ -56,7 +63,8 @@ namespace Server.Controllers
         }
 
         // изменить животное
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/Animal/put/{id}")]
         public async Task Put(int id, [FromBody] Animal value)
         {
             var currentAnimal = await _context.animal.FirstOrDefaultAsync(a => a.id == id);

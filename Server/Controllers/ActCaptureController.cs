@@ -52,8 +52,21 @@ namespace Server.Controllers
             //    .ToListAsync();
         }
 
+        [HttpGet]
+        [Route("/api/ActCapture/{locid}/{date}")]
+        public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
+        {
+            return await _context.actcapture
+                .Where(a => a.localityid == locid && 
+                a.datecapture.Year == DateTime.Parse(date).Year
+                && a.datecapture.Month == DateTime.Parse(date).Month
+                && a.datecapture.Day == DateTime.Parse(date).Day)
+                .Select(a => a)
+                .ToListAsync();
+        }
+
         // тут вывести акты отлова с сортировкой по дате
-        [HttpGet("{datestart}/{dateend}/{locid}")]
+        /*[HttpGet("{datestart}/{dateend}/{locid}")]
         public async Task<IEnumerable<ActCapture>> Get(DateTime datestart, DateTime dateend, int locid)
         {
             return await _context.actcapture
@@ -62,7 +75,7 @@ namespace Server.Controllers
                 .Select(ac => ac)
                 .Where(ac => ac.datecapture.Kind >= datestart.Kind && ac.datecapture.Kind <= dateend.Kind && ac.localityid == locid)
                 .ToListAsync();
-        }
+        }*/
 
         // добавить акт отлова (т.е. одну запись с одним животным)
         [HttpPost]
@@ -71,6 +84,19 @@ namespace Server.Controllers
         {
             await _context.actcapture.AddAsync(value);
             await _context.SaveChangesAsync();
+        }
+
+        [HttpPut]
+        [Route("/api/ActCapture/put/{id}")]
+        public async Task Put(int id, [FromBody] ActCapture value)
+        {
+            var currentLoc = await _context.actcapture.FirstOrDefaultAsync(l => l.id == id);
+            if (currentLoc != null)
+            {
+                currentLoc.datecapture = value.datecapture;
+                currentLoc.localityid = value.localityid;
+                await _context.SaveChangesAsync();
+            }
         }
 
         // удалить животное 

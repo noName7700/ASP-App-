@@ -58,11 +58,15 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
-
-
         public async Task<IEnumerable<ActCapture>> GetAct(int locid)
         {
             var response = await _client.GetAsync($"/api/ActCapture/{locid}");
+            return await response.ReadContentAsync<IEnumerable<ActCapture>>();
+        }
+
+        public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
+        {
+            var response = await _client.GetAsync($"/api/ActCapture/{locid}/{date}");
             return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
@@ -90,6 +94,24 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
         }
 
+        public async Task<TaskMonth> GetTaskMonthOne(int id)
+        {
+            var response = await _client.GetAsync($"/api/TaskMonth/one/{id}");
+            return await response.ReadContentAsync<TaskMonth>();
+        }
+
+        public async Task<ContractNumber> GetContractOne(int id)
+        {
+            var response = await _client.GetAsync($"/api/Contract/one/{id}");
+            return await response.ReadContentAsync<ContractNumber>();
+        }
+
+        public async Task<Animal> GetAnimalOne(int id)
+        {
+            var response = await _client.GetAsync($"/api/Animal/one/{id}");
+            return await response.ReadContentAsync<Animal>();
+        }
+
         public async Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid)
         {
             var response = await _client.GetAsync($"/api/ActCapture/{datestart}/{dateend}/{locid}");
@@ -112,6 +134,7 @@ namespace ASP_App_ПИС.Services
         public async Task<HttpResponseMessage> EditAct(int id, ActCapture value)
         {
             string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PutAsync($"/api/ActCapture/put/{id}", content);
         }
@@ -148,9 +171,10 @@ namespace ASP_App_ПИС.Services
             return await _client.DeleteAsync($"/api/Contract/delete/{id}");
         }
 
-        public async Task<HttpResponseMessage> EditContract(int id, Contract value)
+        public async Task<HttpResponseMessage> EditContract(int id, ContractNumber value)
         {
             string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PutAsync($"/api/Contract/put/{id}", content);
         }
@@ -217,6 +241,7 @@ namespace ASP_App_ПИС.Services
         public async Task<HttpResponseMessage> EditTaskMonth(int id, TaskMonth value)
         {
             string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PutAsync($"/api/TaskMonth/put/{id}", content);
         }

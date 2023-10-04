@@ -1,7 +1,10 @@
-﻿<div class="content-wrapper">
+﻿@using Domain;
+@model Animal;
+
+<div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Добавить животное</h1>
+        <h1 class="page-title">Изменить животное</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -19,7 +22,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Категория</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="category">
+                            <input class="form-control" id="ex-date" type="text" name="category" value="@Model.category">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -29,15 +32,21 @@
                         <label class="col-sm-2 col-form-label">Пол</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="sex">
-                                <option value="Муж">Мужской</option>
-                                <option value="Жен">Женский</option>
+                                @if (@Model.sex == "Муж"){
+                                    <option selected value="Муж">Мужской</option>
+                                    <option value="Жен">Женский</option>
+                                }
+                                else {
+                                    <option value="Муж">Мужской</option>
+                                    <option selected value="Жен">Женский</option>
+                                }
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Порода</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="breed">
+                            <input class="form-control" id="ex-date" type="text" name="breed" value="@Model.breed">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -46,7 +55,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Размер</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="size">
+                            <input class="form-control" id="ex-date" type="text" name="size" value="@Model.size">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -55,7 +64,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Шерсть</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="wool">
+                            <input class="form-control" id="ex-date" type="text" name="wool" value="@Model.wool">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -64,7 +73,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Окрас</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="color">
+                            <input class="form-control" id="ex-date" type="text" name="color" value="@Model.color">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -73,7 +82,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Уши</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="ears">
+                            <input class="form-control" id="ex-date" type="text" name="ears" value="@Model.ears">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -82,7 +91,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Хвост</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="tail">
+                            <input class="form-control" id="ex-date" type="text" name="tail" value="@Model.tail">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -91,14 +100,15 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Особые приметы</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="specsigns">
+                            <input class="form-control" id="ex-date" type="text" name="specsigns" value="@Model.specsigns">
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
+                    <input type="hidden" name="_method" value="PUT">
                     <div class="col-sm-10 ml-sm-auto">
-                        <a href="/animal/add/@ViewData["id"]/@ViewData["date"]" ><button class="btn btn-info" type="submit">Добавить</button></a>
+                        <button class="btn btn-info" type="submit">Сохранить</button>
                     </div>
                 </form>
             </div>

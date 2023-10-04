@@ -66,7 +66,8 @@ namespace Server.Controllers
         }
 
         // изменить нас пункт
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/Locality/put/{id}")]
         public async Task Put(int id, [FromBody] Locality value)
         {
             var currentLoc = await _context.locality.FirstOrDefaultAsync(l => l.id == id);

@@ -24,6 +24,13 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet]
+        [Route("/api/Contract/one/{id}")]
+        public async Task<ContractNumber> GetOne(int id)
+        {
+            return await _context.contractnumber.FirstOrDefaultAsync(t => t.id == id);
+        }
+
         // создать контракт (т.е. одну запись)
         [HttpPost]
         [Route("/api/Contract/add")]
@@ -31,6 +38,19 @@ namespace Server.Controllers
         {
             await _context.contractnumber.AddAsync(value);
             await _context.SaveChangesAsync();
+        }
+
+        [HttpPut]
+        [Route("/api/Contract/put/{id}")]
+        public async Task Put(int id, [FromBody] ContractNumber value)
+        {
+            var currentContract = await _context.contractnumber.FirstOrDefaultAsync(t => t.id == id);
+            if (currentContract != null)
+            {
+                currentContract.validityperiod = value.validityperiod;
+                currentContract.dateconclusion = value.dateconclusion;
+                await _context.SaveChangesAsync();
+            }
         }
 
         // удалить контракт по id

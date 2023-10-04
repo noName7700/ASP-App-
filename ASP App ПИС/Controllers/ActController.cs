@@ -60,5 +60,33 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddAct(act);
             return Redirect("/act/");
         }
+
+        [HttpGet]
+        [Route("/act/edit/{locid}/{date}")]
+        public async Task<IActionResult> Edit(int locid, string date)
+        {
+            IEnumerable<ActCapture> acts = await _service.GetActs(locid, date);
+            ViewData["act"] = acts.First();
+            IEnumerable<Locality> locs = await _service.GetLocalities();
+            return View(locs);
+        }
+
+        [HttpPost]
+        [Route("/act/edit/{locid}/{date}")]
+        public async Task<IActionResult> EditPut(int locid, string date)
+        {
+            IEnumerable<ActCapture> oldActs = await _service.GetActs(locid, date);
+            foreach (var loc in oldActs)
+            {
+                ActCapture act = new ActCapture
+                {
+                    animalid = loc.animalid,
+                    datecapture = DateTime.Parse(Request.Form["datecapture"]),
+                    localityid = int.Parse(Request.Form["locality"])
+                };
+                await _service.EditAct(loc.id, act);
+            }
+            return Redirect("/act/");
+        }
     }
 }

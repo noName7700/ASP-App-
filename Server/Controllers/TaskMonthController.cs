@@ -42,6 +42,13 @@ namespace Server.Controllers
             return await _context.taskmonth.Select(t => t).OrderBy(t => t.id).LastAsync();
         }
 
+        [HttpGet]
+        [Route("/api/TaskMonth/one/{id}")]
+        public async Task<TaskMonth> GetOne(int id)
+        {
+            return await _context.taskmonth.Where(t => t.id == id).Select(t => t).FirstAsync();
+        }
+
         // добавить новое задание на месяц
         [HttpPost]
         [Route("/api/TaskMonth/add")]
@@ -52,7 +59,8 @@ namespace Server.Controllers
         }
 
         // изменить задание на месяц
-        [HttpPut("{id}")]
+        [HttpPut]
+        [Route("/api/TaskMonth/put/{id}")]
         public async Task Put(int id, [FromBody] TaskMonth value)
         {
             var currentTask = await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);

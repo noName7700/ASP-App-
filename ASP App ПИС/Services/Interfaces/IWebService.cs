@@ -21,16 +21,20 @@ namespace ASP_App_ПИС.Services.Interfaces
         /*Task<Locality> GetLocality(int id);*/
         Task<Locality> GetOneLocality(int id);
         Task<IEnumerable<TaskMonth>> GetTaskMonth(int id);
-        Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid);
+        Task<TaskMonth> GetTaskMonthOne(int id);
+        Task<ContractNumber> GetContractOne(int id);
+        Task<Animal> GetAnimalOne(int id);
+        /*Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid);*/
+        Task<IEnumerable<ActCapture>> GetActs(int locid, string date);
         Task<HttpResponseMessage> AddAct(ActCapture value);
         Task<HttpResponseMessage> DeleteAct(int id);
-        Task<HttpResponseMessage> EditAct(int id, ActCapture value); // реализовать в server
+        Task<HttpResponseMessage> EditAct(int id, ActCapture value);
         Task<HttpResponseMessage> AddAnimal(Animal value);
         Task<HttpResponseMessage> EditAnimal(int id, Animal value);
         Task<HttpResponseMessage> DeleteAnimal(int id);
         Task<HttpResponseMessage> AddContract(ContractNumber value);
         Task<HttpResponseMessage> DeleteContract(int id);
-        Task<HttpResponseMessage> EditContract(int id, Contract value); // реализовать в server
+        Task<HttpResponseMessage> EditContract(int id, ContractNumber value);
         Task<HttpResponseMessage> AddLocality(Locality value);
         Task<HttpResponseMessage> EditLocality(int id, Locality value);
         Task<HttpResponseMessage> DeleteLocality(int id);

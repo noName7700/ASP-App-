@@ -45,5 +45,34 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddSchedule(sch);
             return Redirect($"/scheduleone/{id}");
         }
+
+        [HttpGet]
+        [Route("/scheduleone/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            TaskMonth tm = await _service.GetTaskMonthOne(id);
+            return View(tm);
+        }
+
+        [HttpPost]
+        [Route("/scheduleone/edit/{id}")]
+        public async Task<IActionResult> EditPut(int id)
+        {
+            TaskMonth tm = new TaskMonth
+            {
+                startdate = DateTime.Parse(Request.Form["startdate"]),
+                enddate = DateTime.Parse(Request.Form["enddate"]),
+                countanimal = int.Parse(Request.Form["count-animal"])
+            };
+            await _service.EditTaskMonth(id, tm);
+            return Redirect("/schedule/");
+        }
+
+        /*[HttpGet]
+        [Route("/scheduleone/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            
+        }*/
     }
 }

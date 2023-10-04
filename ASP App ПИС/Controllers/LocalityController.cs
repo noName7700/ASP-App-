@@ -43,5 +43,22 @@ namespace ASP_App_ПИС.Controllers
             }
             return Redirect($"/locality/{id}");
         }
+
+        [HttpGet]
+        [Route("/locality/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Locality loc = await _service.GetOneLocality(id);
+            return View(loc);
+        }
+
+        [HttpPost]
+        [Route("/locality/edit/{id}")]
+        public async Task<IActionResult> EditPut(int id)
+        {
+            Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
+            await _service.EditLocality(id, loc);
+            return Redirect("/municipality/");
+        }
     }
 }
