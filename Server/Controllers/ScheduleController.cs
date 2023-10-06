@@ -57,6 +57,13 @@ namespace Server.Controllers
             return await _context.schedule.Where(s => s.localityid == locid).Select(s => s).OrderBy(s => s.id).LastAsync();
         }
 
+        [HttpGet]
+        [Route("/api/Schedule/task/{id}")]
+        public async Task<Schedule> GetFromTaskMonthId(int id)
+        {
+            return await _context.schedule.Where(s => s.taskmonthid == id).Select(s => s).FirstAsync();
+        }
+
         // добавить новый план-график
         [HttpPost]
         [Route("/api/Schedule/add")]
@@ -67,10 +74,11 @@ namespace Server.Controllers
         }
 
         // удалить выбранное задание на месяц (т.е. строку из таблицы планов-графиков)
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/Schedule/delete/{id}")]
         public async Task Delete(int id)
         {
-            var currentSch = await _context.schedule.FirstOrDefaultAsync(s => s.taskmonthid == id);
+            var currentSch = await _context.schedule.FirstOrDefaultAsync(s => s.id == id);
             if (currentSch != null)
             {
                 _context.schedule.Remove(currentSch);

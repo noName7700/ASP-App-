@@ -87,5 +87,15 @@ namespace ASP_App_ПИС.Controllers
             await _service.EditAnimal(id, an);
             return Redirect("/act/");
         }
+
+        [HttpGet]
+        [Route("/animal/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            ActCapture act = await _service.GetActFromAnimalId(id);
+            await _service.DeleteAct(act.id);
+            await _service.DeleteAnimal(id);
+            return Redirect($"/animal/{act.localityid}/{act.datecapture.ToShortDateString()}");
+        }
     }
 }

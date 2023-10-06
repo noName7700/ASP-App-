@@ -74,7 +74,8 @@ namespace Server.Controllers
         }
 
         // удалить задание на месяц
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/TaskMonth/delete/{id}")]
         public async Task Delete(int id)
         {
             var currentTask = await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);

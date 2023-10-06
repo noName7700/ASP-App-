@@ -58,12 +58,31 @@ namespace Server.Controllers
             await _context.SaveChangesAsync();
         }
 
+        [HttpGet]
+        [Route("/api/Municipality/loc/{id}")]
+        public async Task<Municipality_Locality> GetFromLocalityId(int id)
+        {
+            return await _context.municipality_locality.Where(m => m.localityid == id).Select(m => m).FirstAsync();
+        }
+
         [HttpPost]
         [Route("/api/Municipality/add-loc")]
         public async Task Post([FromBody] Municipality_Locality value)
         {
             await _context.municipality_locality.AddAsync(value);
             await _context.SaveChangesAsync();
+        }
+
+        [HttpDelete]
+        [Route("/api/Municipality/delete/{id}")]
+        public async Task Delete(int id)
+        {
+            var currentMun = await _context.municipality_locality.FirstOrDefaultAsync(s => s.id == id);
+            if (currentMun != null)
+            {
+                _context.municipality_locality.Remove(currentMun);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

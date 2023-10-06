@@ -58,6 +58,24 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
+        public async Task<Schedule> GetScheduleFromTaskMonthId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Schedule/task/{id}");
+            return await response.ReadContentAsync<Schedule>();
+        }
+
+        public async Task<Municipality_Locality> GetMunicipalityFromLocalityId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Municipality/loc/{id}");
+            return await response.ReadContentAsync<Municipality_Locality>();
+        }
+
+        public async Task<ActCapture> GetActFromAnimalId(int id)
+        {
+            var response = await _client.GetAsync($"/api/ActCapture/animal/{id}");
+            return await response.ReadContentAsync<ActCapture>();
+        }
+
         public async Task<IEnumerable<ActCapture>> GetAct(int locid)
         {
             var response = await _client.GetAsync($"/api/ActCapture/{locid}");

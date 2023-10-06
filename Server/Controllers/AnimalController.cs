@@ -84,7 +84,8 @@ namespace Server.Controllers
         }
 
         // удалить животное
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/Animal/delete/{id}")]
         public async Task Delete(int id)
         {
             var currentAnimal = await _context.animal.FirstOrDefaultAsync(a => a.id == id);

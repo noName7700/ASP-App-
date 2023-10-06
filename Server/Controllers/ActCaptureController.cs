@@ -65,6 +65,13 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet]
+        [Route("/api/ActCapture/animal/{id}")]
+        public async Task<ActCapture> GetFromAnimalId(int id)
+        {
+            return await _context.actcapture.Where(a => a.animalid == id).Select(a => a).FirstAsync();
+        }
+
         // тут вывести акты отлова с сортировкой по дате
         /*[HttpGet("{datestart}/{dateend}/{locid}")]
         public async Task<IEnumerable<ActCapture>> Get(DateTime datestart, DateTime dateend, int locid)
@@ -99,11 +106,12 @@ namespace Server.Controllers
             }
         }
 
-        // удалить животное 
-        [HttpDelete("{id}")]
+        // удалить акт 
+        [HttpDelete]
+        [Route("/api/ActCapture/delete/{id}")]
         public async Task Delete(int id)
         {
-            var currentAct = await _context.actcapture.FirstOrDefaultAsync(s => s.animalid == id);
+            var currentAct = await _context.actcapture.FirstOrDefaultAsync(s => s.id == id);
             if (currentAct != null)
             {
                 _context.actcapture.Remove(currentAct);

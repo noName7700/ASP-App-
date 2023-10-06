@@ -51,7 +51,7 @@
                         <td>@loc.tariph</td>
                         <td>
                             <a href="/locality/edit/@loc.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
+                            <a class="delete" href="/locality/delete/@loc.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
                         </td>
                     </tr>
                     }
@@ -60,6 +60,12 @@
                 </div>
             </div>
         </div>
-    </div>
     <!-- END PAGE CONTENT-->
 </div>
+<script src="~/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
+<script>
+    $(".delete").click(function() {
+    let res = confirm("Подтвердите действие");
+    if (!res) return false;
+});
+</script>

@@ -60,5 +60,15 @@ namespace ASP_App_ПИС.Controllers
             await _service.EditLocality(id, loc);
             return Redirect("/municipality/");
         }
+
+        [HttpGet]
+        [Route("/locality/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Municipality_Locality munLoc = await _service.GetMunicipalityFromLocalityId(id);
+            await _service.DeleteMunicipality(munLoc.id);
+            await _service.DeleteLocality(id);
+            return Redirect($"/locality/{munLoc.munid}");
+        }
     }
 }

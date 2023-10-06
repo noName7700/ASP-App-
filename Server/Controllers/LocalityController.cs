@@ -80,7 +80,8 @@ namespace Server.Controllers
         }
 
         // удалить нас пункт
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("/api/Locality/delete/{id}")]
         public async Task Delete(int id)
         {
             var currentLoc = await _context.locality.FirstOrDefaultAsync(l => l.id == id);
