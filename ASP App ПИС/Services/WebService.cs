@@ -305,5 +305,11 @@ namespace ASP_App_ПИС.Services
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PostAsync($"/api/Municipality/add-loc", content);
         }
+
+        public async Task<double> GetReportsMoney(DateTime startDate, DateTime endDate, int munid)
+        {
+            var response = await _client.GetAsync($"/api/reportmoney/{startDate}/{endDate}/{munid}");
+            return await response.ReadContentAsync<double>();
+        }
     }
 }

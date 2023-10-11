@@ -23,7 +23,10 @@
                         <label class="col-sm-2 col-form-label">Муниципалитет</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="municipality">
-                                <option>Здесь будут вытягиваться муниципалитеты из сервера</option>
+                                @foreach (var mun in Model)
+                                {
+                                    <option value="@mun.id">@mun.name</option>
+                                }
                             </select>
                         </div>
                     </div>
