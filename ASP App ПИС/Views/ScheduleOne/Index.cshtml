@@ -9,7 +9,6 @@
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
-            <li class="breadcrumb-item">Тюмень</li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -32,14 +31,6 @@
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr role="row">
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата начала</th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата окончания</th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Планируемое количество животных</th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                     @foreach(var tm in Model)
                     {
@@ -55,22 +46,6 @@
                     }
                     </tbody>
                 </table></div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 col-md-5">
-                        <div class="dataTables_info" id="example-table_info" role="status" aria-live="polite">
-                            Showing 1 to 10 of 36 entries
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-7">
-                        <div class="dataTables_paginate paging_simple_numbers" id="example-table_paginate">
-                            <div class="btn-group m-b-10">
-                            <button class="btn btn-default">Left</button>
-                            <span>Тут будет номер плана-графика по счету</span>
-                            <button class="btn btn-default">Right</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 </div>
             </div>

@@ -23,7 +23,9 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> Add()
         {
             IEnumerable<Locality> locs = await _service.GetLocalities();
-            return View(locs);
+            IEnumerable<MunicipalityName> muns = await _service.GetMunicipalities();
+            var locs_muns = new Dictionary<IEnumerable<Locality>, IEnumerable<MunicipalityName>> { { locs, muns} };
+            return View(locs_muns);
         }
 
         [HttpPost]

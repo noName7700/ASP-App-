@@ -1,5 +1,5 @@
 ﻿@using Domain;
-@model IEnumerable<Locality>;
+@model Dictionary<IEnumerable<Locality>, IEnumerable<MunicipalityName>>;
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -9,7 +9,6 @@
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
-            <li class="breadcrumb-item">Form masks</li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -23,9 +22,12 @@
                         <label class="col-sm-2 col-form-label">Муниципалитет</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="municipality">
-                                @foreach (var mun in Model)
+                                @foreach (var enummun in Model.Values)
                                 {
-                                    <option value="@mun.id">@mun.name</option>
+                                    @foreach (var mun in enummun)
+                                    {
+                                        <option value="@mun.id">@mun.name</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -34,9 +36,12 @@
                         <label class="col-sm-2 col-form-label">Населенный пункт</label>
                         <div class="col-sm-8">
                             <select class="form-control" name="locality">
-                                @foreach(var loc in Model)
+                                @foreach(var enumloc in Model.Keys)
                                 {
-                                    <option value="@loc.id">@loc.name</option>
+                                    @foreach (var loc in enumloc)
+                                    {
+                                        <option value="@loc.id">@loc.name</option>
+                                    }
                                 }
                             </select>
                         </div>
