@@ -25,8 +25,9 @@ namespace Server.Controllers
             _context = context;
         }
 
-        [HttpGet("{startDate}/{endDate}/{munid}")]
-        public async Task<double> Get(DateTime startDate, DateTime endDate, int munid)
+        [HttpGet]
+        [Route("/api/Reports/{startDate}/{endDate}/{munid}")]
+        public async Task<double> Get(string startDate, string endDate, int munid)
         {
             // выбираю нужные населенные пункты
             var needLocalities = await _context.municipality_locality.Select(l => l).Where(m => m.munid == munid).Select(h => h.localityid).ToListAsync();
@@ -34,11 +35,17 @@ namespace Server.Controllers
             // то что фактически получилось, я пробегаюсь по всем актам отлова из этого нас пункта и считаю цену потом складываю
             return await _context.actcapture
                 .Include(act => act.Locality)
-                .Where(act => act.datecapture >= startDate && act.datecapture <= endDate && needLocalities.Contains(act.localityid))
+                .Where(act => act.datecapture.Year >= DateTime.Parse(startDate).Year
+                && act.datecapture.Month >= DateTime.Parse(startDate).Month
+                && act.datecapture.Day >= DateTime.Parse(startDate).Day
+                && act.datecapture.Year <= DateTime.Parse(endDate).Year
+                && act.datecapture.Month <= DateTime.Parse(endDate).Month
+                && act.datecapture.Day <= DateTime.Parse(endDate).Day
+                && needLocalities.Contains(act.localityid)) 
                 .SumAsync(act => act.Locality.tariph);
         }
 
-        [HttpGet("{munid}")]
+        [HttpGet("/{munid}")]
         public async Task<Dictionary<int, int>> Get(int munid)
         {
             // выбираю нужные населенные пункты

@@ -306,9 +306,9 @@ namespace ASP_App_ПИС.Services
             return await _client.PostAsync($"/api/Municipality/add-loc", content);
         }
 
-        public async Task<double> GetReportsMoney(DateTime startDate, DateTime endDate, int munid)
+        public async Task<double> GetReportsMoney(string startDate, string endDate, int munid)
         {
-            var response = await _client.GetAsync($"/api/reportmoney/{startDate}/{endDate}/{munid}");
+            var response = await _client.GetAsync($"/api/Reports/{startDate}/{endDate}/{munid}");
             return await response.ReadContentAsync<double>();
         }
     }

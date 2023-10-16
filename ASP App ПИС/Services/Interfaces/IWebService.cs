@@ -52,7 +52,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value);
 
         // отчет - деньги
-        Task<double> GetReportsMoney(DateTime startDate, DateTime endDate, int munid);
+        Task<double> GetReportsMoney(string startDate, string endDate, int munid);
 
     }
 }
