@@ -4,6 +4,7 @@ using ASP_App_ПИС.Helpers;
 using System.Text.Json;
 using System.Text;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_App_ПИС.Services
 {
@@ -310,6 +311,13 @@ namespace ASP_App_ПИС.Services
         {
             var response = await _client.GetAsync($"/api/Reports/{startDate}/{endDate}/{munid}");
             return await response.ReadContentAsync<double>();
+        }
+
+        public async Task<FileStreamResult> GetExcelMoney()
+        {
+            var stream =  await _client.GetStreamAsync($"/api/Reports/money/export");
+            var file = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            return file;
         }
     }
 }

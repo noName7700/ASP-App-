@@ -26,7 +26,15 @@ namespace ASP_App_ПИС.Controllers
         {
             int munid = int.Parse(Request.Form["municipality"]);
             var priceItog = await _service.GetReportsMoney(Request.Form["startdate"], Request.Form["enddate"], munid);
+            ViewData["start"] = Request.Form["startdate"];
             return View(priceItog);
+        }
+
+        [HttpGet]
+        [Route("/report/money/export")]
+        public async Task<FileStreamResult> ExportMoney()
+        {
+            return await _service.GetExcelMoney();
         }
     }
 }

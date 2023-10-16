@@ -13,10 +13,10 @@ namespace ASP_App_ПИС.Helpers
                 dataAsString, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
-                    
-                    
                 });
             return result;
         }
+
+
     }
 }
