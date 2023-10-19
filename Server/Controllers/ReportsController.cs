@@ -9,6 +9,7 @@ using System.Net;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Text.Json;
 /*using System.Web.Mvc;*/
 /*using ClosedXML.Excel;*/
 
@@ -67,33 +68,44 @@ namespace Server.Controllers
         //    return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
         //}
 
-        //public ActionResult Export(string url)
-        //{
-        //    Workbook workbook = JsontoExcel(url);
-        //    var stream = new MemoryStream();
+        [HttpGet]
+        [Route("/api/Reports/money/export")]
+        public FileStreamResult GetExcel()
+        {
+            return Export();
+        }
 
-        /*string fileName = Session.SessionID + "_out.xls";*/
-        //
-        //    workbook.Save(stream, SaveFormat.Xlsx);
-        //    stream.Position = 0;
+        private FileStreamResult Export()
+        {
+            Workbook workbook = JsontoExcel();
+            var stream = new MemoryStream();
 
-        //    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-        //}
+           string fileName =  "test_out.xls"; 
 
-        /*public Workbook JsontoExcel(string url)
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
+        private Workbook JsontoExcel()
         {
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            string jsonInput = new WebClient().DownloadString(url);
+           // string jsonInput = new WebClient().DownloadString(url);
+            string s = "11.03.2023";
+            string e = "12.06.2023";
+            int id = 1;
+            string jsonString = JsonSerializer.Serialize(Get(s, e, id));
 
             JsonLayoutOptions options = new JsonLayoutOptions();
             options.ArrayAsTable = true;
 
-            
-            JsonUtility.ImportData(jsonInput, worksheet.Cells, 0, 0, options);
+
+            JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
 
             return workbook;
-        }*/
+        }
     }
 }

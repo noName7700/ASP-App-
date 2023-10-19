@@ -32,6 +32,13 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
+        [Route("/report/money/export")]
+        public async Task<FileStreamResult> ExportMoney()
+        {
+            return await _service.GetExcelMoney();
+        }
+
+        [HttpGet]
         [Route("/report/schedule")]
         public async Task<IActionResult> IndexSchedule()
         {
