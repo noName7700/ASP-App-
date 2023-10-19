@@ -26,7 +26,26 @@ namespace ASP_App_ПИС.Controllers
         {
             int munid = int.Parse(Request.Form["municipality"]);
             var priceItog = await _service.GetReportsMoney(Request.Form["startdate"], Request.Form["enddate"], munid);
+            ViewData["startdate"] = Request.Form["startdate"];
+            ViewData["enddate"] = Request.Form["enddate"];
             return View(priceItog);
+        }
+
+        [HttpGet]
+        [Route("/report/schedule")]
+        public async Task<IActionResult> IndexSchedule()
+        {
+            var municipalities = await _service.GetMunicipalities();
+            return View(municipalities);
+        }
+
+        [HttpPost]
+        [Route("/report/schedule")]
+        public async Task<IActionResult> IndexSchedulePost()
+        {
+            int munid = int.Parse(Request.Form["municipality"]);
+            var countAnimals = await _service.GetReportsSchedule(munid);
+            return View(countAnimals);
         }
     }
 }

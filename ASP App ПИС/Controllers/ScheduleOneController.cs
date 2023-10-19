@@ -75,7 +75,7 @@ namespace ASP_App_ПИС.Controllers
             Schedule schedule = await _service.GetScheduleFromTaskMonthId(id);
             await _service.DeleteSchedule(schedule.id);
             await _service.DeleteTaskMonth(id);
-            return Redirect($"/scheduleone/{schedule.localityid}");
+            return Redirect($"/scheduleone/{schedule.idlocality}");
         }
     }
 }

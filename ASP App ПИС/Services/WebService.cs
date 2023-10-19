@@ -16,10 +16,10 @@ namespace ASP_App_ПИС.Services
             _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task<IEnumerable<MunicipalityName>> GetMunicipalities()
+        public async Task<IEnumerable<Municipality>> GetMunicipalities()
         {
             var response = await _client.GetAsync("/api/Municipality");
-            return await response.ReadContentAsync<List<MunicipalityName>>();
+            return await response.ReadContentAsync<List<Municipality>>();
         }
 
         public async Task<IEnumerable<Locality>> GetLocalActs()
@@ -34,10 +34,10 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Animal>>();
         }
 
-        public async Task<IEnumerable<ContractNumber>> GetContracts()
+        public async Task<IEnumerable<Contract>> GetContracts()
         {
             var response = await _client.GetAsync("/api/Contract");
-            return await response.ReadContentAsync<List<ContractNumber>>();
+            return await response.ReadContentAsync<List<Contract>>();
         }
 
         public async Task<IEnumerable<Locality>> GetLocalities()
@@ -64,11 +64,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Schedule>();
         }
 
-        public async Task<Municipality_Locality> GetMunicipalityFromLocalityId(int id)
-        {
-            var response = await _client.GetAsync($"/api/Municipality/loc/{id}");
-            return await response.ReadContentAsync<Municipality_Locality>();
-        }
+        //public async Task<Municipality_Locality> GetMunicipalityFromLocalityId(int id)
+        //{
+        //    var response = await _client.GetAsync($"/api/Municipality/loc/{id}");
+        //    return await response.ReadContentAsync<Municipality_Locality>();
+        //}
 
         public async Task<ActCapture> GetActFromAnimalId(int id)
         {
@@ -118,10 +118,10 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<TaskMonth>();
         }
 
-        public async Task<ContractNumber> GetContractOne(int id)
+        public async Task<Contract> GetContractOne(int id)
         {
             var response = await _client.GetAsync($"/api/Contract/one/{id}");
-            return await response.ReadContentAsync<ContractNumber>();
+            return await response.ReadContentAsync<Contract>();
         }
 
         public async Task<Animal> GetAnimalOne(int id)
@@ -176,26 +176,26 @@ namespace ASP_App_ПИС.Services
             return await _client.DeleteAsync($"/api/Animal/delete/{id}");
         }
 
-        public async Task<HttpResponseMessage> AddContract(ContractNumber value)
-        {
-            string jsonString = JsonSerializer.Serialize(value);
-            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
-            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return await _client.PostAsync($"/api/Contract/add", content);
-        }
+        //public async Task<HttpResponseMessage> AddContract(ContractNumber value)
+        //{
+        //    string jsonString = JsonSerializer.Serialize(value);
+        //    jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
+        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        //    return await _client.PostAsync($"/api/Contract/add", content);
+        //}
 
         public async Task<HttpResponseMessage> DeleteContract(int id)
         {
             return await _client.DeleteAsync($"/api/Contract/delete/{id}");
         }
 
-        public async Task<HttpResponseMessage> EditContract(int id, ContractNumber value)
-        {
-            string jsonString = JsonSerializer.Serialize(value);
-            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
-            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return await _client.PutAsync($"/api/Contract/put/{id}", content);
-        }
+        //public async Task<HttpResponseMessage> EditContract(int id, ContractNumber value)
+        //{
+        //    string jsonString = JsonSerializer.Serialize(value);
+        //    jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
+        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        //    return await _client.PutAsync($"/api/Contract/put/{id}", content);
+        //}
 
         public async Task<HttpResponseMessage> AddLocality(Locality value)
         {
@@ -216,19 +216,19 @@ namespace ASP_App_ПИС.Services
             return await _client.DeleteAsync($"/api/Locality/delete/{id}");
         }
 
-        public async Task<HttpResponseMessage> AddMunicipality(MunicipalityName value)
-        {
-            string jsonString = JsonSerializer.Serialize(value);
-            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return await _client.PostAsync($"/api/Municipality/add", content);
-        }
+        //public async Task<HttpResponseMessage> AddMunicipality(MunicipalityName value)
+        //{
+        //    string jsonString = JsonSerializer.Serialize(value);
+        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        //    return await _client.PostAsync($"/api/Municipality/add", content);
+        //}
 
-        public async Task<HttpResponseMessage> EditMunicipality(int id, MunicipalityName value)
-        {
-            string jsonString = JsonSerializer.Serialize(value);
-            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return await _client.PutAsync($"/api/Municipality/put/{id}", content);
-        }
+        //public async Task<HttpResponseMessage> EditMunicipality(int id, MunicipalityName value)
+        //{
+        //    string jsonString = JsonSerializer.Serialize(value);
+        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        //    return await _client.PutAsync($"/api/Municipality/put/{id}", content);
+        //}
 
         public async Task<HttpResponseMessage> DeleteMunicipality(int id)
         {
@@ -299,17 +299,23 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Locality>();
         }
 
-        public async Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value)
-        {
-            string jsonString = JsonSerializer.Serialize(value);
-            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return await _client.PostAsync($"/api/Municipality/add-loc", content);
-        }
+        //public async Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value)
+        //{
+        //    string jsonString = JsonSerializer.Serialize(value);
+        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+        //    return await _client.PostAsync($"/api/Municipality/add-loc", content);
+        //}
 
         public async Task<double> GetReportsMoney(string startDate, string endDate, int munid)
         {
             var response = await _client.GetAsync($"/api/Reports/{startDate}/{endDate}/{munid}");
             return await response.ReadContentAsync<double>();
+        }
+
+        public async Task<Dictionary<int, int>> GetReportsSchedule(int munid)
+        {
+            var response = await _client.GetAsync($"/api/Reports/{munid}");
+            return await response.ReadContentAsync<Dictionary<int, int>>();
         }
     }
 }

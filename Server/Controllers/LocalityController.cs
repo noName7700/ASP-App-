@@ -34,11 +34,11 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<Locality>> Get(int id)
         {
-            return await _context.municipality_locality
-                .Include(m => m.Locality)
-                .Where(m => m.munid == id)
-                .Select(m => m.Locality)
+            var t = await _context.locality
+                .Where(l => l.idmunicipality == id)
+                .Select(l => l)
                 .ToListAsync();
+            return t;
         }
 
         [HttpGet]
@@ -74,7 +74,7 @@ namespace Server.Controllers
             if (currentLoc != null)
             {
                 currentLoc.name = value.name;
-                currentLoc.tariph = value.tariph;
+                //currentLoc.tariph = value.tariph;
                 await _context.SaveChangesAsync();
             }
         }

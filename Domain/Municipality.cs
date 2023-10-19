@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class MunicipalityName
+    public class Municipality
     {
         public int id { get; set; }
         public string name { get; set; }
-
-        public MunicipalityName(string name)
-        {
-            this.name = name;
-        }
     }
 }

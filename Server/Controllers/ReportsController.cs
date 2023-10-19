@@ -25,45 +25,47 @@ namespace Server.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        [Route("/api/Reports/{startDate}/{endDate}/{munid}")]
-        public async Task<double> Get(string startDate, string endDate, int munid)
-        {
-            // выбираю нужные населенные пункты
-            var needLocalities = await _context.municipality_locality.Select(l => l).Where(m => m.munid == munid).Select(h => h.localityid).ToListAsync();
+        //[HttpGet]
+        //[Route("/api/Reports/{startDate}/{endDate}/{munid}")]
+        //public async Task<double> Get(string startDate, string endDate, int munid)
+        //{
+        //    // выбираю нужные населенные пункты
+        //    var needLocalities = await _context.municipality_locality.Select(l => l).Where(m => m.munid == munid).Select(h => h.localityid).ToListAsync();
+        //    DateTime startdate = DateTime.Parse(startDate);
+        //    DateTime enddate = DateTime.Parse(endDate);
+        //    // то что фактически получилось, я пробегаюсь по всем актам отлова из этого нас пункта и считаю цену потом складываю
+        //    return await _context.actcapture
+        //        .Include(act => act.Locality)
+        //        .Where(act => act.datecapture.Year >= startdate.Year
+        //        && act.datecapture.Month >= startdate.Month
+        //        && act.datecapture.Day >= startdate.Day
+        //        && act.datecapture.Year <= enddate.Year
+        //        && act.datecapture.Month <= enddate.Month
+        //        && act.datecapture.Day <= enddate.Day
+        //        && needLocalities.Contains(act.localityid))
+        //        .SumAsync(act => act.Locality.tariph);
+        //}
 
-            // то что фактически получилось, я пробегаюсь по всем актам отлова из этого нас пункта и считаю цену потом складываю
-            return await _context.actcapture
-                .Include(act => act.Locality)
-                .Where(act => act.datecapture.Year >= DateTime.Parse(startDate).Year
-                && act.datecapture.Month >= DateTime.Parse(startDate).Month
-                && act.datecapture.Day >= DateTime.Parse(startDate).Day
-                && act.datecapture.Year <= DateTime.Parse(endDate).Year
-                && act.datecapture.Month <= DateTime.Parse(endDate).Month
-                && act.datecapture.Day <= DateTime.Parse(endDate).Day
-                && needLocalities.Contains(act.localityid)) 
-                .SumAsync(act => act.Locality.tariph);
-        }
+        //[HttpGet]
+        //[Route("/api/Reports/{munid}")]
+        //public async Task<Dictionary<int, int>> Get(int munid)
+        //{
+        //    // выбираю нужные населенные пункты
+        //    var needLocalities = await _context.municipality_locality.Select(aa => aa).Where(aa => aa.munid == munid).Select(h => h.localityid).ToListAsync();
 
-        [HttpGet("/{munid}")]
-        public async Task<Dictionary<int, int>> Get(int munid)
-        {
-            // выбираю нужные населенные пункты
-            var needLocalities = await _context.municipality_locality.Select(aa => aa).Where(aa => aa.munid == munid).Select(h => h.localityid).ToListAsync();
+        //    //считаю по планам-графикам то что запланировано
+        //    var countPlanAnimal = await _context.schedule
+        //        .Include(sch => sch.TaskMonth)
+        //        .Where(sch => needLocalities.Contains(sch.localityid))
+        //        .SumAsync(sch => sch.TaskMonth.countanimal);
 
-            //считаю по планам-графикам то что запланировано
-            var countPlanAnimal = await _context.schedule
-                .Include(sch => sch.TaskMonth)
-                .Where(sch => needLocalities.Contains(sch.localityid))
-                .SumAsync(sch => sch.TaskMonth.countanimal);
+        //    // считаю по актам отлова то что в итоге
+        //    var countAnimal = await _context.actcapture
+        //        .Where(act => needLocalities.Contains(act.localityid))
+        //        .CountAsync();
 
-            // считаю по актам отлова то что в итоге
-            var countAnimal = await _context.actcapture
-                .Where(act => needLocalities.Contains(act.localityid))
-                .CountAsync();
-
-            return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
-        }
+        //    return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
+        //}
 
         //public ActionResult Export(string url)
         //{

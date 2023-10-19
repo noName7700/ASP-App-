@@ -29,7 +29,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
             return await _context.schedule
-                .Where(t => t.localityid == id)
+                .Where(t => t.idlocality == id)
                 .Include(t => t.TaskMonth)
                 .Select(t => t.TaskMonth)
                 .ToListAsync();

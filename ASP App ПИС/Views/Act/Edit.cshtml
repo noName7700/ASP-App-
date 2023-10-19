@@ -24,7 +24,7 @@
                             <select class="form-control" name="locality">
                                 @foreach(var loc in Model)
                                 {
-                                    if(loc.id == ((ActCapture)ViewData["act"]).localityid)
+                                    if(loc.id == ((ActCapture)ViewData["act"]).idlocality)
                                     {
                                         <option selected value="@loc.id">@loc.name</option>
                                     }

@@ -32,16 +32,14 @@ namespace Server.Controllers
         [HttpGet("{locid}")]
         public async Task<IEnumerable<ActCapture>> Get(int locid)
         {
-            var t = await _context.actcapture
+            return await _context.actcapture
                 .Include(a => a.Animal)
                 .Include(a => a.Locality)
-                .Where(a => a.localityid == locid)
+                .Where(a => a.idlocality == locid)
                 .GroupBy(a => a.datecapture)
                 .OrderByDescending(a => a.Key)
                 .Select(f => f.First())
                 .ToListAsync();
-
-            return t;
 
             // это открываются акт отлова для одного нас пункта (выводиться будут только дата и кнопка просмотр животного)
             //return await _context.actcapture
@@ -57,7 +55,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
         {
             return await _context.actcapture
-                .Where(a => a.localityid == locid && 
+                .Where(a => a.idlocality == locid && 
                 a.datecapture.Year == DateTime.Parse(date).Year
                 && a.datecapture.Month == DateTime.Parse(date).Month
                 && a.datecapture.Day == DateTime.Parse(date).Day)
@@ -69,7 +67,7 @@ namespace Server.Controllers
         [Route("/api/ActCapture/animal/{id}")]
         public async Task<ActCapture> GetFromAnimalId(int id)
         {
-            return await _context.actcapture.Where(a => a.animalid == id).Select(a => a).FirstAsync();
+            return await _context.actcapture.Where(a => a.idanimal == id).Select(a => a).FirstAsync();
         }
 
         // тут вывести акты отлова с сортировкой по дате
@@ -101,7 +99,7 @@ namespace Server.Controllers
             if (currentLoc != null)
             {
                 currentLoc.datecapture = value.datecapture;
-                currentLoc.localityid = value.localityid;
+                currentLoc.idlocality = value.idlocality;
                 await _context.SaveChangesAsync();
             }
         }

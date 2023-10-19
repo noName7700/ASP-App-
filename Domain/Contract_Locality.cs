@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class Municipality_Contract
+    public class Contract_Locality
     {
         public int id { get; set; }
-        public int munid { get; set; }
-        public MunicipalityName MunicipalityName { get; set; }
-        public int contractid { get; set; }
+        public int idcontract { get; set; }
         public Contract? Contract { get; set; }
+        public int idlocality { get; set; }
+        public Locality? Locality { get; set; }
+        public double tariph { get; set; }
     }
 }

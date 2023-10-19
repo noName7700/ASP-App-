@@ -52,9 +52,9 @@ namespace ASP_App_ПИС.Controllers
             Animal animalLast = await _service.GetLastAnimal();
             ActCapture act = new ActCapture
             {
-                animalid = animalLast.id,
+                idanimal = animalLast.id,
                 datecapture = DateTime.Parse(date),
-                localityid = id
+                idlocality = id
             };
             await _service.AddAct(act);
             return Redirect($"/animal/{id}/{date}");
@@ -95,7 +95,7 @@ namespace ASP_App_ПИС.Controllers
             ActCapture act = await _service.GetActFromAnimalId(id);
             await _service.DeleteAct(act.id);
             await _service.DeleteAnimal(id);
-            return Redirect($"/animal/{act.localityid}/{act.datecapture.ToShortDateString()}");
+            return Redirect($"/animal/{act.idlocality}/{act.datecapture.ToShortDateString()}");
         }
     }
 }

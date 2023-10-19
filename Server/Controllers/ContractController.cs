@@ -18,33 +18,33 @@ namespace Server.Controllers
 
         // получить все контракты
         [HttpGet]
-        public async Task<IEnumerable<ContractNumber>> Get()
+        public async Task<IEnumerable<Contract>> Get()
         {
-            return await _context.contractnumber
+            return await _context.contract
                 .ToListAsync();
         }
 
         [HttpGet]
         [Route("/api/Contract/one/{id}")]
-        public async Task<ContractNumber> GetOne(int id)
+        public async Task<Contract> GetOne(int id)
         {
-            return await _context.contractnumber.FirstOrDefaultAsync(t => t.id == id);
+            return await _context.contract.FirstOrDefaultAsync(t => t.id == id);
         }
 
         // создать контракт (т.е. одну запись)
         [HttpPost]
         [Route("/api/Contract/add")]
-        public async Task Post([FromBody] ContractNumber value)
+        public async Task Post([FromBody] Contract value)
         {
-            await _context.contractnumber.AddAsync(value);
+            await _context.contract.AddAsync(value);
             await _context.SaveChangesAsync();
         }
 
         [HttpPut]
         [Route("/api/Contract/put/{id}")]
-        public async Task Put(int id, [FromBody] ContractNumber value)
+        public async Task Put(int id, [FromBody] Contract value)
         {
-            var currentContract = await _context.contractnumber.FirstOrDefaultAsync(t => t.id == id);
+            var currentContract = await _context.contract.FirstOrDefaultAsync(t => t.id == id);
             if (currentContract != null)
             {
                 currentContract.validityperiod = value.validityperiod;

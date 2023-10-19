@@ -18,9 +18,9 @@ namespace Server.Controllers
 
         // все муниципалитеты
         [HttpGet]
-        public async Task<IEnumerable<MunicipalityName>> Get()
+        public async Task<IEnumerable<Municipality>> Get()
         {
-            return await _context.municipalityname
+            return await _context.municipality
                 .ToListAsync();
         }
 
@@ -52,37 +52,37 @@ namespace Server.Controllers
         // создать новый муниципалитет
         [HttpPost]
         [Route("/api/Municipality/add")]
-        public async Task Post([FromBody] MunicipalityName value)
+        public async Task Post([FromBody] Municipality value)
         {
-            await _context.municipalityname.AddAsync(value);
+            await _context.municipality.AddAsync(value);
             await _context.SaveChangesAsync();
         }
 
-        [HttpGet]
-        [Route("/api/Municipality/loc/{id}")]
-        public async Task<Municipality_Locality> GetFromLocalityId(int id)
-        {
-            return await _context.municipality_locality.Where(m => m.localityid == id).Select(m => m).FirstAsync();
-        }
+        //[HttpGet]
+        //[Route("/api/Municipality/loc/{id}")]
+        //public async Task<Locality> GetFromLocalityId(int id)
+        //{
+        //    return await _context.local.Where(m => m.localityid == id).Select(m => m).FirstAsync();
+        //}
 
-        [HttpPost]
-        [Route("/api/Municipality/add-loc")]
-        public async Task Post([FromBody] Municipality_Locality value)
-        {
-            await _context.municipality_locality.AddAsync(value);
-            await _context.SaveChangesAsync();
-        }
+        //[HttpPost]
+        //[Route("/api/Municipality/add-loc")]
+        //public async Task Post([FromBody] Municipality_Locality value)
+        //{
+        //    await _context.municipality_locality.AddAsync(value);
+        //    await _context.SaveChangesAsync();
+        //}
 
-        [HttpDelete]
-        [Route("/api/Municipality/delete/{id}")]
-        public async Task Delete(int id)
-        {
-            var currentMun = await _context.municipality_locality.FirstOrDefaultAsync(s => s.id == id);
-            if (currentMun != null)
-            {
-                _context.municipality_locality.Remove(currentMun);
-                await _context.SaveChangesAsync();
-            }
-        }
+        //[HttpDelete]
+        //[Route("/api/Municipality/delete/{id}")]
+        //public async Task Delete(int id)
+        //{
+        //    var currentMun = await _context.municipality_locality.FirstOrDefaultAsync(s => s.id == id);
+        //    if (currentMun != null)
+        //    {
+        //        _context.municipality_locality.Remove(currentMun);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
     }
 }

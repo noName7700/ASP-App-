@@ -28,21 +28,21 @@ namespace ASP_App_ПИС.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Route("/locality/add/{id}")]
-        public async Task<IActionResult> AddPost(int id)
-        {
-            if (Request.Form["name"] != "")
-            {
-                Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
-                await _service.AddLocality(loc);
-                Locality lastLoc = await _service.GetLastLocality();
-                Municipality_Locality munLoc = new Municipality_Locality(id, lastLoc.id);
-                await _service.AddMunLoc(munLoc);
-                return Redirect($"/locality/{id}");
-            }
-            return Redirect($"/locality/{id}");
-        }
+        //[HttpPost]
+        //[Route("/locality/add/{id}")]
+        //public async Task<IActionResult> AddPost(int id)
+        //{
+        //    if (Request.Form["name"] != "")
+        //    {
+        //        Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
+        //        await _service.AddLocality(loc);
+        //        Locality lastLoc = await _service.GetLastLocality();
+        //        Municipality_Locality munLoc = new Municipality_Locality(id, lastLoc.id);
+        //        await _service.AddMunLoc(munLoc);
+        //        return Redirect($"/locality/{id}");
+        //    }
+        //    return Redirect($"/locality/{id}");
+        //}
 
         [HttpGet]
         [Route("/locality/edit/{id}")]
@@ -52,23 +52,23 @@ namespace ASP_App_ПИС.Controllers
             return View(loc);
         }
 
-        [HttpPost]
-        [Route("/locality/edit/{id}")]
-        public async Task<IActionResult> EditPut(int id)
-        {
-            Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
-            await _service.EditLocality(id, loc);
-            return Redirect("/municipality/");
-        }
+        //[HttpPost]
+        //[Route("/locality/edit/{id}")]
+        //public async Task<IActionResult> EditPut(int id)
+        //{
+        //    Locality loc = new Locality(Request.Form["name"], double.Parse(Request.Form["tariph"]));
+        //    await _service.EditLocality(id, loc);
+        //    return Redirect("/municipality/");
+        //}
 
-        [HttpGet]
-        [Route("/locality/delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            Municipality_Locality munLoc = await _service.GetMunicipalityFromLocalityId(id);
-            await _service.DeleteMunicipality(munLoc.id);
-            await _service.DeleteLocality(id);
-            return Redirect($"/locality/{munLoc.munid}");
-        }
+        //[HttpGet]
+        //[Route("/locality/delete/{id}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    Municipality_Locality munLoc = await _service.GetMunicipalityFromLocalityId(id);
+        //    await _service.DeleteMunicipality(munLoc.id);
+        //    await _service.DeleteLocality(id);
+        //    return Redirect($"/locality/{munLoc.munid}");
+        //}
     }
 }

@@ -32,7 +32,7 @@ namespace Server.Controllers
             var d = DateTime.Parse(date);
             var res = await _context.actcapture
                 .Include(a => a.Animal)
-                .Where(a => a.localityid == id && a.datecapture.Year == d.Year 
+                .Where(a => a.idlocality == id && a.datecapture.Year == d.Year 
                 && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
                 .Select(a => a.Animal)
                 .ToListAsync();
