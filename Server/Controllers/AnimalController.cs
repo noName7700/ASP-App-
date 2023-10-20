@@ -30,9 +30,20 @@ namespace Server.Controllers
         public async Task<IEnumerable<Animal>> Get(int id, string date)
         {
             var d = DateTime.Parse(date);
+            //List<int> idanimals = await _context.actcapture
+            //    .Where(a => a.localityid == id && a.datecapture.Year == d.Year
+            //    && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
+            //    .Select(a => a.animalid)
+            //    .ToListAsync();
+
+            //var res = await _context.animal
+            //    .Where(a => idanimals.Contains(a.id))
+            //    .Select(a => a)
+            //    .ToListAsync();
+
             var res = await _context.actcapture
                 .Include(a => a.Animal)
-                .Where(a => a.idlocality == id && a.datecapture.Year == d.Year 
+                .Where(a => a.localityid == id && a.datecapture.Year == d.Year
                 && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
                 .Select(a => a.Animal)
                 .ToListAsync();
@@ -78,7 +89,7 @@ namespace Server.Controllers
                 currentAnimal.color = value.color;
                 currentAnimal.size = value.size;
                 currentAnimal.tail = value.tail;
-                currentAnimal.specsigns = value.specsigns;
+                currentAnimal.specsings = value.specsings;
                 await _context.SaveChangesAsync();
             }
         }

@@ -48,14 +48,15 @@ namespace ASP_App_ПИС.Controllers
                 sex = Request.Form["sex"],
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
-                specsigns = Request.Form["specsigns"],
+                specsings = Request.Form["specsigns"],
             };
             await _service.AddAnimal(animal);
             Animal lastAni = await _service.GetLastAnimal();
+
             ActCapture act = new ActCapture{
-                idanimal = lastAni.id,
+                animalid = lastAni.id,
                 datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                idlocality = int.Parse(Request.Form["locality"])
+                localityid = int.Parse(Request.Form["locality"])
             };
             await _service.AddAct(act);
             return Redirect("/act/");
@@ -80,9 +81,9 @@ namespace ASP_App_ПИС.Controllers
             {
                 ActCapture act = new ActCapture
                 {
-                    idanimal = loc.idanimal,
+                    animalid = loc.animalid,
                     datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                    idlocality = int.Parse(Request.Form["locality"])
+                    localityid = int.Parse(Request.Form["locality"])
                 };
                 await _service.EditAct(loc.id, act);
             }

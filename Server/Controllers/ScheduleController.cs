@@ -54,14 +54,14 @@ namespace Server.Controllers
         [Route("/api/Schedule/last/{locid}")]
         public async Task<Schedule> GetLast(int locid)
         {
-            return await _context.schedule.Where(s => s.idlocality == locid).Select(s => s).OrderBy(s => s.id).LastAsync();
+            return await _context.schedule.Where(s => s.localityid == locid).Select(s => s).OrderBy(s => s.id).LastAsync();
         }
 
         [HttpGet]
         [Route("/api/Schedule/task/{id}")]
         public async Task<Schedule> GetFromTaskMonthId(int id)
         {
-            return await _context.schedule.Where(s => s.idtaskmonth == id).Select(s => s).FirstAsync();
+            return await _context.schedule.Where(s => s.taskmonthid == id).Select(s => s).FirstAsync();
         }
 
         // добавить новый план-график

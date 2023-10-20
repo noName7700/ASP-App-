@@ -1,10 +1,10 @@
 ﻿@using Domain;
-@model IEnumerable<Locality>;
+@model Dictionary<IEnumerable<Locality>, IEnumerable<Contract_Locality>>;
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Тюменская область</h1>
+        <h1 class="page-title">@ViewData["munname"]</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -17,14 +17,6 @@
                 <div class="ibox-title">Населенные пункты</div>
             </div>
             <div class="ibox-body">
-                <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
-                    <div class="row"><div class="col-sm-12 col-md-6">
-                        <div class="dataTables_length" id="example-table_length">
-                            
-                            <a href="/locality/add/@ViewData["id"]"><button class="btn btn-success">Добавить</button></a> 
-                        </div>
-                    </div>
-                </div>
             <div class="row">
                 <div class="col-sm-12">
                 <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
@@ -37,19 +29,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach(var loc in Model)
+                    @foreach(var loc_tar in Model)
                     {
-                    <tr role="row" class="odd">
-                        <td>@loc.name</td>
-                        <td>@* @loc.tariph *@</td>
+                        @foreach (var loc in loc_tar.Key)
+                        {
+                            <tr role="row" class="odd">
+                            <td>@loc.name</td>
+                            <td>@loc_tar.Value.Where(cl => cl.localityid == loc.id).Select(cl => cl.tariph).FirstOrDefault()</td>
                         <td>
                             <a href="/locality/edit/@loc.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
                             <a class="delete" href="/locality/delete/@loc.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
                         </td>
                     </tr>
+                        }
                     }
                     </tbody>
                 </table>
+                        <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="example-table_length">
+                                        <a href="/locality/add/@ViewData["id"]"><button class="btn btn-success">Добавить</button></a>
+                                    </div>
+                                </div>
+                            </div>
                 </div>
             </div>
         </div>

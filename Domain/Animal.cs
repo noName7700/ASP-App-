@@ -17,6 +17,6 @@ namespace Domain
         public string color { get; set; }
         public string ears { get; set; }
         public string tail { get; set; }
-        public string specsigns { get; set; }
+        public string specsings { get; set; }
     }
 }
