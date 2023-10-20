@@ -35,7 +35,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<Locality>> Get(int id)
         {
             var t = await _context.locality
-                .Where(l => l.idmunicipality == id)
+                .Where(l => l.municipalityid == id)
                 .Select(l => l)
                 .ToListAsync();
             return t;

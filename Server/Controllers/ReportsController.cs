@@ -68,7 +68,7 @@ namespace Server.Controllers
         //    return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
         //}
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("/api/Reports/money/export")]
         public FileStreamResult GetExcel()
         {
@@ -106,6 +106,6 @@ namespace Server.Controllers
             JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
 
             return workbook;
-        }
+        }*/
     }
 }
