@@ -2,6 +2,7 @@
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -14,15 +15,20 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
+        [HttpGet]
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
-
-            var municipalities = (await _service.GetMunicipalities()).OrderBy(m => m.name);
+            var municipalities = await _service.GetMunicipalities();
+            if (!string.IsNullOrEmpty(search))
+            {
+                municipalities = municipalities.Where(m => m.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             municipalities = sort switch
             {
-                SortState.NameAsc => municipalities.OrderBy(m => m.name),
-                SortState.NameDesc => municipalities.OrderByDescending(m => m.name)
+                SortState.NameAsc => municipalities.OrderBy(m => m.name).ToList(),
+                SortState.NameDesc => municipalities.OrderByDescending(m => m.name).ToList()
             };
             return View(municipalities);
         }
