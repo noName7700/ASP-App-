@@ -21,39 +21,41 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            var muns = await _service.GetMunicipalities();
+            return View(muns);
         }
 
-        //[HttpPost]
-        //[Route("/contract/add")]
-        //public async Task<IActionResult> AddPost()
-        //{
-        //    ContractNumber con = new ContractNumber(
-        //        DateTime.Parse(Request.Form["validityperiod"]), 
-        //        DateTime.Parse(Request.Form["dateconclusion"]));
-        //    await _service.AddContract(con);
-        //    return Redirect("/contract/");
-        //}
+        [HttpPost]
+        [Route("/contract/add")]
+        public async Task<IActionResult> AddPost()
+        {
+            Contract con = new Contract { validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
+                dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]), 
+                municipalityid = int.Parse(Request.Form["municipality"])};
+            await _service.AddContract(con);
+            return Redirect("/contract/");
+        }
 
-        //[HttpGet]
-        //[Route("/contract/edit/{id}")]
-        //public async Task<IActionResult> Edit(int id)
-        //{
-        //    ContractNumber con = await _service.GetContractOne(id);
-        //    return View(con);
-        //}
+        [HttpGet]
+        [Route("/contract/edit/{id}/{munid}")]
+        public async Task<IActionResult> Edit(int id, int munid)
+        {
+            Contract con = await _service.GetContractOne(id);
+            ViewData["munid"] = munid;
+            return View(con);
+        }
 
-        //[HttpPost]
-        //[Route("/contract/edit/{id}")]
-        //public async Task<IActionResult> EditPut(int id)
-        //{
-        //    ContractNumber con = new ContractNumber(
-        //        DateTime.Parse(Request.Form["validityperiod"]),
-        //        DateTime.Parse(Request.Form["dateconclusion"]));
-        //    await _service.EditContract(id, con);
-        //    return Redirect("/contract/");
-        //}
+        [HttpPost]
+        [Route("/contract/edit/{id}/{munid}")]
+        public async Task<IActionResult> EditPut(int id, int munid)
+        {
+            Contract con = new Contract { validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
+                dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]), 
+                municipalityid = munid};
+            await _service.EditContract(id, con);
+            return Redirect("/contract/");
+        }
     }
 }

@@ -46,15 +46,18 @@ namespace ASP_App_ПИС.Controllers
                 sex = Request.Form["sex"],
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
-                specsigns = Request.Form["specsigns"],
+                specsings = Request.Form["specsigns"],
             };
             await _service.AddAnimal(animal);
             Animal animalLast = await _service.GetLastAnimal();
+            var mun = await _service.GetMunicipalityFromLocalityId(id);
+            int conid = await _service.GetContractFromMuniciaplity(mun.id);
             ActCapture act = new ActCapture
             {
-                idanimal = animalLast.id,
+                animalid = animalLast.id,
                 datecapture = DateTime.Parse(date),
-                idlocality = id
+                localityid = id,
+                contractid = conid
             };
             await _service.AddAct(act);
             return Redirect($"/animal/{id}/{date}");
@@ -82,7 +85,7 @@ namespace ASP_App_ПИС.Controllers
                 sex = Request.Form["sex"],
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
-                specsigns = Request.Form["specsigns"],
+                specsings = Request.Form["specsigns"],
             };
             await _service.EditAnimal(id, an);
             return Redirect("/act/");
@@ -95,7 +98,7 @@ namespace ASP_App_ПИС.Controllers
             ActCapture act = await _service.GetActFromAnimalId(id);
             await _service.DeleteAct(act.id);
             await _service.DeleteAnimal(id);
-            return Redirect($"/animal/{act.idlocality}/{act.datecapture.ToShortDateString()}");
+            return Redirect($"/animal/{act.localityid}/{act.datecapture.ToShortDateString()}");
         }
     }
 }

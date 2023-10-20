@@ -1,7 +1,7 @@
 ﻿<div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Добавить план-график</h1>
+        <h1 class="page-title">Добавить задание на месяц</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -16,27 +16,21 @@
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Дата начала</label>
+                        <label class="col-sm-2 col-form-label" for="start-date">Дата начала:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="startdate">
-                            <span class="help-block">Формат даты dd.mm.yyyy
-                                <span></span>
-                            </span>
+                            <input class="form-control" id="start-date" type="date" name="startdate">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Дата окончания</label>
+                        <label class="col-sm-2 col-form-label" for="end-date">Дата окончания:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="enddate">
-                            <span class="help-block">Формат даты dd.mm.yyyy
-                                <span></span>
-                            </span>
+                            <input class="form-control" id="end-date" type="date" name="enddate">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Планируемое количество животных</label>
+                        <label class="col-sm-2 col-form-label" for="count-animal">Планируемое количество животных</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="count-animal">
+                            <input class="form-control" id="count-animal" type="text" name="count-animal">
                             <span class="help-block">
                                 <span></span>
                             </span>

@@ -21,7 +21,17 @@ namespace Server.Controllers
         public async Task<IEnumerable<Contract>> Get()
         {
             return await _context.contract
+                .Include(c => c.Municipality)
                 .ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<int> Get(int id)
+        {
+            return await _context.contract
+                .Where(c => c.municipalityid == id)
+                .Select(c => c.id)
+                .FirstOrDefaultAsync();
         }
 
         [HttpGet]

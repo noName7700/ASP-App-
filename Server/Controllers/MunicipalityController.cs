@@ -24,17 +24,26 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
-/*        // вывести нас пункты одного муниципалитета
         [HttpGet("{id}")]
-        public async Task<List<Locality>> Get(int id)
+        public async Task<Municipality> Get(int id)
         {
             return await _context.municipality
-                .Include(m => m.Locality)
-                .Include(m => m.MunicipalityName)
-                .Where(m => m.munid == id)
-                .Select(m => m.Locality)
-                .ToListAsync();
-        }*/
+                .Where(m => m.id == id)
+                .Select (m => m)
+                .FirstOrDefaultAsync();
+        }
+
+        /*        // вывести нас пункты одного муниципалитета
+                [HttpGet("{id}")]
+                public async Task<List<Locality>> Get(int id)
+                {
+                    return await _context.municipality
+                        .Include(m => m.Locality)
+                        .Include(m => m.MunicipalityName)
+                        .Where(m => m.munid == id)
+                        .Select(m => m.Locality)
+                        .ToListAsync();
+                }*/
 
         //[HttpGet("{id}")]
         //public async Task<IEnumerable<Locality>> Get(int id)
@@ -58,12 +67,16 @@ namespace Server.Controllers
             await _context.SaveChangesAsync();
         }
 
-        //[HttpGet]
-        //[Route("/api/Municipality/loc/{id}")]
-        //public async Task<Locality> GetFromLocalityId(int id)
-        //{
-        //    return await _context.local.Where(m => m.localityid == id).Select(m => m).FirstAsync();
-        //}
+        [HttpGet]
+        [Route("/api/Municipality/loc/{id}")]
+        public async Task<Municipality> GetFromLocalityId(int id)
+        {
+            return await _context.locality
+                .Include(l => l.Municipality)
+                .Where(m => m.municipalityid == id)
+                .Select(m => m.Municipality)
+                .FirstAsync();
+        }
 
         //[HttpPost]
         //[Route("/api/Municipality/add-loc")]

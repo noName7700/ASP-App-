@@ -4,24 +4,26 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Отчёт</h1>
+        <h1 class="page-title">Отчёт о выполненной работе за контракт</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="index.html"><i class="la la-home font-20"></i></a>
+                <a href="/report/money">Отчёт</a>
             </li>
-            <li class="breadcrumb-item">Отчёт</li>
+            <li class="breadcrumb-item">
+                Результаты отчета
+            </li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Отчёт о выполненной работе за контракт с @ViewData["startdate"] по @ViewData["enddate"]</div>
+                <div class="ibox-title">Результаты отчёта</div>
             </div>
             <div class="ibox-body">
                 <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                     <div class="row">
                         <div class="col-sm-12">
-                            <p>Итоговая сумма, полученная за введенный период: @Model р.</p>
+                            <p>Итоговая сумма, полученная с <i>@DateTime.Parse(ViewData["startdate"].ToString()).ToString("D")</i> по <i>@DateTime.Parse(ViewData["enddate"].ToString()).ToString("D")</i>: <b>@Model</b> ₽</p>
                         </div>
                     </div>
                 </div>

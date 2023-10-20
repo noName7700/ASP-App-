@@ -25,17 +25,17 @@ namespace ASP_App_ПИС.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[Route("/municipality/add")]
-        //public async Task<IActionResult> AddPost()
-        //{
-        //    if (Request.Form["name"] != "")
-        //    {
-        //        MunicipalityName mun = new MunicipalityName(Request.Form["name"]);
-        //        await _service.AddMunicipality(mun);
-        //        return Redirect("/municipality/");
-        //    }
-        //    return Redirect("/municipality/");
-        //}
+        [HttpPost]
+        [Route("/municipality/add")]
+        public async Task<IActionResult> AddPost()
+        {
+            if (Request.Form["name"] != "")
+            {
+                Municipality mun = new Municipality { name = Request.Form["name"] };
+                await _service.AddMunicipality(mun);
+                return Redirect("/municipality/");
+            }
+            return Redirect("/municipality/");
+        }
     }
 }

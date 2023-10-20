@@ -6,9 +6,6 @@
             <div class="page-heading">
                 <h1 class="page-title">Контракты</h1>
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="index.html"><i class="la la-home font-20"></i></a>
-                    </li>
                     <li class="breadcrumb-item">Контракты</li>
                 </ol>
             </div>
@@ -24,6 +21,7 @@
                                    </div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                             <thead>
                                 <tr role="row">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Муниципалитет</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Номер</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Срок действия</th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата заключения</th>
@@ -35,11 +33,12 @@
                             @foreach(var con in Model)
                             {
                             <tr role="row" class="odd">
+                                <td>@con.Municipality.name</td>
                                 <td>@con.id</td>
                                 <td>@con.validityperiod.ToShortDateString()</td>
                                 <td>@con.dateconclusion.ToShortDateString()</td>
                                 <td>
-                                    <a href="/contract/edit/@con.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                    <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
                                 </td>
                             </tr>

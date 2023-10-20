@@ -18,6 +18,8 @@ namespace ASP_App_ПИС.Controllers
         {
             var tasks = await _service.GetTaskMonth(id);
             ViewData["id"] = id;
+            var loc = await _service.GetOneLocality(id);
+            ViewData["locality"] = loc.name;
             return View(tasks);
         }
 
@@ -41,7 +43,7 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddTaskMonth(tm);
             TaskMonth lastTm = await _service.GetLastTaskMonth();
             Schedule lastSch = await _service.GetLastSchedule(id);
-            Schedule sch = new Schedule(id, lastTm.id, lastSch.dateapproval);
+            Schedule sch = new Schedule { localityid = id, taskmonthid = lastTm.id, dateapproval = lastSch.dateapproval };
             await _service.AddSchedule(sch);
             return Redirect($"/scheduleone/{id}");
         }
@@ -75,7 +77,7 @@ namespace ASP_App_ПИС.Controllers
             Schedule schedule = await _service.GetScheduleFromTaskMonthId(id);
             await _service.DeleteSchedule(schedule.id);
             await _service.DeleteTaskMonth(id);
-            return Redirect($"/scheduleone/{schedule.idlocality}");
+            return Redirect($"/scheduleone/{schedule.localityid}");
         }
     }
 }

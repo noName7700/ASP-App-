@@ -11,17 +11,17 @@ namespace Domain
     public class Schedule
     { 
         public int id { get; set; }
-        public int idlocality { get; set; }
+        public int localityid { get; set; }
         public Locality? Locality { get; set; }
-        public int idtaskmonth { get; set; }
+        public int taskmonthid { get; set; }
         public TaskMonth? TaskMonth { get; set; }
         public DateTime dateapproval { get; set; }
 
-        public Schedule(int localityid, int taskmonthid, DateTime dateapproval)
-        {
-            this.idlocality = localityid;
-            this.idtaskmonth = taskmonthid;
-            this.dateapproval = dateapproval;
-        }
+        //public Schedule(int localityid, int taskmonthid, DateTime dateapproval)
+        //{
+        //    this.idlocality = localityid;
+        //    this.idtaskmonth = taskmonthid;
+        //    this.dateapproval = dateapproval;
+        //}
     }
 }
