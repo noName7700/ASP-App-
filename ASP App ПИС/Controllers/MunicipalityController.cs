@@ -20,15 +20,9 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(SortState so = SortState.NameAsc)
+        public async Task<IActionResult> Index()
         {
-            var municipalities = (await _service.GetMunicipalities()).OrderBy(m => m.name);
-            ViewData["NameSort"] = so == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            municipalities = so switch
-            {
-                SortState.NameDesc => municipalities.OrderByDescending(m => m.name),
-                SortState.NameAsc => municipalities.OrderBy(m => m.name),
-            };
+            var municipalities = await _service.GetMunicipalities();
             return View(municipalities);
         }
 
