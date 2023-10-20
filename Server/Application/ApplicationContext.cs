@@ -13,6 +13,7 @@ namespace Server.Application
         public DbSet<Contract_Locality> contract_locality { get; set; } = null!;
         public DbSet<TaskMonth> taskmonth { get; set; } = null!;
         public DbSet<Schedule> schedule { get; set; } = null!;
+        public DbSet<Usercapture> usercapture { get; set; } = null!;
 
         public ApplicationContext()
         {
