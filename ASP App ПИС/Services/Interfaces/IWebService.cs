@@ -54,7 +54,7 @@ namespace ASP_App_ПИС.Services.Interfaces
 
         // отчет - деньги
         Task<double> GetReportsMoney(string startDate, string endDate, int munid);
-        //Task<FileStreamResult> GetExcelMoney();
+        Task<FileStreamResult> GetExcelMoney();
 
         // отчет - план-график
         Task<Dictionary<int, int>> GetReportsSchedule(int munid);

@@ -4,15 +4,8 @@ using Domain;
 
 namespace ASP_App_ПИС.Controllers
 {
-    public enum SortState
-    {
-        NameAsc,
-        NameDesc
-    }
-
     public class MunicipalityController : Controller
     {
-        
         private IWebService _service;
 
         public MunicipalityController(IWebService service)

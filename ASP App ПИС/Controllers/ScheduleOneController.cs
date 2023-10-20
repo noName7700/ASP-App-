@@ -41,7 +41,7 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddTaskMonth(tm);
             TaskMonth lastTm = await _service.GetLastTaskMonth();
             Schedule lastSch = await _service.GetLastSchedule(id);
-            Schedule sch = new Schedule { id = id, idtaskmonth = lastTm.id, dateapproval = lastSch.dateapproval };
+            Schedule sch = new Schedule(id, lastTm.id, lastSch.dateapproval);
             await _service.AddSchedule(sch);
             return Redirect($"/scheduleone/{id}");
         }
