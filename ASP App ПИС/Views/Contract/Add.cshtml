@@ -20,9 +20,9 @@
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Муниципалитет</label>
+                        <label class="col-sm-2 col-form-label" for="munname">Муниципалитет:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="municipality">
+                            <select class="form-control" id="munname" name="municipality">
                                 @foreach (var mun in Model)
                                 {
                                     <option value="@mun.id">@mun.name</option>

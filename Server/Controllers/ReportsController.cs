@@ -44,12 +44,8 @@ namespace Server.Controllers
             double summ = 0;
             foreach (var act in _context.actcapture)
             {
-                if (act.datecapture.Year >= startdate.Year && act.datecapture.Month >= startdate.Month
-                && act.datecapture.Day >= startdate.Day
-                && act.datecapture.Year <= enddate.Year
-                && act.datecapture.Month <= enddate.Month
-                && act.datecapture.Day <= enddate.Day
-                && needLocalities.Contains(act.localityid))
+                if (act.datecapture >= startdate && act.datecapture <= enddate 
+                    && needLocalities.Contains(act.localityid))
                 {
                     summ += loc_tar[act.localityid];
                 }

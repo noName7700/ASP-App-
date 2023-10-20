@@ -14,9 +14,15 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
-            var schedules = (await _service.GetSchedules()).OrderBy(sc => sc.Locality.name);
+            var schedules = await _service.GetSchedules();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                schedules = schedules.Where(m => m.Locality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;

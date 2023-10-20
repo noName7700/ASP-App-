@@ -18,18 +18,19 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
-            var municipalities = (await _service.GetMunicipalities()).OrderBy(m => m.name);
             var municipalities = await _service.GetMunicipalities();
+
             if (!string.IsNullOrEmpty(search))
             {
                 municipalities = municipalities.Where(m => m.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
+
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             municipalities = sort switch
             {
-                SortState.NameAsc => municipalities.OrderBy(m => m.name).ToList(),
-                SortState.NameDesc => municipalities.OrderByDescending(m => m.name).ToList()
+                SortState.NameAsc => municipalities.OrderBy(m => m.name),
+                SortState.NameDesc => municipalities.OrderByDescending(m => m.name)
             };
             return View(municipalities);
         }

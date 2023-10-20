@@ -20,9 +20,9 @@
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Муниципалитет</label>
+                        <label class="col-sm-2 col-form-label" for="munname">Муниципалитет</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="municipality">
+                            <select class="form-control" id="munname" name="municipality">
                                 @foreach (var enummun in Model.Values)
                                 {
                                     @foreach (var mun in enummun)
@@ -35,9 +35,9 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Населенный пункт</label>
+                        <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт</label>
                         <div class="col-sm-8">
-                            <select class="form-control" name="locality">
+                            <select class="form-control" id="localityy" name="locality">
                                 @foreach(var enumloc in Model.Keys)
                                 {
                                     @foreach (var loc in enumloc)
@@ -50,9 +50,9 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Дата утверждения</label>
+                        <label class="col-sm-2 col-form-label" for="dateapproval">Дата утверждения</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="date" name="dateapproval">
+                            <input class="form-control" id="dateapproval" type="date" name="dateapproval">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -64,26 +64,23 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Дата начала</label>
+                        <label class="col-sm-2 col-form-label" for="startdate">Дата начала</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="date" name="startdate">
+                            <input class="form-control" id="startdate" type="date" name="startdate">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Дата окончания</label>
+                        <label class="col-sm-2 col-form-label" for="enddate">Дата окончания</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="date" name="enddate">
-                            <span class="help-block">Формат даты dd.mm.yyyy
-                                <span></span>
-                            </span>
+                            <input class="form-control" id="enddate" type="date" name="enddate">
                         </div>
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Планируемое количество животных</label>
+                        <label class="col-sm-2 col-form-label" for="animal-count">Количество животных</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="ex-date" type="text" name="count-animal">
+                            <input class="form-control" id="animal-count" type="text" name="count-animal">
                             <span class="help-block">
                                 <span></span>
                             </span>

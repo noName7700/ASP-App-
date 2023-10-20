@@ -12,12 +12,14 @@
             <li class="breadcrumb-item">Муниципалитеты</li>
         </ol>
     </div>  
+    <hr>
     <form class="navbar-search" method="get">
-        <div class="rel">
-            <span class="search-icon"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Search here...">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование муниципалитета">
         </div>
     </form>
+    <hr>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-body">
@@ -27,7 +29,10 @@
                             </div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                     <thead>
                         <tr role="row">
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;"><a asp-action="Index" asp-route-sort="@ViewData["NameSort"]">Муниципалитет</a></th>
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                Муниципалитет
+                                <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                            </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Населенные пункты</th>
                         </tr>
                     </thead>

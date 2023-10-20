@@ -16,9 +16,15 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
-            var locs = (await _service.GetLocalActs()).OrderBy(sc => sc.name);
+            var locs = await _service.GetLocalActs();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                locs = locs.Where(m => m.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             locs = sort switch
@@ -31,9 +37,19 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/act/{id}")]
-        public async Task<IActionResult> ViewActs(int id, SortState sort = SortState.DateAsc)
+        public async Task<IActionResult> ViewActs(int id, string search, SortState sort = SortState.DateAsc)
         {
             var acts = await _service.GetAct(id);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                DateTime searchDate = DateTime.Parse(search);
+                acts = acts.Where(ac => ac.datecapture == searchDate).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
+
+            var localityname = await _service.GetOneLocality(id);
+            ViewData["localityname"] = localityname.name;
 
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
             acts = sort switch

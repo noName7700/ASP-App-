@@ -15,9 +15,16 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id, SortState sort = SortState.DateAsc)
+        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.DateAsc)
         {
             var tasks = await _service.GetTaskMonth(id);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                DateTime searchDate = DateTime.Parse(search);
+                tasks = tasks.Where(ts => ts.startdate == searchDate).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
 
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
             tasks = sort switch

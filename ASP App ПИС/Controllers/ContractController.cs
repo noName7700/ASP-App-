@@ -15,9 +15,15 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
-            var contracts = (await _service.GetContracts()).OrderBy(c => c.Municipality.name);
+            var contracts = await _service.GetContracts();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                contracts = contracts.Where(m => m.Municipality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             contracts = sort switch

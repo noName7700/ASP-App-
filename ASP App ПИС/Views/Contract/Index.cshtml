@@ -9,6 +9,14 @@
                     <li class="breadcrumb-item">Контракты</li>
                 </ol>
             </div>
+    <hr>
+    <form class="navbar-search" method="get">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование муниципалитета">
+        </div>
+    </form>
+    <hr>
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">

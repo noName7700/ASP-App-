@@ -15,9 +15,15 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/locality/{id}")]
-        public async Task<IActionResult> Index(int id, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.NameAsc)
         {
-            var localities = (await _service.GetLocalitiesFromMunId(id)).OrderBy(l => l.name);
+            var localities = await _service.GetLocalitiesFromMunId(id);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                localities = localities.Where(m => m.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             localities = sort switch
