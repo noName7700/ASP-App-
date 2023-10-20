@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using ASP_App_ПИС.Models;
 
 
 namespace ASP_App_ПИС.Controllers
@@ -14,9 +15,17 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
         {
-            var contracts = await _service.GetContracts();
+            var contracts = (await _service.GetContracts()).OrderBy(c => c.Municipality.name);
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            contracts = sort switch
+            {
+                SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
+                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name)
+            };
+
             return View(contracts);
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using ASP_App_ПИС.Models;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -14,9 +15,17 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/locality/{id}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, SortState sort = SortState.NameAsc)
         {
-            var localities = await _service.GetLocalitiesFromMunId(id);
+            var localities = (await _service.GetLocalitiesFromMunId(id)).OrderBy(l => l.name);
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            localities = sort switch
+            {
+                SortState.NameAsc => localities.OrderBy(m => m.name),
+                SortState.NameDesc => localities.OrderByDescending(m => m.name)
+            };
+
             ViewData["id"] = id;
             var munname = await _service.GetMunicipalityForId(id);
             ViewData["munname"] = munname.name;

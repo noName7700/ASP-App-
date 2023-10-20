@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using ASP_App_ПИС.Models;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -14,9 +15,17 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, SortState sort = SortState.DateAsc)
         {
             var tasks = await _service.GetTaskMonth(id);
+
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            tasks = sort switch
+            {
+                SortState.DateAsc => tasks.OrderBy(sc => sc.startdate),
+                SortState.DateDesc => tasks.OrderByDescending(sc => sc.startdate)
+            };
+
             ViewData["id"] = id;
             var loc = await _service.GetOneLocality(id);
             ViewData["locality"] = loc.name;

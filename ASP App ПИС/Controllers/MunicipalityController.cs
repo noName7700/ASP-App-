@@ -16,7 +16,6 @@ namespace ASP_App_ПИС.Controllers
 
         public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
         {
-
             var municipalities = (await _service.GetMunicipalities()).OrderBy(m => m.name);
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             municipalities = sort switch

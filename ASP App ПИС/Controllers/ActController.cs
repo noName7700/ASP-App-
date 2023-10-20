@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using ASP_App_ПИС.Models;
+using System.Diagnostics.Contracts;
 
 
 namespace ASP_App_ПИС.Controllers
@@ -14,16 +16,32 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
         {
-            var locs = await _service.GetLocalActs();
+            var locs = (await _service.GetLocalActs()).OrderBy(sc => sc.name);
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            locs = sort switch
+            {
+                SortState.NameAsc => locs.OrderBy(sc => sc.name),
+                SortState.NameDesc => locs.OrderByDescending(sc => sc.name)
+            };
+
             return View(locs);
         }
 
         [Route("/act/{id}")]
-        public async Task<IActionResult> ViewActs(int id)
+        public async Task<IActionResult> ViewActs(int id, SortState sort = SortState.DateAsc)
         {
             var acts = await _service.GetAct(id);
+
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            acts = sort switch
+            {
+                SortState.DateAsc => acts.OrderBy(sc => sc.datecapture),
+                SortState.DateDesc => acts.OrderByDescending(sc => sc.datecapture)
+            };
+
             return View(acts);
         }
 
@@ -53,10 +71,16 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddAnimal(animal);
             Animal lastAni = await _service.GetLastAnimal();
 
+            int localityid = int.Parse(Request.Form["locality"]);
+
+            // нахожу контракт по нас. пункту
+            var conid = (await _service.GetOneContract_Locality(localityid)).contractid;
+
             ActCapture act = new ActCapture{
                 animalid = lastAni.id,
                 datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                localityid = int.Parse(Request.Form["locality"])
+                localityid = localityid,
+                contractid = conid
             };
             await _service.AddAct(act);
             return Redirect("/act/");
@@ -77,13 +101,19 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> EditPut(int locid, string date)
         {
             IEnumerable<ActCapture> oldActs = await _service.GetActs(locid, date);
+
+            // нахожу контракт по нас. пункту
+            var conid = (await _service.GetOneContract_Locality(locid)).contractid;
+
             foreach (var loc in oldActs)
             {
+
                 ActCapture act = new ActCapture
                 {
                     animalid = loc.animalid,
                     datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                    localityid = int.Parse(Request.Form["locality"])
+                    localityid = int.Parse(Request.Form["locality"]),
+                    contractid = conid
                 };
                 await _service.EditAct(loc.id, act);
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using ASP_App_ПИС.Models;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -13,9 +14,20 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SortState sort = SortState.NameAsc)
         {
-            var schedules = await _service.GetSchedules();
+            var schedules = (await _service.GetSchedules()).OrderBy(sc => sc.Locality.name);
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            schedules = sort switch
+            {
+                SortState.NameAsc => schedules.OrderBy(sc => sc.Locality.name),
+                SortState.NameDesc => schedules.OrderByDescending(sc => sc.Locality.name),
+                SortState.DateAsc => schedules.OrderBy(sc => sc.dateapproval),
+                SortState.DateDesc => schedules.OrderByDescending(sc => sc.dateapproval)
+            };
+
             return View(schedules);
         }
 
