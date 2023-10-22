@@ -3,9 +3,11 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_App_ПИС.Controllers
 {
+    [Authorize]
     public class MunicipalityController : Controller
     {
         private IWebService _service;

@@ -1,13 +1,15 @@
 ﻿using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_App_ПИС.Controllers
 {
-    public class ReportMoney : Controller
+    [Authorize]
+    public class ReportController : Controller
     {
         private IWebService _service;
-        public ReportMoney(IWebService service)
+        public ReportController(IWebService service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }

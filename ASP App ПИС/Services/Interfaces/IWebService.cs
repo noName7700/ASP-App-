@@ -14,6 +14,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<IEnumerable<Locality>> GetLocalities();
         Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id);
         Task<IEnumerable<Schedule>> GetSchedules();
+        Task<IEnumerable<Usercapture>> GetUsers();
         Task<Schedule> GetScheduleFromTaskMonthId(int id);
         Task<Municipality> GetMunicipalityFromLocalityId(int id);
         Task<ActCapture> GetActFromAnimalId(int id);

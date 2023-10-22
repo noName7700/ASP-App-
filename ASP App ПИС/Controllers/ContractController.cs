@@ -2,10 +2,11 @@
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_App_ПИС.Controllers
 {
+    [Authorize]
     public class ContractController : Controller
     {
         private IWebService _service;

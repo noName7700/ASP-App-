@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First();
+    var name = claims.Where(c => c.Type == ClaimTypes.Name).First();
+    var surname = claims.Where(c => c.Type == ClaimTypes.Surname).First();
+    var login = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).First();
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -37,11 +45,11 @@
                     <li class="dropdown dropdown-user">
                         <a class="nav-link dropdown-toggle link" data-toggle="dropdown">
                             <img src="~/img/admin-avatar.png" />
-                            <span></span>Admin<i class="fa fa-angle-down m-l-5"></i></a>
+                            <span></span>@login.Value<i class="fa fa-angle-down m-l-5"></i></a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="profile.html"><i class="fa fa-user"></i>Profile</a>
                             <li class="dropdown-divider"></li>
-                            <a class="dropdown-item" href="login.html"><i class="fa fa-power-off"></i>Logout</a>
+                            <a class="dropdown-item" href="/logout"><i class="fa fa-power-off"></i>Logout</a>
                         </ul>
                     </li>
                 </ul>
@@ -58,7 +66,7 @@
                         <img src="~/img/admin-avatar.png" width="45px" />
                     </div>
                     <div class="admin-info">
-                        <div class="font-strong">James Brown</div><small>Administrator</small></div>
+                        <div class="font-strong">@surname.Value @name.Value</div><small>@role.Value</small></div>
                 </div>
                 <ul class="side-menu metismenu">
                     <li>

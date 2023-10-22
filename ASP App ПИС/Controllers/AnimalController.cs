@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_App_ПИС.Controllers
 {
+    [Authorize]
     public class AnimalController : Controller
     {
         private IWebService _service;

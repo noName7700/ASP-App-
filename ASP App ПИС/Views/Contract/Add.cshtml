@@ -1,5 +1,10 @@
 ﻿@using Domain;
+@using System.Security.Claims
 @model IEnumerable<Municipality>;
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+}
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -22,10 +27,13 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="munname">Муниципалитет:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="munname" name="municipality">
+                            <select class="form-control" id="munname" name="municipality" disabled>
                                 @foreach (var mun in Model)
                                 {
-                                    <option value="@mun.id">@mun.name</option>
+                                    if (mun.id == munId)
+                                    {
+                                        <option value="@mun.id">@mun.name</option>
+                                    }
                                 }
                             </select>
                         </div>

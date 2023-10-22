@@ -3,10 +3,11 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
 using System.Diagnostics.Contracts;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASP_App_ПИС.Controllers
 {
+    [Authorize]
     public class ActController : Controller
     {
         private IWebService _service;

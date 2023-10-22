@@ -60,6 +60,12 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<TaskMonth>>();
         }
 
+        public async Task<IEnumerable<Usercapture>> GetUsers()
+        {
+            var response = await _client.GetAsync("/api/User");
+            return await response.ReadContentAsync<List<Usercapture>>();
+        }
+
         public async Task<Schedule> GetScheduleFromTaskMonthId(int id)
         {
             var response = await _client.GetAsync($"/api/Schedule/task/{id}");
