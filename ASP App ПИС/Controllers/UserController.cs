@@ -25,13 +25,13 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpPost]
         [Route("/login")]
-        public async Task<IResult> IndexPost(string returnUrl)
+        public async Task<IActionResult> IndexPost(string returnUrl) // было Task<IResult>
         {
             var users = _service.GetUsers();
             var login = Request.Form["login"];
             var password = Request.Form["password"];
             Usercapture user = users.Result.FirstOrDefault(u => u.login == login && u.password == password);
-            if (user == null) return Results.Unauthorized();
+            if (user == null) return Unauthorized();
             var claims = new List<Claim> { 
                 new Claim(ClaimTypes.NameIdentifier, user.login), 
                 new Claim(ClaimTypes.Role, user.role),
@@ -42,7 +42,8 @@ namespace ASP_App_ПИС.Controllers
                 };
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await Request.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-            return Results.Redirect(returnUrl??"/");
+            //return Results.Redirect(returnUrl??"/");
+            return Redirect("/home/");
         }
 
         [HttpGet]

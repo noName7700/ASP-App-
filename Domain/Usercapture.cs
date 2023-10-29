@@ -19,5 +19,6 @@ namespace Domain
         public Locality? Locality { get; set; }
         public string login { get; set; }
         public string password { get; set; }
+        public bool isadmin { get; set; }
     }
 }
