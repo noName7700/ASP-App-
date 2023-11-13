@@ -19,7 +19,15 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Usercapture>> Get()
         {
-            return await _context.usercapture.ToListAsync();
+            return await _context.usercapture.Include(u => u.Municipality).Include(u => u.Locality).ToListAsync();
+        }
+
+        [HttpPost]
+        [Route("/api/User/add")]
+        public async Task Post([FromBody] Usercapture value)
+        {
+            await _context.usercapture.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
     }
 }

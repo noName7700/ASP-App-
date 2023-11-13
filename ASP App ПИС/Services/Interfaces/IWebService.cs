@@ -53,6 +53,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddTaskMonth(TaskMonth value);
         Task<HttpResponseMessage> EditTaskMonth(int id, TaskMonth value);
         Task<HttpResponseMessage> DeleteTaskMonth(int id);
+        Task<HttpResponseMessage> AddUser(Usercapture value);
         //Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value);
 
         // отчет - деньги

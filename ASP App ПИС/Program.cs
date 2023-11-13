@@ -8,11 +8,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/login");
 builder.Services.AddAuthorization();
 
-builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri("https://localhost:44370/"));
+builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri("https://localhost:7022/"));
 
 var app = builder.Build();
-
-// получение данных
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

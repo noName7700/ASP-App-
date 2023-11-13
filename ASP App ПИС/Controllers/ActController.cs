@@ -4,6 +4,7 @@ using Domain;
 using ASP_App_ПИС.Models;
 using System.Diagnostics.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -88,7 +89,11 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddAnimal(animal);
             Animal lastAni = await _service.GetLastAnimal();
 
-            int localityid = int.Parse(Request.Form["locality"]);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+
+            int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
 
             // нахожу контракт по нас. пункту
             var conid = (await _service.GetOneContract_Locality(localityid)).contractid;

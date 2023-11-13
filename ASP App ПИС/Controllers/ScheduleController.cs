@@ -3,6 +3,7 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -40,6 +41,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
+        [Route("/schedule/add")]
         public async Task<IActionResult> Add()
         {
             IEnumerable<Locality> locs = await _service.GetLocalities();
@@ -62,7 +64,12 @@ namespace ASP_App_ПИС.Controllers
                 };
                 await _service.AddTaskMonth(tm);
                 TaskMonth lastTm = await _service.GetLastTaskMonth();
-                Locality loc = await _service.GetOneLocality(int.Parse(Request.Form["locality"]));
+
+                var claims = HttpContext.Request.HttpContext.User.Claims;
+                var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+                var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+                int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
+                Locality loc = await _service.GetOneLocality(localityid);
                 Schedule sch = new Schedule { localityid = loc.id,taskmonthid = lastTm.id, dateapproval = DateTime.Parse(Request.Form["dateapproval"]) };
                 await _service.AddSchedule(sch);
                 return Redirect("/schedule/");

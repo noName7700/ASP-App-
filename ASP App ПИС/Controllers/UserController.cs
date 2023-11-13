@@ -40,6 +40,7 @@ namespace ASP_App_ПИС.Controllers
                 new Claim(ClaimTypes.Locality, user.localityid.ToString()),
                 new Claim(ClaimTypes.StateOrProvince, user.municipalityid.ToString())
                 };
+            claims.Add(new Claim("IsAdmin", user.isadmin.ToString(), "bool"));
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
             await Request.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
             //return Results.Redirect(returnUrl??"/");
@@ -52,6 +53,45 @@ namespace ASP_App_ПИС.Controllers
         {
             await Request.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect("/login");
+        }
+
+        [HttpGet]
+        [Route("/user")]
+        public new async Task<IActionResult> User()
+        {
+            var users = await _service.GetUsers();
+            return View(users);
+        }
+
+        [HttpGet]
+        [Route("/user/add")]
+        public new async Task<IActionResult> Add()
+        {
+            ViewData["muns"] = await _service.GetMunicipalities();
+            ViewData["locs"] = await _service.GetLocalities();
+            return View();
+        }
+
+        [HttpPost]
+        [Route("/user/add")]
+        public new async Task<IActionResult> AddPost()
+        {
+            var role = Request.Form["role"] == "admin" ? "Админ" : "Оператор по отлову";
+            var isAdmin = Request.Form["role"] == "admin";
+            Usercapture user = new Usercapture
+            {
+                surname = Request.Form["surname"],
+                name = Request.Form["name"],
+                patronymic = Request.Form["patronymic"],
+                role = role,
+                municipalityid = int.Parse(Request.Form["municipality"]),
+                localityid = int.Parse(Request.Form["locality"]),
+                login = Request.Form["login"],
+                password = Request.Form["password"],
+                isadmin = isAdmin
+            };
+            await _service.AddUser(user);
+            return Redirect("/user");
         }
     }
 }

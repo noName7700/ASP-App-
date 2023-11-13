@@ -4,6 +4,7 @@
 @{
     var claims = Context.Request.HttpContext.User.Claims;
     var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 
 <div class="content-wrapper">
@@ -26,14 +27,24 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="locality">Населенный пункт:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="locality" name="locality" disabled>
-                                @foreach(var loc in Model)
+                            <select class="form-control" id="locality" name="locality" @if (!isAdmin) Write("disabled");>
+                                @if (!isAdmin) 
                                 {
-                                    if (loc.id == locId)
+                                    @foreach (var loc in Model)
+                                    {
+                                        if (loc.id == locId)
+                                        {
+                                            <option value="@loc.id">@loc.name</option>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    @foreach (var loc in Model)
                                     {
                                         <option value="@loc.id">@loc.name</option>
                                     }
-                                }                                
+                                }      
                             </select>
                         </div>
                     </div>

@@ -307,6 +307,13 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Locality>();
         }
 
+        public async Task<HttpResponseMessage> AddUser(Usercapture value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PostAsync($"/api/User/add", content);
+        }
+
         //public async Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value)
         //{
         //    string jsonString = JsonSerializer.Serialize(value);

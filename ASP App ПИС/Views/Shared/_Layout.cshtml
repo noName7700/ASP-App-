@@ -5,6 +5,7 @@
     var name = claims.Where(c => c.Type == ClaimTypes.Name).First();
     var surname = claims.Where(c => c.Type == ClaimTypes.Surname).First();
     var login = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).First();
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -106,9 +107,12 @@
                             <li>
                                 <a href="/municipality/">Муниципалитеты</a>
                             </li>
+                            @if(isAdmin)
+                            {
                             <li>
                                 <a href="/municipality/add">Добавить<br/>муниципалитет</a>
                             </li>
+                            }
                         </ul>
                     </li>
                     <li>
@@ -123,6 +127,21 @@
                             </li>
                         </ul>
                     </li>
+                    @if (isAdmin)
+                    {
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-user"></i>
+                            <span class="nav-label">Пользователи</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="/user/">Список пользователей</a>
+                            </li>
+                            <li>
+                                <a href="/user/add">Добавить пользователя</a>
+                            </li>
+                        </ul>
+                    </li>   
+                    }
                     <li class="heading">ОТЧЕТЫ</li>
                     <li>
                         <a href="/report/money"><i class="sidebar-item-icon fa fa-clipboard"></i>

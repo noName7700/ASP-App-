@@ -5,6 +5,7 @@
     var claims = Context.Request.HttpContext.User.Claims;
     var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
     var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 
 <div class="content-wrapper">
@@ -28,12 +29,22 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="munname">Муниципалитет</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="munname" name="municipality" disabled>
+                            <select class="form-control" id="munname" name="municipality" @if (!isAdmin) Write("disabled");>
                                 @foreach (var enummun in Model.Values)
                                 {
-                                    @foreach (var mun in enummun)
+                                    if (!isAdmin)
                                     {
+                                        @foreach (var mun in enummun)
+                                        {
                                         if (mun.id == munId)
+                                        {
+                                            <option value="@mun.id">@mun.name</option>
+                                        }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach (var mun in enummun)
                                         {
                                             <option value="@mun.id">@mun.name</option>
                                         }
@@ -46,12 +57,22 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="localityy" name="locality" disabled>
+                            <select class="form-control" id="localityy" name="locality"  @if (!isAdmin) Write("disabled");>
                                 @foreach(var enumloc in Model.Keys)
                                 {
-                                    @foreach (var loc in enumloc)
+                                    if (!isAdmin)
                                     {
-                                        if (loc.id == locId)
+                                        @foreach (var loc in enumloc)
+                                        {
+                                            if (loc.id == locId)
+                                            {
+                                                <option value="@loc.id">@loc.name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach (var loc in enumloc)
                                         {
                                             <option value="@loc.id">@loc.name</option>
                                         }
@@ -108,3 +129,56 @@
     </div>
     <!-- END PAGE CONTENT-->
 </div>
+<script src="~/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
+<script>
+let startVal = $('#munname').val();
+$.ajax({
+    url: "https://localhost:7022/api/Locality/" + startVal,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    },
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+        let locs = $("#localityy");
+        locs.empty();
+        $.each(data, function(index, locality) {
+            locs.append($("<option />",
+                {
+                    value: locality.id,
+                    text: locality.name
+                }));
+        })
+    },
+    error: function(result, status, err) {
+        console.log("error:" + result + " status" + status + " err" + err)
+    }
+});
+$('#munname').change(function(e) {
+    let val = $(this).val();
+    $.ajax({
+        url: "https://localhost:7022/api/Locality/" + val,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            let locs = $("#localityy");
+            locs.empty();
+            $.each(data, function(index, locality) {
+                locs.append($("<option />",
+                    {
+                        value: locality.id,
+                        text: locality.name
+                    }));
+            })
+        },
+        error: function(result, status, err) {
+            console.log("error:" + result + " status" + status + " err" + err)
+        }
+    });
+});
+</script>

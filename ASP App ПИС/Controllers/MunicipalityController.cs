@@ -4,6 +4,7 @@ using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -40,7 +41,10 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            return View();
+            var isAdmin = bool.Parse( HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            if (isAdmin)
+                return View();
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

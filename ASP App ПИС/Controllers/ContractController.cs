@@ -3,6 +3,7 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -47,9 +48,15 @@ namespace ASP_App_ПИС.Controllers
         [Route("/contract/add")]
         public async Task<IActionResult> AddPost()
         {
-            Contract con = new Contract { validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
-                dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]), 
-                municipalityid = int.Parse(Request.Form["municipality"])};
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            Contract con = new Contract
+            {
+                validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
+                dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]),
+                municipalityid = isAdmin ? int.Parse(Request.Form["municipality"]) : munId
+            };
             await _service.AddContract(con);
             return Redirect("/contract/");
         }

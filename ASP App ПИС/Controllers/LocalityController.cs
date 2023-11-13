@@ -46,7 +46,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/locality/add/{id}")]
         public IActionResult Add(int id)
         {
-            return View(id);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            if (isAdmin)
+                return View(id);
+            return Redirect($"/locality/{id}");
         }
 
         [HttpPost]

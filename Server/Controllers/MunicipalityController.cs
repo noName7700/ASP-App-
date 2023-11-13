@@ -73,7 +73,7 @@ namespace Server.Controllers
         {
             return await _context.locality
                 .Include(l => l.Municipality)
-                .Where(m => m.municipalityid == id)
+                .Where(l => l.id == id)
                 .Select(m => m.Municipality)
                 .FirstAsync();
         }
