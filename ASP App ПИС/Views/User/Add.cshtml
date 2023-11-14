@@ -119,7 +119,7 @@ $('#munname').change(function(e) {
     if (val != '0') {
         $('#locality-div').show();
         $.ajax({
-            url: "https://localhost:7022/api/Locality/" + val,
+            url: "https://localhost:44370/api/Locality/" + val,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

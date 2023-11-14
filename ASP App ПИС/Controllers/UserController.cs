@@ -1,9 +1,11 @@
-﻿using ASP_App_ПИС.Services.Interfaces;
+﻿using ASP_App_ПИС.Models;
+using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -57,9 +59,23 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/user")]
-        public new async Task<IActionResult> User()
+        public new async Task<IActionResult> User(string search, SortState sort = SortState.NameAsc)
         {
             var users = await _service.GetUsers();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(us => us.surname.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(us => us).ToList();
+                ViewData["search"] = search;
+            }
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            users = sort switch
+            {
+                SortState.NameAsc => users.OrderBy(sc => sc.surname),
+                SortState.NameDesc => users.OrderByDescending(sc => sc.surname)
+            };
+
             return View(users);
         }
 
