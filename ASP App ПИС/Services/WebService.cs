@@ -390,5 +390,23 @@ namespace ASP_App_ПИС.Services
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PostAsync($"/api/Organization/add", content);
         }
+
+        public async Task<Organization> GetOneOrganization(int id)
+        {
+            var response = await _client.GetAsync($"/api/Organization/one/{id}");
+            return await response.ReadContentAsync<Organization>();
+        }
+
+        public async Task<HttpResponseMessage> EditOrganization(int id, Organization value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PutAsync($"/api/Organization/put/{id}", content);
+        }
+
+        public async Task<HttpResponseMessage> DeleteOrganization(int id)
+        {
+            return await _client.DeleteAsync($"/api/Organization/delete/{id}");
+        }
     }
 }

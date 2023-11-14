@@ -75,6 +75,9 @@ namespace ASP_App_ПИС.Services.Interfaces
 
         Task<HttpResponseMessage> EditTariphLocality(int id, Contract_Locality value);
         Task<IEnumerable<Organization>> GetOrganizations();
+        Task<Organization> GetOneOrganization(int id);
         Task<HttpResponseMessage> AddOrganization(Organization value);
+        Task<HttpResponseMessage> EditOrganization (int id, Organization value);
+        Task<HttpResponseMessage> DeleteOrganization(int id);
     }
 }

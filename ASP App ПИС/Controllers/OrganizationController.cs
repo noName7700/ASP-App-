@@ -62,5 +62,35 @@ namespace ASP_App_ПИС.Controllers
             }
             return Redirect("/organization/");
         }
+
+        [HttpGet]
+        [Route("/organization/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Organization org = await _service.GetOneOrganization(id);
+            return View(org);
+        }
+
+        [HttpPost]
+        [Route("/organization/edit/{id}")]
+        public async Task<IActionResult> EditPut(int id)
+        {
+            Organization org = new Organization
+            {
+                name = Request.Form["name"],
+                telephone = Request.Form["telephone"],
+                email = Request.Form["email"]
+            };
+            await _service.EditOrganization(id, org);
+            return Redirect("/organization/");
+        }
+
+        [HttpGet]
+        [Route("/organization/delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteOrganization(id);
+            return Redirect($"/organization/");
+        }
     }
 }

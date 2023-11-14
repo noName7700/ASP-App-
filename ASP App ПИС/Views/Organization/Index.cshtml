@@ -44,6 +44,9 @@
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             E-mail
                                         </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                            Действия
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -53,6 +56,10 @@
                                             <td>@org.name</td>
                                             <td>@org.telephone</td>
                                             <td>@org.email</td>
+                                            <td>
+                                                <a href="/organization/edit/@org.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                                <a href="/organization/delete/@org.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>
