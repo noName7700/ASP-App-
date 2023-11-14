@@ -10,6 +10,12 @@
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
+            <li class="breadcrumb-item">
+                <a href="/user/">Список пользователей</a>
+            </li>
+            <li class="breadcrumb-item">
+                Добавить пользователя
+            </li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
@@ -20,7 +26,7 @@
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="nameloc">Фамилия:</label>
+                        <label class="col-sm-2 col-form-label" for="surname">Фамилия:</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="surname" type="text" name="surname">
                             <span class="help-block">
@@ -29,7 +35,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="nameloc">Имя:</label>
+                        <label class="col-sm-2 col-form-label" for="name">Имя:</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="name" type="text" name="name">
                             <span class="help-block">
@@ -38,9 +44,9 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="nameloc">Отчество (при наличии):</label>
+                        <label class="col-sm-2 col-form-label" for="patron">Отчество (при наличии):</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="patronymic" type="text" name="patronymic">
+                            <input class="form-control" id="patron" type="text" name="patronymic">
                             <span class="help-block">
                                 <span></span>
                             </span>
@@ -48,7 +54,27 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="role">Роль</label>
+                        <label class="col-sm-2 col-form-label" for="telephone">Номер телефона:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="telephone" type="tel" name="telephone">
+                            <span class="help-block">
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="email">E-mail:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="email" type="email" name="email">
+                            <span class="help-block">
+                                <span></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="role">Роль:</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="role" name="role">
                                 <option value="operator">Оператор по отлову</option>
@@ -58,7 +84,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label" for="munname">Муниципалитет</label>
+                        <label class="col-sm-2 col-form-label" for="munname">Муниципалитет:</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="munname" name="municipality">
                             <option value="0">-</option>
@@ -71,12 +97,24 @@
                     </div>
 
                     <div class="form-group row" id="locality-div">
-                        <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт</label>
+                        <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт:</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="localityy" name="locality">
                                 @foreach (Locality loc in (IEnumerable)ViewData["locs"])
                             {
                                 <option value="@loc.id">@loc.name</option>
+                            }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="organization">Организация:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="organization" name="organization">
+                                @foreach (Organization org in (IEnumerable)ViewData["orgs"])
+                            {
+                                <option value="@org.id">@org.name</option>
                             }
                             </select>
                         </div>

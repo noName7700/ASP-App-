@@ -17,6 +17,10 @@ namespace Domain
         public Municipality? Municipality { get; set; }
         public int localityid { get; set; }
         public Locality? Locality { get; set; }
+        public int organizationid { get; set; }
+        public Organization? Organization { get; set; }
+        public string telephone { get; set; }
+        public string email { get; set; }
         public string login { get; set; }
         public string password { get; set; }
         public bool isadmin { get; set; }

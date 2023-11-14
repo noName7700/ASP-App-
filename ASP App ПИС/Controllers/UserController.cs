@@ -65,7 +65,7 @@ namespace ASP_App_ПИС.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                users = users.Where(us => us.surname.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(us => us).ToList();
+                users = users.Where(us => us.Organization.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(us => us).ToList();
                 ViewData["search"] = search;
             }
 
@@ -85,6 +85,7 @@ namespace ASP_App_ПИС.Controllers
         {
             ViewData["muns"] = await _service.GetMunicipalities();
             ViewData["locs"] = await _service.GetLocalities();
+            ViewData["orgs"] = await _service.GetOrganizations();
             return View();
         }
 
@@ -100,8 +101,11 @@ namespace ASP_App_ПИС.Controllers
                 name = Request.Form["name"],
                 patronymic = Request.Form["patronymic"],
                 role = role,
+                telephone = Request.Form["telephone"],
+                email = Request.Form["email"],
                 municipalityid = int.Parse(Request.Form["municipality"]),
                 localityid = int.Parse(Request.Form["locality"]),
+                organizationid = int.Parse(Request.Form["organization"]),
                 login = Request.Form["login"],
                 password = Request.Form["password"],
                 isadmin = isAdmin

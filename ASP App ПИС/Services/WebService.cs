@@ -377,5 +377,18 @@ namespace ASP_App_ПИС.Services
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PutAsync($"/api/Contract_Locality/put/{id}", content);
         }
+
+        public async Task<IEnumerable<Organization>> GetOrganizations()
+        {
+            var response = await _client.GetAsync("/api/Organization");
+            return await response.ReadContentAsync<IEnumerable<Organization>>();
+        }
+
+        public async Task<HttpResponseMessage> AddOrganization(Organization value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PostAsync($"/api/Organization/add", content);
+        }
     }
 }

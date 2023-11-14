@@ -14,6 +14,7 @@ namespace Server.Application
         public DbSet<TaskMonth> taskmonth { get; set; } = null!;
         public DbSet<Schedule> schedule { get; set; } = null!;
         public DbSet<Usercapture> usercapture { get; set; } = null!;
+        public DbSet<Organization> organization { get; set; } = null!;
 
         public ApplicationContext()
         {

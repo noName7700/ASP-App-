@@ -127,6 +127,23 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="javascript:;">
+                            <i class="sidebar-item-icon fa fa-user"></i>
+                            <span class="nav-label">Организации</span><i class="fa fa-angle-left arrow"></i>
+                        </a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="/organization/">Список организаций</a>
+                            </li>
+                            @if (isAdmin)
+                            {
+                            <li>
+                                    <a href="/organization/add">Добавить<br>организацию</a>
+                            </li>
+                            }
+                        </ul>
+                    </li>
                     @if (isAdmin)
                     {
                      <li>

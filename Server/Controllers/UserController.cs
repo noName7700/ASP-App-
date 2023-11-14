@@ -19,7 +19,11 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Usercapture>> Get()
         {
-            return await _context.usercapture.Include(u => u.Municipality).Include(u => u.Locality).ToListAsync();
+            return await _context.usercapture
+                .Include(u => u.Municipality)
+                .Include(u => u.Locality)
+                .Include(u => u.Organization)
+                .ToListAsync();
         }
 
         [HttpPost]

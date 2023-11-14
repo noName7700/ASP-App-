@@ -1,0 +1,66 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using ASP_App_ПИС.Services.Interfaces;
+using Domain;
+using ASP_App_ПИС.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
+namespace ASP_App_ПИС.Controllers
+{
+    public class OrganizationController : Controller
+    {
+        private IWebService _service;
+        public OrganizationController(IWebService service)
+        {
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        {
+            var orgs = await _service.GetOrganizations();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                orgs = orgs.Where(o => o.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(o => o).ToList();
+                ViewData["search"] = search;
+            }
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            orgs = sort switch
+            {
+                SortState.NameAsc => orgs.OrderBy(m => m.name),
+                SortState.NameDesc => orgs.OrderByDescending(m => m.name)
+            };
+
+            return View(orgs);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            if (isAdmin)
+                return View();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Route("/organization/add")]
+        public async Task<IActionResult> AddPost()
+        {
+            var name = Request.Form["name"];
+            var telephone = Request.Form["telephone"];
+            var email = Request.Form["email"];
+            if (name != "" && telephone != "" && email != "")
+            {
+                Organization org = new Organization { name = name, telephone = telephone, email = email };
+                await _service.AddOrganization(org);
+                return Redirect("/organization/");
+            }
+            return Redirect("/organization/");
+        }
+    }
+}

@@ -16,7 +16,7 @@
     <form class="navbar-search" method="get">
         <div class="rel" style="display:flex; align-items:center;width:350px">
             <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Фамилия пользователя">
+            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Название организации">
         </div>
     </form>
     <hr>
@@ -26,32 +26,41 @@
                 <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                     <div class="row"><div class="col-sm-12 col-md-6">
                         <div class="dataTables_length" id="example-table_length">
-                            </div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                            </div></div></div><div class="row"><div class="col-sm-12" style="position: relative; right: 20px;"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                     <thead>
                         <tr role="row">
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 260px; font-size: 14px;">
                                 Фамилия
                                 <a asp-action="User" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Имя
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Отчество
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
+                                Телефон
+                            </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
+                                E-mail
+                            </th>
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Роль
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Муниципалитет
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Населенный пункт
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
+                                Организация
+                            </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Логин
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Пароль
                             </th>
                         </tr>
@@ -60,14 +69,17 @@
                     @foreach(var user in Model)
                     {
                         <tr role="row" class="odd">
-                            <td>@user.surname</td>
-                            <td>@user.name</td>
-                            <td>@user.patronymic</td>
-                            <td>@user.role</td>
-                            <td>@user.Municipality.name</td>        
-                            <td>@user.Locality.name</td>       
-                            <td>@user.login</td>
-                            <td>@user.password</td>
+                                            <td style="font-size: 14px;">@user.surname</td>
+                                            <td style="font-size: 14px;">@user.name</td>
+                                            <td style="font-size: 14px;">@user.patronymic</td>
+                                            <td style="font-size: 14px;">@user.telephone</td>
+                                            <td style="font-size: 14px;">@user.email</td>
+                                            <td style="font-size: 14px;">@user.role</td>
+                                            <td style="font-size: 14px;">@user.Municipality.name</td>
+                                            <td style="font-size: 14px;">@user.Locality.name</td>
+                                            <td style="font-size: 14px;">@user.Organization.name</td>
+                                            <td style="font-size: 14px;">@user.login</td>
+                                            <td style="font-size: 14px;">@user.password</td>
                         </tr>
                     }
                     </tbody>
