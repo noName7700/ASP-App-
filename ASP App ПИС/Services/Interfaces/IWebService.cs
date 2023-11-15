@@ -79,5 +79,8 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddOrganization(Organization value);
         Task<HttpResponseMessage> EditOrganization (int id, Organization value);
         Task<HttpResponseMessage> DeleteOrganization(int id);
+        Task<IEnumerable<Journal>> GetJournal(int id);
+        Task<HttpResponseMessage> AddJournal(Journal value);
+        Task<HttpResponseMessage> DeleteJournal(int id);
     }
 }

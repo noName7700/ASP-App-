@@ -408,5 +408,29 @@ namespace ASP_App_ПИС.Services
         {
             return await _client.DeleteAsync($"/api/Organization/delete/{id}");
         }
+
+        public async Task<IEnumerable<Journal>> GetJournal(int id)
+        {
+            var response = await _client.GetAsync($"/api/Journal/{id}");
+            return await response.ReadContentAsync<IEnumerable<Journal>>();
+        }
+
+        public async Task<HttpResponseMessage> AddJournal(Journal value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
+
+            //int indexT = jsonString.IndexOf('T'); // индекс Т к нему прибавляю 9
+            //jsonString = jsonString.Remove(indexT + 9, 14); // удаляю там что-то
+            //jsonString = jsonString.Insert(indexT + 9, ".0Z"); // добавляю это
+
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PostAsync($"/api/Journal/add", content);
+        }
+
+        public async Task<HttpResponseMessage> DeleteJournal(int id)
+        {
+            return await _client.DeleteAsync($"/api/Journal/delete/{id}");
+        }
     }
 }

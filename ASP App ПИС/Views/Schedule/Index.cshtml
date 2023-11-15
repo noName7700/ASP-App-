@@ -20,7 +20,7 @@
         </div>
     </form>
     <hr>
-            <div class="page-content fade-in-up">
+            <div class="page-content fade-in-up" style="text-align: right;">
                 <div class="ibox">
                     <div class="ibox-body">
                         <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
@@ -29,24 +29,24 @@
                                    </div></div></div><div class="row"><div class="col-sm-12"><table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; text-align: left;">
                                         Населенный пункт
                                         <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                     </th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; text-align: left;">
                                         Дата утверждения
                                         <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                     </th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">План-график</th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; text-align: left;">План-график</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach(var sch in Model)
                             {
                             <tr role="row" class="odd">
-                                <td>@sch.Locality.name</td>
-                                <td>@sch.dateapproval.ToShortDateString()</td>
-                                <td><a href="/scheduleone/@sch.localityid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
+                                            <td style="text-align: left;">@sch.Locality.name</td>
+                                            <td style="text-align: left;">@sch.dateapproval.ToShortDateString()</td>
+                                            <td style="text-align: left;"><a href="/scheduleone/@sch.localityid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
                             </tr>
                             }
                             </tbody>
@@ -54,6 +54,8 @@
                 
                     </div>
                 </div>
+
+               <a href="/journal/1">Посмотреть журнал изменений</a>
             </div>
             <!-- END PAGE CONTENT-->
         </div>

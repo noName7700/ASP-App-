@@ -4,6 +4,7 @@ using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Xml;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -56,11 +57,15 @@ namespace ASP_App_ПИС.Controllers
         {
             if (Request.Form["dateapproval"] != "")
             {
+                var startdateForm = DateTime.Parse(Request.Form["startdate"]);
+                var enddateForm = DateTime.Parse(Request.Form["enddate"]);
+                var countanimalForm = int.Parse(Request.Form["count-animal"]);
+
                 TaskMonth tm = new TaskMonth
                 {
-                    startdate = DateTime.Parse(Request.Form["startdate"]),
-                    enddate = DateTime.Parse(Request.Form["enddate"]),
-                    countanimal = int.Parse(Request.Form["count-animal"])
+                    startdate = startdateForm,
+                    enddate = enddateForm,
+                    countanimal = countanimalForm
                 };
                 await _service.AddTaskMonth(tm);
                 TaskMonth lastTm = await _service.GetLastTaskMonth();
@@ -72,6 +77,23 @@ namespace ASP_App_ПИС.Controllers
                 Locality loc = await _service.GetOneLocality(localityid);
                 Schedule sch = new Schedule { localityid = loc.id,taskmonthid = lastTm.id, dateapproval = DateTime.Parse(Request.Form["dateapproval"]) };
                 await _service.AddSchedule(sch);
+
+                Schedule lastSched = await _service.GetLastSchedule(loc.id);
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+                // вместе со всем добавить строку в журнал
+                Journal jo = new Journal
+                {
+                    nametable = 1,
+                    usercaptureid = userid,
+                    //Usercapture = (await _service.GetUsers()).ToList().Where(u => u.id == userid).FirstOrDefault(),
+                    datetimechange = DateTime.Now,
+                    idobject = lastSched.id,
+                    description = $"{loc.name} - {lastSched.dateapproval.ToString("yyyy-MM-dd")}. Добавлена задача на месяц: {startdateForm.ToString("yyyy-MM-dd")} - " +
+                    $"{enddateForm.ToString("yyyy-MM-dd")} - {countanimalForm}"
+                };
+                await _service.AddJournal(jo);
+
                 return Redirect("/schedule/");
             }
             return Redirect("/schedule/");

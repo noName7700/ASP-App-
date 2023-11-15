@@ -35,6 +35,7 @@ namespace ASP_App_ПИС.Controllers
             Usercapture user = users.Result.FirstOrDefault(u => u.login == login && u.password == password);
             if (user == null) return Unauthorized();
             var claims = new List<Claim> { 
+                new Claim(ClaimTypes.Actor, user.id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.login), 
                 new Claim(ClaimTypes.Role, user.role),
                 new Claim(ClaimTypes.Name, user.name),
