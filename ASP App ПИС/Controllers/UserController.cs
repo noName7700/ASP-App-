@@ -112,6 +112,22 @@ namespace ASP_App_ПИС.Controllers
                 isadmin = isAdmin
             };
             await _service.AddUser(user);
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            Usercapture userAdd = await _service.GetLastUser();
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 6,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = userAdd.id,
+                description = $"Добавлен пользователь: {userAdd.surname} - {userAdd.name} - {userAdd.patronymic} - {userAdd.role} - {userAdd.Municipality.name} - " +
+                $"{userAdd.Locality.name} - {userAdd.Organization.name} - {userAdd.telephone} - {userAdd.email}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/user");
         }
     }

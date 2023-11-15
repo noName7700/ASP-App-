@@ -2,6 +2,7 @@
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -62,6 +63,21 @@ namespace ASP_App_ПИС.Controllers
                 contractid = conid
             };
             await _service.AddAct(act);
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            ActCapture lastAct = await _service.GetLastActCapture();
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Journal jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastAct.id,
+                description = $"{lastAct.Locality.name} - {lastAct.datecapture.ToString("dd.MM.yyyy")} Добавлено животное: {animalLast.category} - {animalLast.tail} - {animalLast.wool} - " +
+                $"{animalLast.sex} - {animalLast.size} - {animalLast.breed} - {animalLast.color} - {animalLast.ears}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect($"/animal/{id}/{date}");
         }
 
@@ -90,6 +106,22 @@ namespace ASP_App_ПИС.Controllers
                 specsings = Request.Form["specsigns"],
             };
             await _service.EditAnimal(id, an);
+
+            ActCapture act = await _service.GetActFromAnimalId(id);
+            Animal animalEdit = await _service.GetAnimalOne(id);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Journal jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = animalEdit.id,
+                description = $"{act.Locality.name} - {act.datecapture.ToString("dd.MM.yyyy")} Изменено животное: {animalEdit.category} - {animalEdit.tail} - {animalEdit.wool} - " +
+                $"{animalEdit.sex} - {animalEdit.size} - {animalEdit.breed} - {animalEdit.color} - {animalEdit.ears}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/act/");
         }
 
@@ -98,8 +130,23 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             ActCapture act = await _service.GetActFromAnimalId(id);
+            Animal animalDelet = await _service.GetAnimalOne(id);
             await _service.DeleteAct(act.id);
             await _service.DeleteAnimal(id);
+            
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Journal jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = animalDelet.id,
+                description = $"{act.Locality.name} - {act.datecapture.ToString("dd.MM.yyyy")} Удалено животное: {animalDelet.category} - {animalDelet.tail} - {animalDelet.wool} - " +
+                $"{animalDelet.sex} - {animalDelet.size} - {animalDelet.breed} - {animalDelet.color} - {animalDelet.ears}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect($"/animal/{act.localityid}/{act.datecapture.ToShortDateString()}");
         }
     }

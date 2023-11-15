@@ -105,6 +105,31 @@ namespace ASP_App_ПИС.Controllers
                 contractid = conid
             };
             await _service.AddAct(act);
+
+            ActCapture lastAct = await _service.GetLastActCapture();
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastAct.id,
+                description = $"Добавлен акт отлова: {lastAct.Locality.name} - {lastAct.datecapture.ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
+
+            jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastAct.id,
+                description = $"{lastAct.Locality.name} - {lastAct.datecapture.ToString("dd.MM.yyyy")} Добавлено животное: {lastAni.category} - {lastAni.tail} - {lastAni.wool} - " +
+                $"{lastAni.sex} - {lastAni.size} - {lastAni.breed} - {lastAni.color} - {lastAni.ears}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/act/");
         }
 
@@ -139,6 +164,20 @@ namespace ASP_App_ПИС.Controllers
                 };
                 await _service.EditAct(loc.id, act);
             }
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Locality locNeed = await _service.GetOneLocality(int.Parse(Request.Form["locality"]));
+            Journal jo = new Journal
+            {
+                nametable = 4,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = locNeed.id,
+                description = $"Изменен акт отлова: {locNeed.name} - {DateTime.Parse(Request.Form["datecapture"]).ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/act/");
         }
     }

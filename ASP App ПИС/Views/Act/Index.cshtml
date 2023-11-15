@@ -1,5 +1,9 @@
 ﻿@using Domain;
 @model IEnumerable<Locality>
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+}
 
 <div class="content-wrapper">
             <!-- START PAGE CONTENT-->
@@ -50,7 +54,11 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                        @if (isAdmin)
+                        {
+                            <a href="/journal/4">Посмотреть журнал изменений</a>
+                        }
+                    </div>
             </div>
             <!-- END PAGE CONTENT-->
         </div>

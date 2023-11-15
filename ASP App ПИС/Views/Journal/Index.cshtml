@@ -30,40 +30,40 @@
                             </div>
                         </div>
                     </div><div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                        <div class="col-sm-12" style="position: relative; right: 20px;">
+                            <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;font-size: 12px;">
                                 <thead>
                                     <tr role="row">
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             ФИО
                                             @* <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a> *@
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Телефон
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Электронная почта
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Организация
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             Должность
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Рабочий телефон
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             Рабочий E-mail
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Дата и время изменений
+                                            Дата и время
+                                        </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
+                                            Номер экземпляра
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Номер экземпляра объекта
-                                        </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Описание экземпляра после действия
+                                            Описание
                                         </th>
                                     </tr>
                                 </thead>
@@ -71,14 +71,14 @@
                                     @foreach (var jou in Model)
                                     {
                                         <tr role="row" class="odd">
-                                            <td>@jou.Usercapture.surname + " " + @jou.Usercapture.name + " " + @jou.Usercapture.patronymic</td>
+                                            <td>@jou.Usercapture.surname @jou.Usercapture.name @jou.Usercapture.patronymic</td>
                                             <td>@jou.Usercapture.telephone</td>
                                             <td>@jou.Usercapture.email</td>
                                             <td>@jou.Usercapture.Organization.name</td>
                                             <td>@jou.Usercapture.role</td>
                                             <td>@jou.Usercapture.Organization.telephone</td>
                                             <td>@jou.Usercapture.Organization.email</td>
-                                            <td>@jou.datetimechange.ToString("dd.MM.yyyy") + " " + @jou.datetimechange.ToShortTimeString()</td>
+                                            <td>@jou.datetimechange.ToString("dd.MM.yyyy") @jou.datetimechange.ToShortTimeString()</td>
                                             <td>@jou.idobject</td>
                                             <td>@jou.description</td>
                                         </tr>

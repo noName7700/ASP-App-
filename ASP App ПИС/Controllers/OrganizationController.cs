@@ -58,6 +58,21 @@ namespace ASP_App_ПИС.Controllers
             {
                 Organization org = new Organization { name = name, telephone = telephone, email = email };
                 await _service.AddOrganization(org);
+
+                var claims = HttpContext.Request.HttpContext.User.Claims;
+                Organization orgLast = await _service.GetLastOrganization();
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+                Journal jo = new Journal
+                {
+                    nametable = 5,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = orgLast.id,
+                    description = $"Добавлена организация: {orgLast.name} - {orgLast.telephone} - {orgLast.email}"
+                };
+                await _service.AddJournal(jo);
+
                 return Redirect("/organization/");
             }
             return Redirect("/organization/");
@@ -82,6 +97,21 @@ namespace ASP_App_ПИС.Controllers
                 email = Request.Form["email"]
             };
             await _service.EditOrganization(id, org);
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            Organization orgEdit = await _service.GetOneOrganization(id);
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 5,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = orgEdit.id,
+                description = $"Изменена организация: {orgEdit.name} - {orgEdit.telephone} - {orgEdit.email}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/organization/");
         }
 
@@ -89,7 +119,23 @@ namespace ASP_App_ПИС.Controllers
         [Route("/organization/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            Organization orgEdit = await _service.GetOneOrganization(id);
             await _service.DeleteOrganization(id);
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 5,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = orgEdit.id,
+                description = $"Удалена организация: {orgEdit.name} - {orgEdit.telephone} - {orgEdit.email}"
+            };
+            await _service.AddJournal(jo);
+
+            
             return Redirect($"/organization/");
         }
     }

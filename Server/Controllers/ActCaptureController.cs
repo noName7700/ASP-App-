@@ -50,6 +50,18 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/ActCapture/last")]
+        public async Task<ActCapture> GetLast()
+        {
+            return await _context.actcapture
+                .Include(a => a.Animal)
+                .Include(a => a.Locality)
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
+        [HttpGet]
         [Route("/api/ActCapture/{locid}/{date}")]
         public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
         {
@@ -66,7 +78,11 @@ namespace Server.Controllers
         [Route("/api/ActCapture/animal/{id}")]
         public async Task<ActCapture> GetFromAnimalId(int id)
         {
-            return await _context.actcapture.Where(a => a.animalid == id).Select(a => a).FirstAsync();
+            return await _context.actcapture
+                .Include(ac => ac.Locality)
+                .Where(a => a.animalid == id)
+                .Select(a => a)
+                .FirstAsync();
         }
 
         // тут вывести акты отлова с сортировкой по дате

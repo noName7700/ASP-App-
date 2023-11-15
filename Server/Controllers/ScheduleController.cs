@@ -61,7 +61,9 @@ namespace Server.Controllers
         [Route("/api/Schedule/task/{id}")]
         public async Task<Schedule> GetFromTaskMonthId(int id)
         {
-            return await _context.schedule.Where(s => s.taskmonthid == id).Select(s => s).FirstAsync();
+            return await _context.schedule
+                .Include(sc => sc.Locality)
+                .Where(s => s.taskmonthid == id).Select(s => s).FirstAsync();
         }
 
         // добавить новый план-график
