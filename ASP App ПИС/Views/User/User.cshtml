@@ -27,6 +27,10 @@
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-body">
+                @if (isAdmin)
+                {
+                    <div style="margin-bottom: 17px;"><a href="/journal/6">Посмотреть журнал изменений</a></div>
+                }
                 <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                     <div class="row"><div class="col-sm-12 col-md-6">
                         <div class="dataTables_length" id="example-table_length">
@@ -35,7 +39,7 @@
                         <tr role="row">
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 260px; font-size: 14px;">
                                 Фамилия
-                                <a asp-action="User" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="User" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Имя
@@ -88,10 +92,7 @@
                     }
                     </tbody>
                 </table>
-                            @if (isAdmin)
-                            {
-                                <a href="/journal/6">Посмотреть журнал изменений</a>
-                            }
+                           
                         </div>
         </div>
     </div>

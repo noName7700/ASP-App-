@@ -26,10 +26,12 @@
     <hr>
             <div class="page-content fade-in-up">
                 <div class="ibox">
-                    <div class="ibox-head">
-                        <div class="ibox-title">Контракты</div>
-                    </div>
                     <div class="ibox-body">
+                @if (isAdmin)
+                {
+                    <div style="margin-bottom: 17px;">
+                        <a href="/journal/2">Посмотреть журнал изменений</a></div>
+                }
                         <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                             <div class="row"><div class="col-sm-12 col-md-6">
                                 <div class="dataTables_length" id="example-table_length">
@@ -64,10 +66,6 @@
                         </table>
                     </div>
                 </div>
-                    @if (isAdmin)
-                    {
-                        <a href="/journal/2">Посмотреть журнал изменений</a>
-                    }
 
             </div>
             <!-- END PAGE CONTENT-->

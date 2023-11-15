@@ -27,6 +27,12 @@
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-body">
+                @if (isAdmin)
+                {
+                    <div style="margin-bottom: 17px;">
+                        <a href="/journal/3">Посмотреть журнал изменений</a>
+                    </div>
+                }
                 <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                     <div class="row"><div class="col-sm-12 col-md-6">
                         <div class="dataTables_length" id="example-table_length">
@@ -51,10 +57,6 @@
                     </tbody>
                 </table>
             </div>
-                        @if (isAdmin)
-                        {
-                            <a href="/journal/3">Посмотреть журнал изменений</a>
-                        }
         </div>
     </div>
     <!-- END PAGE CONTENT-->

@@ -34,6 +34,11 @@
                             </div>
                         </div>
                     </div><div class="row">
+                        @if (isAdmin)
+                        {
+                            <div style="margin-bottom: 17px;">
+                                <a href="/journal/5">Посмотреть журнал изменений</a></div>
+                        }
                         <div class="col-sm-12">
                             <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                                 <thead>
@@ -68,10 +73,6 @@
                                     }
                                 </tbody>
                             </table>
-                            @if (isAdmin)
-                            {
-                                <a href="/journal/5">Посмотреть журнал изменений</a>
-                            }
                         </div>
                     </div>
                 </div>

@@ -6,5 +6,21 @@
         NameDesc,
         DateAsc,
         DateDesc,
+        UserTelAsc,
+        UserTelDesc,
+        UserEmailAsc,
+        UserEmailDesc,
+        OrgNameAsc,
+        OrgNameDesc,
+        UserRoleAsc,
+        UserRoleDesc,
+        OrgTelAsc,
+        OrgTelDesc,
+        OrgEmailAsc,
+        OrgEmailDesc,
+        NumberAsc,
+        NumberDesc,
+        DescAsc,
+        DescDesc
     }
 }
