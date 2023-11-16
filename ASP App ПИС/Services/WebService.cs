@@ -425,13 +425,13 @@ namespace ASP_App_ПИС.Services
             jsonString = jsonString.Remove(indexT + 9, 14);
             jsonString = jsonString.Insert(indexT + 9, ".0Z");
 
-            var firstNum = jsonString[indexT + 1];
+            /*var firstNum = jsonString[indexT + 1];
             var secongNum = jsonString[indexT + 2];
             var timeaa = $"{firstNum}{secongNum}";
             int hours = int.Parse(timeaa); // это беру часы от времени
             int nowHours = hours - 5;
             jsonString = jsonString.Remove(indexT + 1, 2); // удаляю текущее время
-            jsonString = jsonString.Insert(indexT + 1, nowHours.ToString()); // добавляю нужное
+            jsonString = jsonString.Insert(indexT + 1, nowHours.ToString()); // добавляю нужное*/
 
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PostAsync($"/api/Journal/add", content);

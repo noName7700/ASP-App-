@@ -1,0 +1,76 @@
+﻿@using Domain;
+@model Usercapture;
+
+<div class="content-wrapper">
+<div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-lg-3 col-md-4">
+            <div class="ibox">
+                <div class="ibox-body text-center">
+                    <div class="m-t-20">
+                        <img class="img-circle" src="/img/admin-avatar.png">
+                    </div>
+                    <h5 class="font-strong m-b-10 m-t-10">@Model.surname @Model.name</h5>
+                    <div class="m-b-20 text-muted">@Model.role</div>
+                    <div class="m-b-20 text-muted">@Model.Organization.name</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-8">
+            <div class="ibox">
+                <div class="ibox-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="tab-2" aria-expanded="true">
+                            <div class="row">
+                                <div class="col-sm-6 form-group">
+                                    <label>Имя</label>
+                                    <input class="form-control" value="@Model.name" type="text" disabled>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Фамилия</label>
+                                    <input class="form-control" value="@Model.surname" type="text" disabled>
+                                </div>
+                                <div class="col-sm-6 form-group">
+                                    <label>Отчество</label>
+                                    <input class="form-control" value="@Model.patronymic" type="text" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input class="form-control" type="text" value="@Model.email" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Номер телефона</label>
+                                <input class="form-control" type="tel" value="@Model.telephone" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Муниципалитет</label>
+                                <input class="form-control" type="text" value="@Model.Municipality.name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Населенный пункт</label>
+                                <input class="form-control" type="text" value="@Model.Locality.name" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .profile-social a {
+            font-size: 16px;
+            margin: 0 10px;
+            color: #999;
+        }
+
+        .profile-social a:hover {
+            color: #485b6f;
+        }
+
+        .profile-stat-count {
+            font-size: 22px
+        }
+    </style>
+</div>
+</div>

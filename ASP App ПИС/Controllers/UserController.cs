@@ -130,5 +130,15 @@ namespace ASP_App_ПИС.Controllers
 
             return Redirect("/user");
         }
+
+        [HttpGet]
+        [Route("/user/profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            var user = _service.GetUsers().Result.Where(u => u.id == userId).First();
+            return View(user);
+        }
     }
 }
