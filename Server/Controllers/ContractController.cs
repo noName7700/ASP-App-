@@ -35,10 +35,23 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Contract/last")]
+        public async Task<Contract> GetLast()
+        {
+            return await _context.contract
+                .Include(c => c.Municipality)
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
+        [HttpGet]
         [Route("/api/Contract/one/{id}")]
         public async Task<Contract> GetOne(int id)
         {
-            return await _context.contract.FirstOrDefaultAsync(t => t.id == id);
+            return await _context.contract
+                .Include(c => c.Municipality)
+                .FirstOrDefaultAsync(t => t.id == id);
         }
 
         // создать контракт (т.е. одну запись)

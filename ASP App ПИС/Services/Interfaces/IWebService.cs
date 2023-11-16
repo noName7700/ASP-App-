@@ -20,6 +20,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<ActCapture> GetActFromAnimalId(int id);
         Task<IEnumerable<TaskMonth>> GetTaskMonths();
         Task<TaskMonth> GetLastTaskMonth();
+        Task<Municipality> GetLastMunicipality();
         Task<Schedule> GetLastSchedule(int locid);
         Task<Animal> GetLastAnimal();
         Task<Locality> GetLastLocality();
@@ -42,6 +43,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddContract(Contract value);
         Task<HttpResponseMessage> DeleteContract(int id);
         Task<HttpResponseMessage> EditContract(int id, Contract value);
+        Task<Contract> GetLastContract();
         Task<HttpResponseMessage> AddLocality(Locality value);
         Task<HttpResponseMessage> EditLocality(int id, Locality value);
         Task<HttpResponseMessage> DeleteLocality(int id);
@@ -82,5 +84,8 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<IEnumerable<Journal>> GetJournal(int id);
         Task<HttpResponseMessage> AddJournal(Journal value);
         Task<HttpResponseMessage> DeleteJournal(int id);
+        Task<ActCapture> GetLastActCapture();
+        Task<Organization> GetLastOrganization();
+        Task<Usercapture> GetLastUser();
     }
 }

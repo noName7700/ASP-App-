@@ -33,6 +33,16 @@ namespace Server.Controllers
                 .FirstOrDefaultAsync();
         }
 
+        [HttpGet]
+        [Route("/api/Municipality/last")]
+        public async Task<Municipality> GetLast()
+        {
+            return await _context.municipality
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
         /*        // вывести нас пункты одного муниципалитета
                 [HttpGet("{id}")]
                 public async Task<List<Locality>> Get(int id)

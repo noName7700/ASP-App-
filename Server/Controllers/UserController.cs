@@ -26,6 +26,19 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet]
+        [Route("/api/User/last")]
+        public async Task<Usercapture> GetLast()
+        {
+            return await _context.usercapture
+                .Include(u => u.Municipality)
+                .Include(u => u.Locality)
+                .Include(u => u.Organization)
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
         [HttpPost]
         [Route("/api/User/add")]
         public async Task Post([FromBody] Usercapture value)

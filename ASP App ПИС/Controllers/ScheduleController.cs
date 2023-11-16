@@ -86,11 +86,10 @@ namespace ASP_App_ПИС.Controllers
                 {
                     nametable = 1,
                     usercaptureid = userid,
-                    //Usercapture = (await _service.GetUsers()).ToList().Where(u => u.id == userid).FirstOrDefault(),
                     datetimechange = DateTime.Now,
                     idobject = lastSched.id,
-                    description = $"{loc.name} - {lastSched.dateapproval.ToString("yyyy-MM-dd")}. Добавлена задача на месяц: {startdateForm.ToString("yyyy-MM-dd")} - " +
-                    $"{enddateForm.ToString("yyyy-MM-dd")} - {countanimalForm}"
+                    description = $"{loc.name} - {lastSched.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
+                    $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
                 };
                 await _service.AddJournal(jo);
 

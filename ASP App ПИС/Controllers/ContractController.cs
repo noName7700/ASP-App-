@@ -58,6 +58,19 @@ namespace ASP_App_ПИС.Controllers
                 municipalityid = isAdmin ? int.Parse(Request.Form["municipality"]) : munId
             };
             await _service.AddContract(con);
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Contract conLast = await _service.GetLastContract();
+            Journal jo = new Journal
+            {
+                nametable = 2,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = conLast.id,
+                description = $"Добавлен контракт: {conLast.Municipality.name} - {conLast.validityperiod.ToString("dd.MM.yyyy")} - {conLast.dateconclusion.ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/contract/");
         }
 
@@ -78,6 +91,20 @@ namespace ASP_App_ПИС.Controllers
                 dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]), 
                 municipalityid = munid};
             await _service.EditContract(id, con);
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Contract contractEdit = await _service.GetContractOne(id);
+            Journal jo = new Journal
+            {
+                nametable = 2,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = contractEdit.id,
+                description = $"Изменен контракт: {contractEdit.Municipality.name} - {contractEdit.validityperiod.ToString("dd.MM.yyyy")} - {contractEdit.dateconclusion.ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/contract/");
         }
     }

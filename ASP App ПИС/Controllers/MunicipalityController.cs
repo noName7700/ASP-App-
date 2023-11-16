@@ -55,6 +55,20 @@ namespace ASP_App_ПИС.Controllers
             {
                 Municipality mun = new Municipality { name = Request.Form["name"] };
                 await _service.AddMunicipality(mun);
+
+                var claims = HttpContext.Request.HttpContext.User.Claims;
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+                Municipality munLast = await _service.GetLastMunicipality();
+                Journal jo = new Journal
+                {
+                    nametable = 3,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = munLast.id,
+                    description = $"Добавлен муниципалитет: {munLast.name}"
+                };
+                await _service.AddJournal(jo);
+
                 return Redirect("/municipality/");
             }
             return Redirect("/municipality/");

@@ -13,12 +13,79 @@
         </ol>
     </div>
     <hr>
-    @* <form class="navbar-search" method="get">
+    <div onclick="openSearches()"><span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span><i class="fa fa-angle-left arrow"></i></div>
+
+    <div id="searches" style="display: none;">
+        <form class="navbar-search" method="get" style="margin-bottom: 10px; margin-top: 10px;">
+            <div class="rel" style="display:flex; align-items:center;width:350px">
+                <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+                <input value="@ViewData["search"]" name="search" class="form-control" placeholder="ФИО пользователя">
+            </div>
+        </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
         <div class="rel" style="display:flex; align-items:center;width:350px">
             <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование муниципалитета">
+            <input value="@ViewData["search1"]" name="search1" class="form-control" placeholder="Номер телефона">
         </div>
-    </form> *@
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search2"]" name="search2" class="form-control" placeholder="Адрес электронной почты">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search3"]" name="search3" class="form-control" placeholder="Название организации">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search4"]" name="search4" class="form-control" placeholder="Должность">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search5"]" name="search5" class="form-control" placeholder="Рабочий телефон">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search6"]" name="search6" class="form-control" placeholder="Рабочий адрес почты">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search7"]" name="search7" class="form-control" placeholder="dd.MM.yyyy">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search8"]" name="search8" class="form-control" placeholder="Номер экземпляра">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search9"]" name="search9" class="form-control" placeholder="Описание">
+        </div>
+    </form>
+    </div>
     <hr>
     <div class="page-content fade-in-up">
         <div class="ibox">
@@ -30,40 +97,49 @@
                             </div>
                         </div>
                     </div><div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                        <div class="col-sm-12" style="position: relative; right: 20px;">
+                            <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;font-size: 12px;">
                                 <thead>
                                     <tr role="row">
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             ФИО
-                                            @* <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a> *@
+                                            <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Телефон
+                                            <a asp-action="Index" asp-route-sort="@ViewData["UserTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Электронная почта
+                                            <a asp-action="Index" asp-route-sort="@ViewData["UserEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Организация
+                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgNameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             Должность
+                                            <a asp-action="Index" asp-route-sort="@ViewData["UserRoleSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
                                             Рабочий телефон
+                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                             Рабочий E-mail
+                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Дата и время изменений
+                                            Дата и время
+                                            <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
+                                        </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: auto;">
+                                            Номер экземпляра
+                                            <a asp-action="Index" asp-route-sort="@ViewData["NumberSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Номер экземпляра объекта
-                                        </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                            Описание экземпляра после действия
+                                            Описание
+                                            <a asp-action="Index" asp-route-sort="@ViewData["DescSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                                         </th>
                                     </tr>
                                 </thead>
@@ -71,14 +147,14 @@
                                     @foreach (var jou in Model)
                                     {
                                         <tr role="row" class="odd">
-                                            <td>@jou.Usercapture.surname + " " + @jou.Usercapture.name + " " + @jou.Usercapture.patronymic</td>
+                                            <td>@jou.Usercapture.surname @jou.Usercapture.name @jou.Usercapture.patronymic</td>
                                             <td>@jou.Usercapture.telephone</td>
                                             <td>@jou.Usercapture.email</td>
                                             <td>@jou.Usercapture.Organization.name</td>
                                             <td>@jou.Usercapture.role</td>
                                             <td>@jou.Usercapture.Organization.telephone</td>
                                             <td>@jou.Usercapture.Organization.email</td>
-                                            <td>@jou.datetimechange</td>
+                                            <td>@jou.datetimechange.ToString("dd.MM.yyyy") @jou.datetimechange.ToShortTimeString()</td>
                                             <td>@jou.idobject</td>
                                             <td>@jou.description</td>
                                         </tr>
@@ -90,3 +166,15 @@
                 </div>
                 <!-- END PAGE CONTENT-->
             </div>
+            <script>
+                function openSearches() {
+                    var blocks = document.getElementById("searches");
+
+                    if (blocks.style.display !== "none") {
+                        blocks.style.display = "none";
+                    } 
+                    else {
+                        blocks.style.display = "block";
+                    }
+                };
+            </script>

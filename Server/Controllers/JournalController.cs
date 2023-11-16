@@ -17,17 +17,17 @@ namespace Server.Controllers
         }
 
         // получить данные журнала для таблицы
-        [HttpGet]
-        [Route("/api/Journal/{id}")]
+        [HttpGet("{id}")]
+        //[Route("/api/Journal/{id}")]
         public async Task<IEnumerable<Journal>> Get(int id)
         {
-            // вывод планов графиков в виде: нас.пункт(название) - дата подписи
-            return await _context.journal
+            var aa = await _context.journal
                 .Include(j => j.Usercapture)
                 .ThenInclude(j => j.Organization)
                 .Where(j => j.nametable == id)
                 .Select(j => j)
                 .ToListAsync();
+            return aa;
         }
 
         // добавить запись журнала

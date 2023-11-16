@@ -6,6 +6,8 @@ using System.Text;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Globalization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ASP_App_ПИС.Services
 {
@@ -418,11 +420,18 @@ namespace ASP_App_ПИС.Services
         public async Task<HttpResponseMessage> AddJournal(Journal value)
         {
             string jsonString = JsonSerializer.Serialize(value);
-            //jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
 
-            int indexT = jsonString.IndexOf('T'); // индекс Т к нему прибавляю 9
-            jsonString = jsonString.Remove(indexT + 9, 14); // удаляю там что-то
-            jsonString = jsonString.Insert(indexT + 9, ".0Z"); // добавляю это
+            int indexT = jsonString.IndexOf('T');
+            jsonString = jsonString.Remove(indexT + 9, 14);
+            jsonString = jsonString.Insert(indexT + 9, ".0Z");
+
+            var firstNum = jsonString[indexT + 1];
+            var secongNum = jsonString[indexT + 2];
+            var timeaa = $"{firstNum}{secongNum}";
+            int hours = int.Parse(timeaa); // это беру часы от времени
+            int nowHours = hours - 5;
+            jsonString = jsonString.Remove(indexT + 1, 2); // удаляю текущее время
+            jsonString = jsonString.Insert(indexT + 1, nowHours.ToString()); // добавляю нужное
 
             HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return await _client.PostAsync($"/api/Journal/add", content);
@@ -431,6 +440,36 @@ namespace ASP_App_ПИС.Services
         public async Task<HttpResponseMessage> DeleteJournal(int id)
         {
             return await _client.DeleteAsync($"/api/Journal/delete/{id}");
+        }
+
+        public async Task<Contract> GetLastContract()
+        {
+            var response = await _client.GetAsync($"/api/Contract/last");
+            return await response.ReadContentAsync<Contract>();
+        }
+
+        public async Task<Municipality> GetLastMunicipality()
+        {
+            var response = await _client.GetAsync($"/api/Municipality/last");
+            return await response.ReadContentAsync<Municipality>();
+        }
+
+        public async Task<ActCapture> GetLastActCapture()
+        {
+            var response = await _client.GetAsync($"/api/ActCapture/last");
+            return await response.ReadContentAsync<ActCapture>();
+        }
+
+        public async Task<Organization> GetLastOrganization()
+        {
+            var response = await _client.GetAsync($"/api/Organization/last");
+            return await response.ReadContentAsync<Organization>();
+        }
+
+        public async Task<Usercapture> GetLastUser()
+        {
+            var response = await _client.GetAsync($"/api/User/last");
+            return await response.ReadContentAsync<Usercapture>();
         }
     }
 }

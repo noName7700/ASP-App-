@@ -30,6 +30,17 @@ namespace Server.Controllers
             return await _context.organization.FirstOrDefaultAsync(o => o.id == id);
         }
 
+        [HttpGet]
+        [Route("/api/Organization/last")]
+        public async Task<Organization> GetLast()
+        {
+            return await _context
+                .organization
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
         // добавить новую организацию
         [HttpPost]
         [Route("/api/Organization/add")]
