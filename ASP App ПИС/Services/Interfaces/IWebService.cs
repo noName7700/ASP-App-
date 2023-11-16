@@ -9,7 +9,7 @@ namespace ASP_App_ПИС.Services.Interfaces
     {
         Task<IEnumerable<Municipality>> GetMunicipalities();
         Task<IEnumerable<Locality>> GetLocalActs();
-        Task<IEnumerable<Animal>> GetAnimals(int id, string date);
+        Task<IEnumerable<Animal>> GetAnimals(int id);
         Task<IEnumerable<Contract>> GetContracts();
         Task<IEnumerable<Locality>> GetLocalities();
         Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id);
@@ -33,7 +33,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Contract> GetContractOne(int id);
         Task<Animal> GetAnimalOne(int id);
         //Task<IEnumerable<ActCapture>> GetActs(DateTime datestart, DateTime dateend, int locid);
-        Task<IEnumerable<ActCapture>> GetActs(int locid, string date);
+        Task<ActCapture> GetOneAct(int id);
         Task<HttpResponseMessage> AddAct(ActCapture value);
         Task<HttpResponseMessage> DeleteAct(int id);
         Task<HttpResponseMessage> EditAct(int id, ActCapture value);

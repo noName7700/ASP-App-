@@ -18,5 +18,7 @@ namespace Domain
         public string ears { get; set; }
         public string tail { get; set; }
         public string specsings { get; set; }
+        public int actcaptureid { get; set; }
+        public ActCapture? ActCapture { get; set; }
     }
 }

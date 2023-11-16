@@ -32,21 +32,11 @@ namespace Server.Controllers
         [HttpGet("{locid}")]
         public async Task<IEnumerable<ActCapture>> Get(int locid)
         {
-            var t = await _context.actcapture
+            return await _context.actcapture
+                .Include(a => a.Locality)
                 .Where(a => a.localityid == locid)
-                .GroupBy(a => a.datecapture)
-                .OrderByDescending(a => a.Key)
-                .Select(f => f.First())
+                .Select(a => a)
                 .ToListAsync();
-            return t;
-
-            // это открываются акт отлова для одного нас пункта (выводиться будут только дата и кнопка просмотр животного)
-            //return await _context.actcapture
-            //    .Include(act => act.Animal)
-            //    .Include(act => act.Locality)
-            //    .Select(ac => ac)
-            //    .Where(ac => ac.localityid == locid)
-            //    .ToListAsync();
         }
 
         [HttpGet]
@@ -54,7 +44,6 @@ namespace Server.Controllers
         public async Task<ActCapture> GetLast()
         {
             return await _context.actcapture
-                .Include(a => a.Animal)
                 .Include(a => a.Locality)
                 .Select(t => t)
                 .OrderBy(t => t.id)
@@ -62,26 +51,23 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/ActCapture/{locid}/{date}")]
-        public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
+        [Route("/api/ActCapture/one/{id}")]
+        public async Task<ActCapture> GetOne(int id)
         {
             return await _context.actcapture
-                .Where(a => a.localityid == locid && 
-                a.datecapture.Year == DateTime.Parse(date).Year
-                && a.datecapture.Month == DateTime.Parse(date).Month
-                && a.datecapture.Day == DateTime.Parse(date).Day)
+                .Where(a => a.id == id)
                 .Select(a => a)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
         }
 
         [HttpGet]
         [Route("/api/ActCapture/animal/{id}")]
         public async Task<ActCapture> GetFromAnimalId(int id)
         {
-            return await _context.actcapture
-                .Include(ac => ac.Locality)
-                .Where(a => a.animalid == id)
-                .Select(a => a)
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .Where(a => a.id == id)
+                .Select(a => a.ActCapture)
                 .FirstAsync();
         }
 
@@ -115,6 +101,7 @@ namespace Server.Controllers
             {
                 currentLoc.datecapture = value.datecapture;
                 currentLoc.localityid = value.localityid;
+                currentLoc.contractid = value.contractid;
                 await _context.SaveChangesAsync();
             }
         }

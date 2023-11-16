@@ -32,9 +32,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Locality>>();
         }
 
-        public async Task<IEnumerable<Animal>> GetAnimals(int id, string date)
+        public async Task<IEnumerable<Animal>> GetAnimals(int id)
         {
-            var response = await _client.GetAsync($"/api/Animal/{id}/{date}");
+            var response = await _client.GetAsync($"/api/Animal/{id}");
             return await response.ReadContentAsync<List<Animal>>();
         }
 
@@ -92,10 +92,10 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
-        public async Task<IEnumerable<ActCapture>> GetActs(int locid, string date)
+        public async Task<ActCapture> GetOneAct(int id)
         {
-            var response = await _client.GetAsync($"/api/ActCapture/{locid}/{date}");
-            return await response.ReadContentAsync<IEnumerable<ActCapture>>();
+            var response = await _client.GetAsync($"/api/ActCapture/one/{id}");
+            return await response.ReadContentAsync<ActCapture>();
         }
 
         public async Task<Animal> GetAnimal(int id)

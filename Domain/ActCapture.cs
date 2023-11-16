@@ -10,8 +10,6 @@ namespace Domain
     {
         public int id { get; set; }
         public DateTime datecapture { get; set; }
-        public int animalid { get; set; }
-        public Animal? Animal { get; set; }
         public int localityid { get; set; }
         public Locality? Locality { get; set; }
         public int contractid { get; set; }

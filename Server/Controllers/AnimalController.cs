@@ -17,54 +17,47 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // вывести всех животных
         [HttpGet]
         public async Task<IEnumerable<Animal>> Get()
         {
             return await _context.animal.ToListAsync();
         }
 
-        //вывести одно животное по localid и datecapture
         [HttpGet]
-        [Route("/api/Animal/{id}/{date}")]
-        public async Task<IEnumerable<Animal>> Get(int id, string date)
+        [Route("/api/Animal/{id}")]
+        public async Task<IEnumerable<Animal>> Get(int id)
         {
-            var d = DateTime.Parse(date);
-            //List<int> idanimals = await _context.actcapture
-            //    .Where(a => a.localityid == id && a.datecapture.Year == d.Year
-            //    && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
-            //    .Select(a => a.animalid)
-            //    .ToListAsync();
-
-            //var res = await _context.animal
-            //    .Where(a => idanimals.Contains(a.id))
-            //    .Select(a => a)
-            //    .ToListAsync();
-
-            var res = await _context.actcapture
-                .Include(a => a.Animal)
-                .Where(a => a.localityid == id && a.datecapture.Year == d.Year
-                && a.datecapture.Month == d.Month && a.datecapture.Day == d.Day)
-                .Select(a => a.Animal)
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .ThenInclude(a => a.Locality)
+                .Where(a => a.actcaptureid == id)
+                .Select(a => a)
                 .ToListAsync();
-            return res;
         }
 
         [HttpGet]
         [Route("/api/Animal/one/{id}")]
         public async Task<Animal> GetOne(int id)
         {
-            return await _context.animal.Where(l => l.id == id).FirstAsync();
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .ThenInclude(a => a.Locality)
+                .Where(l => l.id == id)
+                .FirstAsync();
         }
 
         [HttpGet]
         [Route("/api/Animal/last")]
         public async Task<Animal> GetLast()
         {
-            return await _context.animal.Select(t => t).OrderBy(t => t.id).LastAsync();
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .ThenInclude(a => a.Locality)
+                .Select(t => t)
+                .OrderBy(t => t.id)
+                .LastAsync();
         }
 
-        // добавить новое животное
         [HttpPost]
         [Route("/api/Animal/add")]
         public async Task Post([FromBody] Animal value)
@@ -73,7 +66,6 @@ namespace Server.Controllers
             await _context.SaveChangesAsync();
         }
 
-        // изменить животное
         [HttpPut]
         [Route("/api/Animal/put/{id}")]
         public async Task Put(int id, [FromBody] Animal value)

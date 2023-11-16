@@ -71,7 +71,11 @@ namespace Server.Controllers
         public async Task<Dictionary<int, int>> Get(int munid)
         {
             // выбираю нужные населенные пункты
-            var needLocalities = await _context.locality.Select(aa => aa).Where(aa => aa.municipalityid == munid).Select(h => h.id).ToListAsync();
+            var needLocalities = await _context.locality
+                .Select(aa => aa)
+                .Where(aa => aa.municipalityid == munid)
+                .Select(h => h.id)
+                .ToListAsync();
 
             //считаю по планам-графикам то что запланировано
             var countPlanAnimal = await _context.schedule
@@ -80,8 +84,9 @@ namespace Server.Controllers
                 .SumAsync(sch => sch.TaskMonth.countanimal);
 
             // считаю по актам отлова то что в итоге
-            var countAnimal = await _context.actcapture
-                .Where(act => needLocalities.Contains(act.localityid))
+            var countAnimal = await _context.animal
+                .Include(an => an.ActCapture)
+                .Where(an => needLocalities.Contains(an.ActCapture.localityid))
                 .CountAsync();
 
             return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };

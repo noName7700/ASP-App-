@@ -75,6 +75,24 @@ namespace ASP_App_ПИС.Controllers
         [Route("/act/add")]
         public async Task<IActionResult> AddPost()
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+
+            // сначала добавляю акт отлова
+            int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
+            // нахожу контракт по нас. пункту
+            var conid = (await _service.GetOneContract_Locality(localityid)).contractid;
+
+            ActCapture act = new ActCapture
+            {
+                datecapture = DateTime.Parse(Request.Form["datecapture"]),
+                localityid = localityid,
+                contractid = conid
+            };
+            await _service.AddAct(act);
+            ActCapture lastAct = await _service.GetLastActCapture();
+
             Animal animal = new Animal{
                 breed = Request.Form["breed"],
                 wool = Request.Form["wool"],
@@ -85,28 +103,11 @@ namespace ASP_App_ПИС.Controllers
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
                 specsings = Request.Form["specsigns"],
+                actcaptureid = lastAct.id
             };
             await _service.AddAnimal(animal);
             Animal lastAni = await _service.GetLastAnimal();
 
-            var claims = HttpContext.Request.HttpContext.User.Claims;
-            var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
-            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-
-            int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
-
-            // нахожу контракт по нас. пункту
-            var conid = (await _service.GetOneContract_Locality(localityid)).contractid;
-
-            ActCapture act = new ActCapture{
-                animalid = lastAni.id,
-                datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                localityid = localityid,
-                contractid = conid
-            };
-            await _service.AddAct(act);
-
-            ActCapture lastAct = await _service.GetLastActCapture();
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
             Journal jo = new Journal
@@ -134,47 +135,41 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        [Route("/act/edit/{locid}/{date}")]
-        public async Task<IActionResult> Edit(int locid, string date)
+        [Route("/act/edit/{id}")]
+        public async Task<IActionResult> Edit(int id)
         {
-            IEnumerable<ActCapture> acts = await _service.GetActs(locid, date);
-            ViewData["act"] = acts.First();
+            ActCapture act = await _service.GetOneAct(id);
+            ViewData["act"] = act;
             IEnumerable<Locality> locs = await _service.GetLocalities();
             return View(locs);
         }
 
         [HttpPost]
-        [Route("/act/edit/{locid}/{date}")]
-        public async Task<IActionResult> EditPut(int locid, string date)
+        [Route("/act/edit/{id}")]
+        public async Task<IActionResult> EditPut(int id)
         {
-            IEnumerable<ActCapture> oldActs = await _service.GetActs(locid, date);
+            DateTime date = DateTime.Parse(Request.Form["datecapture"]);
+            int locid = int.Parse(Request.Form["locality"]);
+            int conid = (await _service.GetOneContract_Locality(locid)).contractid;
 
-            // нахожу контракт по нас. пункту
-            var conid = (await _service.GetOneContract_Locality(locid)).contractid;
-
-            foreach (var loc in oldActs)
+            ActCapture act = new ActCapture
             {
-
-                ActCapture act = new ActCapture
-                {
-                    animalid = loc.animalid,
-                    datecapture = DateTime.Parse(Request.Form["datecapture"]),
-                    localityid = int.Parse(Request.Form["locality"]),
-                    contractid = conid
-                };
-                await _service.EditAct(loc.id, act);
-            }
+                datecapture = date,
+                localityid = locid,
+                contractid = conid
+            };
+            await _service.EditAct(id, act);
 
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-            Locality locNeed = await _service.GetOneLocality(int.Parse(Request.Form["locality"]));
+            Locality locNeed = await _service.GetOneLocality(locid);
             Journal jo = new Journal
             {
                 nametable = 4,
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = locNeed.id,
-                description = $"Изменен акт отлова: {locNeed.name} - {DateTime.Parse(Request.Form["datecapture"]).ToString("dd.MM.yyyy")}"
+                description = $"Изменен акт отлова: {locNeed.name} - {date.ToString("dd.MM.yyyy")}"
             };
             await _service.AddJournal(jo);
 

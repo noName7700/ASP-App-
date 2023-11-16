@@ -17,27 +17,25 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        [Route("/animal/{id}/{date}")]
-        public async Task<IActionResult> Index(int id, string date)
+        [Route("/animal/{id}")]
+        public async Task<IActionResult> Index(int id)
         {
             ViewData["id"] = id;
-            ViewData["date"] = date;
-            var animals = await _service.GetAnimals(id, date);
+            var animals = await _service.GetAnimals(id);
             return View(animals);
         }
 
         [HttpGet]
-        [Route("/animal/add/{id}/{date}")]
-        public IActionResult Add(int id, string date)
+        [Route("/animal/add/{id}")]
+        public IActionResult Add(int id)
         {
             ViewData["id"] = id;
-            ViewData["date"] = date;
             return View();
         }
 
         [HttpPost]
-        [Route("/animal/add/{id}/{date}")]
-        public async Task<IActionResult> AddPost(int id, string date)
+        [Route("/animal/add/{id}")]
+        public async Task<IActionResult> AddPost(int id)
         {
             Animal animal = new Animal
             {
@@ -50,35 +48,26 @@ namespace ASP_App_ПИС.Controllers
                 size = Request.Form["size"],
                 tail = Request.Form["tail"],
                 specsings = Request.Form["specsigns"],
+                actcaptureid = id
             };
             await _service.AddAnimal(animal);
             Animal animalLast = await _service.GetLastAnimal();
-            var mun = await _service.GetMunicipalityFromLocalityId(id);
-            int conid = await _service.GetContractFromMuniciaplity(mun.id);
-            ActCapture act = new ActCapture
-            {
-                animalid = animalLast.id,
-                datecapture = DateTime.Parse(date),
-                localityid = id,
-                contractid = conid
-            };
-            await _service.AddAct(act);
 
             var claims = HttpContext.Request.HttpContext.User.Claims;
-            ActCapture lastAct = await _service.GetLastActCapture();
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             Journal jo = new Journal
             {
                 nametable = 4,
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
-                idobject = lastAct.id,
-                description = $"{lastAct.Locality.name} - {lastAct.datecapture.ToString("dd.MM.yyyy")} Добавлено животное: {animalLast.category} - {animalLast.tail} - {animalLast.wool} - " +
+                idobject = animalLast.id,
+                description = $"{animalLast.ActCapture.Locality.name} - {animalLast.ActCapture.datecapture.ToString("dd.MM.yyyy")} " +
+                $"Добавлено животное: {animalLast.category} - {animalLast.tail} - {animalLast.wool} - " +
                 $"{animalLast.sex} - {animalLast.size} - {animalLast.breed} - {animalLast.color} - {animalLast.ears}"
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/animal/{id}/{date}");
+            return Redirect($"/animal/{id}");
         }
 
         [HttpGet]
@@ -107,7 +96,6 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.EditAnimal(id, an);
 
-            ActCapture act = await _service.GetActFromAnimalId(id);
             Animal animalEdit = await _service.GetAnimalOne(id);
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
@@ -117,7 +105,8 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = animalEdit.id,
-                description = $"{act.Locality.name} - {act.datecapture.ToString("dd.MM.yyyy")} Изменено животное: {animalEdit.category} - {animalEdit.tail} - {animalEdit.wool} - " +
+                description = $"{animalEdit.ActCapture.Locality.name} - {animalEdit.ActCapture.datecapture.ToString("dd.MM.yyyy")} " +
+                $"Изменено животное: {animalEdit.category} - {animalEdit.tail} - {animalEdit.wool} - " +
                 $"{animalEdit.sex} - {animalEdit.size} - {animalEdit.breed} - {animalEdit.color} - {animalEdit.ears}"
             };
             await _service.AddJournal(jo);
@@ -129,9 +118,7 @@ namespace ASP_App_ПИС.Controllers
         [Route("/animal/delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            ActCapture act = await _service.GetActFromAnimalId(id);
             Animal animalDelet = await _service.GetAnimalOne(id);
-            await _service.DeleteAct(act.id);
             await _service.DeleteAnimal(id);
             
             var claims = HttpContext.Request.HttpContext.User.Claims;
@@ -142,12 +129,13 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = animalDelet.id,
-                description = $"{act.Locality.name} - {act.datecapture.ToString("dd.MM.yyyy")} Удалено животное: {animalDelet.category} - {animalDelet.tail} - {animalDelet.wool} - " +
+                description = $"{animalDelet.ActCapture.Locality.name} - {animalDelet.ActCapture.datecapture.ToString("dd.MM.yyyy")} " +
+                $"Удалено животное: {animalDelet.category} - {animalDelet.tail} - {animalDelet.wool} - " +
                 $"{animalDelet.sex} - {animalDelet.size} - {animalDelet.breed} - {animalDelet.color} - {animalDelet.ears}"
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/animal/{act.localityid}/{act.datecapture.ToShortDateString()}");
+            return Redirect($"/animal/{animalDelet.ActCapture.id}");
         }
     }
 }
