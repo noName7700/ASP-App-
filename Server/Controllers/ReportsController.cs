@@ -97,12 +97,32 @@ namespace Server.Controllers
         [Route("/api/Reports/money/export")]
         public FileStreamResult GetExcel()
         {
-            return Export();
+            return Export(double d);
         }
 
-        private FileStreamResult Export()
+        [HttpGet]
+        [Route("/api/Reports/money/export")]
+        public FileStreamResult GetExcel()
         {
-            Workbook workbook = JsontoExcel();
+            return Export(Dictionary<int, int> d);
+        }
+
+        private FileStreamResult Export(Dictionary<int, int> d)
+        {
+            Workbook workbook = JsontoExcel(Dictionary<int, int> d);
+            var stream = new MemoryStream();
+
+            string fileName = "test_out.xls";
+
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0;
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+
+        private FileStreamResult Export(double d)
+        {
+            Workbook workbook = JsontoExcel(double d);
             var stream = new MemoryStream();
 
             string fileName = "test_out.xls";
