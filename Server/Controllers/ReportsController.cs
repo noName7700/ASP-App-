@@ -11,6 +11,7 @@ using System.Linq;
 using System.Web;
 using System.Text.Json;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 //using closedxml.excel;
 
 namespace Server.Controllers
@@ -92,44 +93,75 @@ namespace Server.Controllers
             return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
         }
 
-        //[HttpGet]
-        //[Route("/api/Reports/money/export")]
-        //public FileStreamResult GetExcel()
-        //{
-        //    return Export();
-        //}
+        [HttpGet]
+        [Route("/api/Reports/money/export")]
+        public FileStreamResult GetExcel()
+        {
+            return Export();
+        }
 
-        //private FileStreamResult Export()
-        //{
-        //    Workbook workbook = JsontoExcel();
-        //    var stream = new MemoryStream();
+        private FileStreamResult Export()
+        {
+            Workbook workbook = JsontoExcel();
+            var stream = new MemoryStream();
 
-        //    string fileName = "test_out.xls";
+            string fileName = "test_out.xls";
 
-        //    workbook.Save(stream, SaveFormat.Xlsx);
-        //    stream.Position = 0;
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0;
 
-        //    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-        //}
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
 
-        //private Workbook JsontoExcel()
-        //{
-        //    Workbook workbook = new Workbook();
-        //    Worksheet worksheet = workbook.Worksheets[0];
+        private Workbook JsontoExcel(Dictionary<int, int> d)
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        //    // string jsonInput = new WebClient().DownloadString(url);
-        //    string s = "11.03.2023";
-        //    string e = "12.06.2023";
-        //    int id = 1;
-        //    string jsonString = JsonSerializer.Serialize(Get(s, e, id));
+            //var Animals = new Dictionary<int, int>()
+            //{
+            //    [5] = 6,
+            //    [6] = 8,
+            //    [7] = 9
+            //};
 
-        //    JsonLayoutOptions options = new JsonLayoutOptions();
-        //    options.ArrayAsTable = true;
+            //"Переворачивает" словарь, чтобы он отображался корректно(по столбам, а не строкам)
+            var trans = from key in d.Keys
+                              select new { Животные = key, ТожеЖивотные = d[key] };
 
+            
+            string jsonInput = JsonConvert.SerializeObject(trans);
 
-        //    JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
+            JsonLayoutOptions options = new JsonLayoutOptions();
+            options.ArrayAsTable = true;
 
-        //    return workbook;
-        //}
+            //Удаление рекламной страницы
+            //workbook.Worksheets.RemoveAt(1);
+            JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
+
+            return workbook;
+        }
+
+        private Workbook JsontoExcel(double d)
+        {
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            //double a = 2.5
+
+            
+
+            JsonLayoutOptions options = new JsonLayoutOptions();
+            options.ArrayAsTable = true;
+
+            //Удаление рекламной страницы
+            //workbook.Worksheets.RemoveAt(1);
+            JsonUtility.ImportData("НачалоПериода", worksheet.Cells, 0, 1, options);
+            JsonUtility.ImportData("КонецПериода", worksheet.Cells, 0, 2, options);
+            JsonUtility.ImportData("Сумма", worksheet.Cells, 0, 0, options);
+            JsonUtility.ImportData(d.ToString(), worksheet.Cells, 1, 0, options);
+
+            return workbook;
+        }
     }
 }
