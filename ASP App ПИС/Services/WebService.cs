@@ -325,21 +325,31 @@ namespace ASP_App_ПИС.Services
 
         public async Task<double> GetReportsMoney(string startDate, string endDate, int munid)
         {
-            var response = await _client.GetAsync($"/api/Reports/{startDate}/{endDate}/{munid}");
+            var response = await _client.GetAsync($"/api/Reports/money/{startDate}/{endDate}/{munid}");
             return await response.ReadContentAsync<double>();
         }
 
-        public async Task<Dictionary<int, int>> GetReportsSchedule(int munid, int locid)
+        public async Task<Dictionary<int, int>> GetReportsSchedule(string startDate, string endDate, int munid, int locid)
         {
-            var response = await _client.GetAsync($"/api/Reports/{munid}/{locid}");
+            var response = await _client.GetAsync($"/api/Reports/schedule/{startDate}/{endDate}/{munid}/{locid}");
             return await response.ReadContentAsync<Dictionary<int, int>>();
         }
 
         
-        public async Task<FileStreamResult> GetExcelMoney(double d)
+        public async Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d)
         {
-            var response = await _client.GetAsync($"/api/Reports/money/export/{d}");
-            return await response.ReadContentAsync<FileStreamResult>();
+            var stream = await _client.GetStreamAsync($"/api/Reports/money/export/{startdate}/{enddate}/{munid}/{d}");
+            FileStreamResult file = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            file.FileDownloadName = "Отчет о выполненной работе за контракт.xlsx";
+            return file;
+        }
+
+        public async Task<FileStreamResult> GetExcelSchedule(string startdate, string enddate, int munid, int locid, int plan, int fact)
+        {
+            var stream = await _client.GetStreamAsync($"/api/Reports/money/export/{startdate}/{enddate}/{munid}/{locid}/{plan}/{fact}");
+            FileStreamResult file = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            file.FileDownloadName = "Отчет о выполненной работе по планам-графикам.xlsx";
+            return file;
         }
 
         public async Task<int> GetContractFromMuniciaplity(int id)
