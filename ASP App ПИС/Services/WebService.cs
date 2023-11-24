@@ -329,16 +329,17 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<double>();
         }
 
-        public async Task<Dictionary<int, int>> GetReportsSchedule(int munid)
+        public async Task<Dictionary<int, int>> GetReportsSchedule(int munid, int locid)
         {
-            var response = await _client.GetAsync($"/api/Reports/{munid}");
+            var response = await _client.GetAsync($"/api/Reports/{munid}/{locid}");
             return await response.ReadContentAsync<Dictionary<int, int>>();
         }
 
         
-        public Task<FileStreamResult> GetExcelMoney()
+        public async Task<FileStreamResult> GetExcelMoney(double d)
         {
-            throw new NotImplementedException();
+            var response = await _client.GetAsync($"/api/Reports/money/export/{d}");
+            return await response.ReadContentAsync<FileStreamResult>();
         }
 
         public async Task<int> GetContractFromMuniciaplity(int id)

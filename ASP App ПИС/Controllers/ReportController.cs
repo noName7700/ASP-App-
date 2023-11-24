@@ -2,6 +2,7 @@
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -26,7 +27,8 @@ namespace ASP_App_ПИС.Controllers
         [Route("/report/money")]
         public async Task<IActionResult> IndexMoneyPost()
         {
-            int munid = int.Parse(Request.Form["municipality"]);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
             var priceItog = await _service.GetReportsMoney(Request.Form["startdate"], Request.Form["enddate"], munid);
             ViewData["startdate"] = Request.Form["startdate"];
             ViewData["enddate"] = Request.Form["enddate"];
@@ -34,26 +36,30 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        [Route("/report/money/export")]
-        public async Task<FileStreamResult> ExportMoney()
+        [Route("/report/money/export/{d}")]
+        public async Task<FileStreamResult> ExportMoney(double d)
         {
-            return await _service.GetExcelMoney();
+            return await _service.GetExcelMoney(d);
         }
 
         [HttpGet]
         [Route("/report/schedule")]
         public async Task<IActionResult> IndexSchedule()
         {
-            var municipalities = await _service.GetMunicipalities();
-            return View(municipalities);
+            IEnumerable<Locality> locs = await _service.GetLocalities();
+            IEnumerable<Municipality> muns = await _service.GetMunicipalities();
+            var locs_muns = new Dictionary<IEnumerable<Locality>, IEnumerable<Municipality>> { { locs, muns } };
+            return View(locs_muns);
         }
 
         [HttpPost]
         [Route("/report/schedule")]
         public async Task<IActionResult> IndexSchedulePost()
         {
-            int munid = int.Parse(Request.Form["municipality"]);
-            var countAnimals = await _service.GetReportsSchedule(munid);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+            int locid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            var countAnimals = await _service.GetReportsSchedule(munid, locid);
             return View(countAnimals);
         }
     }

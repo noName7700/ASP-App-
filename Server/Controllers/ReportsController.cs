@@ -68,48 +68,41 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/Reports/{munid}")]
-        public async Task<Dictionary<int, int>> Get(int munid)
+        [Route("/api/Reports/{munid}/{locid}")]
+        public async Task<Dictionary<int, int>> Get(int munid, int locid)
         {
-            // выбираю нужные населенные пункты
-            var needLocalities = await _context.locality
-                .Select(aa => aa)
-                .Where(aa => aa.municipalityid == munid)
-                .Select(h => h.id)
-                .ToListAsync();
-
             //считаю по планам-графикам то что запланировано
-            var countPlanAnimal = await _context.schedule
-                .Include(sch => sch.TaskMonth)
-                .Where(sch => needLocalities.Contains(sch.localityid))
-                .SumAsync(sch => sch.TaskMonth.countanimal);
+            var countPlanAnimal = await _context.taskmonth
+                .Include(sch => sch.Schedule)
+                .Where(sch => sch.Schedule.localityid == locid)
+                .SumAsync(t => t.countanimal);
 
             // считаю по актам отлова то что в итоге
             var countAnimal = await _context.animal
                 .Include(an => an.ActCapture)
-                .Where(an => needLocalities.Contains(an.ActCapture.localityid))
+                .Where(an => an.ActCapture.localityid == locid)
                 .CountAsync();
 
             return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
         }
 
         [HttpGet]
-        [Route("/api/Reports/money/export")]
-        public FileStreamResult GetExcel()
+        [Route("/api/Reports/money/export/{d}")]
+        public FileStreamResult GetExcel(double d)
         {
-            return Export(double d);
+            return Export(d);
         }
 
         [HttpGet]
-        [Route("/api/Reports/money/export")]
-        public FileStreamResult GetExcel()
+        [Route("/api/Reports/schedule/export/{d}")]
+        public FileStreamResult GetExcel(Dictionary<int, int> d)
         {
-            return Export(Dictionary<int, int> d);
+            return Export(d);
         }
 
         private FileStreamResult Export(Dictionary<int, int> d)
         {
-            Workbook workbook = JsontoExcel(Dictionary<int, int> d);
+            Workbook workbook = JsontoExcel(d);
             var stream = new MemoryStream();
 
             string fileName = "test_out.xls";
@@ -122,7 +115,7 @@ namespace Server.Controllers
 
         private FileStreamResult Export(double d)
         {
-            Workbook workbook = JsontoExcel(double d);
+            Workbook workbook = JsontoExcel(d);
             var stream = new MemoryStream();
 
             string fileName = "test_out.xls";
@@ -157,7 +150,7 @@ namespace Server.Controllers
 
             //Удаление рекламной страницы
             //workbook.Worksheets.RemoveAt(1);
-            JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
+            //JsonUtility.ImportData(jsonString, worksheet.Cells, 0, 0, options);
 
             return workbook;
         }

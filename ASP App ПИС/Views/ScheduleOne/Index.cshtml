@@ -1,5 +1,12 @@
 ﻿@using Domain;
-@model IEnumerable<TaskMonth> 
+@model IEnumerable<TaskMonth>;
+@using System.Security.Claims
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+}
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -51,9 +58,17 @@
                         <td>@tm.enddate.ToShortDateString()</td>
                         <td>@tm.countanimal</td>
                         <td>
-                            <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                            <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
-                        </td>
+                            @if (tm.Schedule.localityid == locId && !isAdmin)
+                                                {
+                                                    <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                                    <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
+                                                }
+                                                else if (isAdmin)
+                                                {
+                                                    <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                                    <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
+                                                }
+                                            </td>
                     </tr>
                     }
                     </tbody>
