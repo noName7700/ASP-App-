@@ -24,24 +24,27 @@
             </div>
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="startdate">Дата начала</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="startdate" type="date" name="startdate" value=@Model.startdate.ToString("yyyy-MM-dd")>
+                            <input class="form-control" id="startdate" type="date" name="startdate" value=@Model.startdate.ToString("yyyy-MM-dd") required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="enddate">Дата окончания</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="enddate" type="date" name="enddate" value=@Model.enddate.ToString("yyyy-MM-dd")>
+                            <input class="form-control" id="enddate" type="date" name="enddate" value=@Model.enddate.ToString("yyyy-MM-dd") required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="count-animal">Количество животных</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="count-animal" type="text" name="count-animal" value="@Model.countanimal">
+                            <input class="form-control" id="count-animal" type="number" name="count-animal" value="@Model.countanimal" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>

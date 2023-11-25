@@ -25,58 +25,63 @@
             </div>
             <div class="ibox-body">
                 <form class="form-horizontal" method="post">
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="surname">Фамилия:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="surname" type="text" name="surname">
+                            <input class="form-control" id="surname" type="text" name="surname" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="name">Имя:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="name" type="text" name="name">
+                            <input class="form-control" id="name" type="text" name="name" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="patron">Отчество (при наличии):</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="patron" type="text" name="patronymic">
+                            <input class="form-control" id="patron" type="text" name="patronymic" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="telephone">Номер телефона:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="telephone" type="tel" name="telephone">
+                            <input class="form-control" id="telephone" type="tel" name="telephone" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="email">E-mail:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="email" type="email" name="email">
+                            <input class="form-control" id="email" type="email" name="email" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="role">Роль:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="role" name="role">
+                            <select class="form-control" id="role" name="role" required>
                                 @foreach (Role rol in (IEnumerable)ViewData["roles"])
                                 {
                                     <option value="@rol.id">@rol.name</option>
@@ -85,57 +90,62 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="munname">Муниципалитет:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="munname" name="municipality">
+                            <select class="form-control" id="munname" name="municipality" required>
                             <option value="0">-</option>
                             @foreach (Municipality mun in (IEnumerable)ViewData["muns"])
                             {
                                 <option value="@mun.id">@mun.name</option>
                             }
                             </select>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row" id="locality-div">
+                    <div class="form-group row has-feedback" id="locality-div">
                         <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="localityy" name="locality">
+                            <select class="form-control" id="localityy" name="locality" required>
                                 @foreach (Locality loc in (IEnumerable)ViewData["locs"])
                             {
                                 <option value="@loc.id">@loc.name</option>
                             }
                             </select>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="organization">Организация:</label>
                         <div class="col-sm-8">
-                            <select class="form-control" id="organization" name="organization">
+                            <select class="form-control" id="organization" name="organization" required>
                                 @foreach (Organization org in (IEnumerable)ViewData["orgs"])
                             {
                                 <option value="@org.id">@org.name</option>
                             }
                             </select>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="login">Логин:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="login" type="text" name="login">
+                            <input class="form-control" id="login" type="text" name="login" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="password">Пароль:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="password" type="text" name="password">
+                            <input class="form-control" id="password" type="text" name="password" required>
+                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
                             </span>

@@ -60,12 +60,12 @@ namespace ASP_App_ПИС.Controllers
             {
                 Locality loc = new Locality { name = Request.Form["name"], municipalityid = id };
                 await _service.AddLocality(loc);
-
+                
                 // нахожу номер контракта по муниципалитету
                 var conId = await _service.GetContractFromMuniciaplity(id); // номер контракта
                 var lastloc = await _service.GetLastLocality();
-
-                Contract_Locality con_loc = new Contract_Locality { contractid = conId, localityid = lastloc.id, tariph = double.Parse(Request.Form["tariph"]) };
+                var t = Request.Form["tariph"].ToString().Replace(".", ",");
+                Contract_Locality con_loc = new Contract_Locality { contractid = conId, localityid = lastloc.id, tariph = double.Parse(t) };
                 await _service.AddContractLocality(con_loc);
 
                 return Redirect($"/locality/{id}");
