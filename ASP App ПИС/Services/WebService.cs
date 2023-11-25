@@ -482,5 +482,42 @@ namespace ASP_App_ПИС.Services
             var response = await _client.GetAsync($"/api/User/last");
             return await response.ReadContentAsync<Usercapture>();
         }
+
+        public async Task<IEnumerable<Role>> GetRoles()
+        {
+            var response = await _client.GetAsync("/api/Role");
+            return await response.ReadContentAsync<List<Role>>();
+        }
+
+        public async Task<Role> GetOneRole(int id)
+        {
+            var response = await _client.GetAsync($"/api/Role/{id}");
+            return await response.ReadContentAsync<Role>();
+        }
+
+        public async Task<Role> GetLastRole()
+        {
+            var response = await _client.GetAsync($"/api/Role/last");
+            return await response.ReadContentAsync<Role>();
+        }
+
+        public async Task<HttpResponseMessage> AddRole(Role value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PostAsync($"/api/Role/add", content);
+        }
+
+        public async Task<HttpResponseMessage> EditRole(int id, Role value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PutAsync($"/api/Role/put/{id}", content);
+        }
+
+        public async Task<HttpResponseMessage> DeleteRole(int id)
+        {
+            return await _client.DeleteAsync($"/api/Role/delete/{id}");
+        }
     }
 }

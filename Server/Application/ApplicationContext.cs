@@ -16,6 +16,7 @@ namespace Server.Application
         public DbSet<Usercapture> usercapture { get; set; } = null!;
         public DbSet<Organization> organization { get; set; } = null!;
         public DbSet<Journal> journal { get; set; } = null!;
+        public DbSet<Role> role { get; set; } = null!;
 
         public ApplicationContext()
         {

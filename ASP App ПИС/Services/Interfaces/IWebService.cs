@@ -88,5 +88,11 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<ActCapture> GetLastActCapture();
         Task<Organization> GetLastOrganization();
         Task<Usercapture> GetLastUser();
+        Task<IEnumerable<Role>> GetRoles();
+        Task<Role> GetOneRole(int id);
+        Task<Role> GetLastRole();
+        Task<HttpResponseMessage> AddRole(Role value);
+        Task<HttpResponseMessage> EditRole(int id, Role value);
+        Task<HttpResponseMessage> DeleteRole(int id);
     }
 }

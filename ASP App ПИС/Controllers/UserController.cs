@@ -37,7 +37,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = new List<Claim> { 
                 new Claim(ClaimTypes.Actor, user.id.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.login), 
-                new Claim(ClaimTypes.Role, user.role),
+                new Claim(ClaimTypes.Role, user.Role.name),
                 new Claim(ClaimTypes.Name, user.name),
                 new Claim(ClaimTypes.Surname, user.surname),
                 new Claim(ClaimTypes.Locality, user.localityid.ToString()),
@@ -87,6 +87,7 @@ namespace ASP_App_ПИС.Controllers
             ViewData["muns"] = await _service.GetMunicipalities();
             ViewData["locs"] = await _service.GetLocalities();
             ViewData["orgs"] = await _service.GetOrganizations();
+            ViewData["roles"] = await _service.GetRoles();
             return View();
         }
 
@@ -94,14 +95,14 @@ namespace ASP_App_ПИС.Controllers
         [Route("/user/add")]
         public new async Task<IActionResult> AddPost()
         {
-            var role = Request.Form["role"] == "admin" ? "Админ" : "Оператор по отлову";
-            var isAdmin = Request.Form["role"] == "admin";
+            var role = await _service.GetOneRole(int.Parse(Request.Form["role"]));
+            var isAdmin = role.name == "Админ";
             Usercapture user = new Usercapture
             {
                 surname = Request.Form["surname"],
                 name = Request.Form["name"],
                 patronymic = Request.Form["patronymic"],
-                role = role,
+                roleid = role.id,
                 telephone = Request.Form["telephone"],
                 email = Request.Form["email"],
                 municipalityid = int.Parse(Request.Form["municipality"]),
@@ -123,7 +124,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = userAdd.id,
-                description = $"Добавлен пользователь: {userAdd.surname} - {userAdd.name} - {userAdd.patronymic} - {userAdd.role} - {userAdd.Municipality.name} - " +
+                description = $"Добавлен пользователь: {userAdd.surname} - {userAdd.name} - {userAdd.patronymic} - {userAdd.Role.name} - {userAdd.Municipality.name} - " +
                 $"{userAdd.Locality.name} - {userAdd.Organization.name} - {userAdd.telephone} - {userAdd.email}"
             };
             await _service.AddJournal(jo);

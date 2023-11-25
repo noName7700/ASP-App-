@@ -24,6 +24,8 @@ namespace Server.Controllers
             var aa = await _context.journal
                 .Include(j => j.Usercapture)
                 .ThenInclude(j => j.Organization)
+                .Include(j => j.Usercapture)
+                .ThenInclude(j => j.Role)
                 .Where(j => j.nametable == id)
                 .Select(j => j)
                 .ToListAsync();

@@ -1,0 +1,38 @@
+﻿@using Domain;
+@model Role;
+
+<div class="content-wrapper">
+    <!-- START PAGE CONTENT-->
+    <div class="page-heading">
+        <h1 class="page-title">Изменить организацию</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/role/">Роли</a>
+            </li>
+            <li class="breadcrumb-item">Изменить роль</li>
+        </ol>
+    </div>
+    <div class="page-content fade-in-up">
+        <div class="ibox">
+            <div class="ibox-head">
+                <div class="ibox-title">Изменить название роли</div>
+            </div>
+            <div class="ibox-body">
+                <form class="form-horizontal" method="post">
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="name">Наименование:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="name" type="text" name="name" value=@Model.name>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="col-sm-10 ml-sm-auto">
+                        <button type="submit" class="btn btn-info">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

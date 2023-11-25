@@ -56,7 +56,7 @@ namespace ASP_App_ПИС.Controllers
             if (!string.IsNullOrEmpty(search4))
             {
                 jous = jous
-                    .Where(j => j.Usercapture.role.Contains(search4, StringComparison.InvariantCultureIgnoreCase))
+                    .Where(j => j.Usercapture.Role.name.Contains(search4, StringComparison.InvariantCultureIgnoreCase))
                     .Select(j => j)
                     .ToList();
                 ViewData["search4"] = search4;
@@ -131,8 +131,8 @@ namespace ASP_App_ПИС.Controllers
                 SortState.UserEmailDesc => jous.OrderByDescending(j => j.Usercapture.email),
                 SortState.OrgNameAsc => jous.OrderBy(j => j.Usercapture.Organization.name),
                 SortState.OrgNameDesc => jous.OrderByDescending(j => j.Usercapture.Organization.name),
-                SortState.UserRoleAsc => jous.OrderBy(j => j.Usercapture.role),
-                SortState.UserRoleDesc => jous.OrderByDescending(j => j.Usercapture.role),
+                SortState.UserRoleAsc => jous.OrderBy(j => j.Usercapture.Role.name),
+                SortState.UserRoleDesc => jous.OrderByDescending(j => j.Usercapture.Role.name),
                 SortState.OrgTelAsc => jous.OrderBy(j => j.Usercapture.Organization.telephone),
                 SortState.OrgTelDesc => jous.OrderByDescending(j => j.Usercapture.Organization.telephone),
                 SortState.OrgEmailAsc => jous.OrderBy(j => j.Usercapture.Organization.email),

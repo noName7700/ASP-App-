@@ -159,6 +159,23 @@
                         </ul>
                     </li>   
                     }
+                    @if (isAdmin)
+                    {
+                        <li>
+                            <a href="javascript:;">
+                                <i class="sidebar-item-icon fa fa-user"></i>
+                                <span class="nav-label">Роли</span><i class="fa fa-angle-left arrow"></i>
+                            </a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="/role/">Список ролей</a>
+                                </li>
+                                <li>
+                                    <a href="/role/add">Добавить роль</a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
                     <li class="heading">ОТЧЕТЫ</li>
                     <li>
                         <a href="/report/money"><i class="sidebar-item-icon fa fa-clipboard"></i>

@@ -12,7 +12,8 @@ namespace Domain
         public string surname { get; set; }
         public string name { get; set; }
         public string patronymic { get; set; }
-        public string role { get; set; }
+        public int roleid { get; set; }
+        public Role? Role { get; set; }
         public int municipalityid { get; set; }
         public Municipality? Municipality { get; set; }
         public int localityid { get; set; }

@@ -23,6 +23,7 @@ namespace Server.Controllers
                 .Include(u => u.Municipality)
                 .Include(u => u.Locality)
                 .Include(u => u.Organization)
+                .Include(u => u.Role)
                 .ToListAsync();
         }
 
@@ -34,6 +35,7 @@ namespace Server.Controllers
                 .Include(u => u.Municipality)
                 .Include(u => u.Locality)
                 .Include(u => u.Organization)
+                .Include(u => u.Role)
                 .Select(t => t)
                 .OrderBy(t => t.id)
                 .LastAsync();

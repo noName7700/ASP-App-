@@ -64,7 +64,6 @@ namespace Server.Controllers
             }
         }
 
-        // удалить контракт по id
         [HttpDelete]
         [Route("/api/Organization/delete/{id}")]
         public async Task Delete(int id)
