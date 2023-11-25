@@ -336,9 +336,12 @@ namespace ASP_App_ПИС.Services
         }
 
         
-        public Task<FileStreamResult> GetExcelMoney()
+        public async Task<FileStreamResult> GetExcelMoney()
         {
-            throw new NotImplementedException();
+            var stream = await _client.GetStreamAsync("блаблабла");
+            FileStreamResult f = new FileStreamResult(stream, "text/csv");
+            f.FileDownloadName = DateTime.Now.ToString();
+            return f;
         }
 
         public async Task<int> GetContractFromMuniciaplity(int id)

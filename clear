@@ -1,0 +1,191 @@
+[33mcommit 8b4a459a8ebd279ae04ff09fd535ffae005f68a9[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Валерий Школяренко <stud0000245612@study.utmn.ru>
+Date:   Fri Nov 17 09:54:02 2023 +0500
+
+    Временно продублировал методы, чтобы работало
+
+ Server/Controllers/ReportsController.cs | 26 [32m+++++++++++++++++++++++[m[31m---[m
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+
+[33mcommit dc4f80a6e18961cf16775d66771f5a90edc07101[m
+Author: Валерий Школяренко <stud0000245612@study.utmn.ru>
+Date:   Fri Nov 17 09:09:49 2023 +0500
+
+    Удалю рекламу потом...
+
+ Server/Controllers/ReportsController.cs | 90 [32m++++++++++++++++++++++[m[31m-----------[m
+ 1 file changed, 61 insertions(+), 29 deletions(-)
+
+[33mcommit 67c07275b2ed58b709a79e9d73ca5e944801810e[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Thu Nov 16 21:52:41 2023 +0500
+
+    changeActAnimal
+
+ .../Controllers/ActController.cs"                  | 77 [32m++++++++++[m[31m------------[m
+ .../Controllers/AnimalController.cs"               | 46 [32m+++++[m[31m--------[m
+ "ASP App \320\237\320\230\320\241/Program.cs"      |  2 [32m+[m[31m-[m
+ .../Services/Interfaces/IWebService.cs"            |  4 [32m+[m[31m-[m
+ .../Services/WebService.cs"                        | 10 [32m+[m[31m--[m
+ .../Views/Act/ViewActs.cshtml"                     |  4 [32m+[m[31m-[m
+ .../Views/Animal/Add.cshtml"                       |  2 [32m+[m[31m-[m
+ .../Views/Animal/Index.cshtml"                     |  2 [32m+[m[31m-[m
+ .../Views/Schedule/Add.cshtml"                     |  2 [32m+[m[31m-[m
+ Domain/ActCapture.cs                               |  2 [31m-[m
+ Domain/Animal.cs                                   |  2 [32m+[m
+ Server/Controllers/ActCaptureController.cs         | 37 [32m++++[m[31m-------[m
+ Server/Controllers/AnimalController.cs             | 44 [32m+++++[m[31m--------[m
+ Server/Controllers/ReportsController.cs            | 11 [32m+++[m[31m-[m
+ Server/appsettings.json                            |  2 [32m+[m[31m-[m
+ 15 files changed, 107 insertions(+), 140 deletions(-)
+
+[33mcommit 200ede874cc79025dfc1fbb27a2d41a7ad725529[m
+Author: noName7700 <adlan.shamavov@mail.ru>
+Date:   Thu Nov 16 15:20:20 2023 +0500
+
+    add profile
+
+ .../Controllers/UserController.cs"                 | 10 [32m+++[m
+ .../Services/WebService.cs"                        |  4 [32m+[m[31m-[m
+ .../Views/Organization/Edit.cshtml"                |  6 [32m+[m[31m-[m
+ .../Views/Shared/_Layout.cshtml"                   |  4 [32m+[m[31m-[m
+ .../Views/User/Profile.cshtml"                     | 76 [32m++++++++++++++++++++++[m
+ 5 files changed, 93 insertions(+), 7 deletions(-)
+
+[33mcommit b22ebd057269a73fa096207b8c087700612683fa[m
+Merge: eb52726 fad22a7
+Author: noName7700 <adlan.shamavov@mail.ru>
+Date:   Thu Nov 16 14:10:11 2023 +0500
+
+    commit1212
+
+[33mcommit eb52726aeecd810237381c815c32dd85bd7ba695[m
+Author: noName7700 <adlan.shamavov@mail.ru>
+Date:   Thu Nov 16 14:07:54 2023 +0500
+
+    commit123123
+
+ "ASP App \320\237\320\230\320\241/Program.cs"                 | 2 [32m+[m[31m-[m
+ "ASP App \320\237\320\230\320\241/Services/WebService.cs"     | 8 [32m++++[m[31m----[m
+ "ASP App \320\237\320\230\320\241/Views/Journal/Index.cshtml" | 2 [32m+[m[31m-[m
+ Server/appsettings.json                                       | 2 [32m+[m[31m-[m
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+[33mcommit fad22a7e2b5e81fb144caf929ed2369470ca2f64[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Thu Nov 16 00:16:15 2023 +0500
+
+    addSortFindJournal
+
+ .../Controllers/JournalController.cs"              | 132 [32m++++++++++++++++++++[m[31m-[m
+ .../Models/SortState.cs"                           |  16 [32m+++[m
+ .../Views/Act/Index.cshtml"                        |  12 [32m+[m[31m-[m
+ .../Views/Contract/Index.cshtml"                   |  12 [32m+[m[31m-[m
+ .../Views/Journal/Index.cshtml"                    |  96 [32m++++++++++++++[m[31m-[m
+ .../Views/Municipality/Index.cshtml"               |  10 [32m+[m[31m-[m
+ .../Views/Organization/Index.cshtml"               |   9 [32m+[m[31m-[m
+ .../Views/Schedule/Index.cshtml"                   |  10 [32m+[m[31m-[m
+ .../Views/Shared/_Layout.cshtml"                   |   2 [32m+[m[31m-[m
+ .../Views/User/User.cshtml"                        |  11 [32m+[m[31m-[m
+ 10 files changed, 272 insertions(+), 38 deletions(-)
+
+[33mcommit 0a93367bd833b664fd5b61e526f7e5c98014cdb2[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Wed Nov 15 22:09:38 2023 +0500
+
+    addJournal
+
+ .../Controllers/ActController.cs"                  | 39 [32m++++++++++++[m
+ .../Controllers/AnimalController.cs"               | 47 [32m++++++++++++++[m
+ .../Controllers/ContractController.cs"             | 27 [32m++++++++[m
+ .../Controllers/MunicipalityController.cs"         | 14 [32m+++++[m
+ .../Controllers/OrganizationController.cs"         | 46 [32m++++++++++++++[m
+ .../Controllers/ScheduleController.cs"             |  5 [32m+[m[31m-[m
+ .../Controllers/ScheduleOneController.cs"          | 71 [32m++++++++++++++++++++[m[31m--[m
+ .../Controllers/UserController.cs"                 | 16 [32m+++++[m
+ .../Services/Interfaces/IWebService.cs"            |  5 [32m++[m
+ .../Services/WebService.cs"                        | 47 [32m++++++++++++[m[31m--[m
+ .../Views/Act/Index.cshtml"                        | 10 [32m++[m[31m-[m
+ .../Views/Animal/Index.cshtml"                     |  6 [32m+[m[31m-[m
+ .../Views/Contract/Index.cshtml"                   |  9 [32m+++[m
+ .../Views/Journal/Index.cshtml"                    | 24 [32m++++[m[31m----[m
+ .../Views/Municipality/Index.cshtml"               |  8 [32m+++[m
+ .../Views/Organization/Index.cshtml"               |  8 [32m+++[m
+ .../Views/Schedule/Index.cshtml"                   | 24 [32m+++++[m[31m---[m
+ .../Views/User/User.cshtml"                        | 10 [32m++[m[31m-[m
+ Server/Controllers/ActCaptureController.cs         | 18 [32m+++++[m[31m-[m
+ Server/Controllers/ContractController.cs           | 15 [32m++++[m[31m-[m
+ Server/Controllers/JournalController.cs            |  8 [32m+[m[31m--[m
+ Server/Controllers/MunicipalityController.cs       | 10 [32m+++[m
+ Server/Controllers/OrganizationController.cs       | 11 [32m++++[m
+ Server/Controllers/ScheduleController.cs           |  4 [32m+[m[31m-[m
+ Server/Controllers/UserController.cs               | 13 [32m++++[m
+ 25 files changed, 450 insertions(+), 45 deletions(-)
+
+[33mcommit a5701314c7bd40b1be3cbbf436e9d8144e8f00bd[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Wed Nov 15 16:05:59 2023 +0500
+
+    aaaa
+
+ .../Controllers/JournalController.cs"              | 23 [32m++++++[m
+ .../Controllers/ScheduleController.cs"             | 28 [32m++++++[m[31m-[m
+ .../Controllers/UserController.cs"                 |  1 [32m+[m
+ .../Services/Interfaces/IWebService.cs"            |  3 [32m+[m
+ .../Services/WebService.cs"                        | 24 [32m++++++[m
+ .../Views/Journal/Index.cshtml"                    | 92 [32m++++++++++++++++++++++[m
+ .../Views/Schedule/Index.cshtml"                   | 16 [32m++[m[31m--[m
+ Domain/Journal.cs                                  | 20 [32m+++++[m
+ Server/Application/ApplicationContext.cs           |  1 [32m+[m
+ Server/Controllers/JournalController.cs            | 55 [32m+++++++++++++[m
+ 10 files changed, 253 insertions(+), 10 deletions(-)
+
+[33mcommit 7ee29c308f03bfe783332d19cb1ecc05d746d2ab[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Wed Nov 15 01:50:26 2023 +0500
+
+    addChangeDeleteOrg
+
+ .../Controllers/OrganizationController.cs"         | 30 [32m+++++++++++++[m
+ .../Services/Interfaces/IWebService.cs"            |  3 [32m++[m
+ .../Services/WebService.cs"                        | 18 [32m++++++++[m
+ .../Views/Animal/Index.cshtml"                     |  4 [32m+[m[31m-[m
+ .../Views/Contract/Add.cshtml"                     |  3 [32m++[m
+ .../Views/Contract/Edit.cshtml"                    |  3 [32m++[m
+ .../Views/Contract/Index.cshtml"                   |  4 [32m+[m[31m-[m
+ .../Views/Locality/Index.cshtml"                   |  3 [32m++[m
+ .../Views/Municipality/Add.cshtml"                 |  3 [32m++[m
+ .../Views/Organization/Edit.cshtml"                | 52 [32m++++++++++++++++++++++[m
+ .../Views/Organization/Index.cshtml"               |  7 [32m+++[m
+ .../Views/Report/IndexMoney.cshtml"                |  3 [32m++[m
+ .../Views/Report/IndexMoneyPost.cshtml"            |  3 [32m++[m
+ .../Views/Report/IndexSchedule.cshtml"             |  3 [32m++[m
+ .../Views/Report/IndexSchedulePost.cshtml"         |  3 [32m++[m
+ .../Views/Schedule/Add.cshtml"                     |  3 [32m++[m
+ .../Views/Schedule/Index.cshtml"                   |  3 [32m++[m
+ .../Views/ScheduleOne/Edit.cshtml"                 |  3 [32m++[m
+ .../Views/ScheduleOne/Index.cshtml"                |  3 [32m++[m
+ Server/Controllers/OrganizationController.cs       | 34 [32m++++++++++++++[m
+ 20 files changed, 186 insertions(+), 2 deletions(-)
+
+[33mcommit e48f03aaa439a1b5dfbf89df06324ac7b6d865e5[m
+Author: MashaKhor <144768937+MashaKhor@users.noreply.github.com>
+Date:   Wed Nov 15 00:41:15 2023 +0500
+
+    addOrgChangeAll
+
+ .../Controllers/OrganizationController.cs"         | 66 [32m++++++++++++++++++++++[m
+ .../Controllers/UserController.cs"                 |  6 [32m+[m[31m-[m
+ .../Services/Interfaces/IWebService.cs"            |  2 [32m+[m
+ .../Services/WebService.cs"                        | 13 [32m+++++[m
+ .../Views/Organization/Add.cshtml"                 | 59 [32m+++++++++++++++++++[m
+ .../Views/Organization/Index.cshtml"               | 64 [32m+++++++++++++++++++++[m
+ .../Views/Shared/_Layout.cshtml"                   | 17 [32m++++++[m
+ .../Views/User/Add.cshtml"                         | 52 [32m++++++++++++++[m[31m---[m
+ .../Views/User/User.cshtml"                        | 48 [32m++++++++++[m[31m------[m
+ Domain/Organization.cs                             | 16 [32m++++++[m
+ Domain/Usercapture.cs                              |  4 [32m++[m
+ Server/Application/ApplicationContext.cs           |  1 [32m+[m
+ Server/Controllers/OrganizationController.cs       | 35 [32m++++++++++++[m
+ Server/Controllers/UserController.cs               |  6 [32m+[m[31m-[m
+ 14 files changed, 362 insertions(+), 27 deletions(-)
