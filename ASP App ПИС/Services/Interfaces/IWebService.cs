@@ -60,10 +60,11 @@ namespace ASP_App_ПИС.Services.Interfaces
 
         // отчет - деньги
         Task<double> GetReportsMoney(string startDate, string endDate, int munid);
-        Task<FileStreamResult> GetExcelMoney();
+        Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d);
+        Task<FileStreamResult> GetExcelSchedule(string startdate, string enddate, int munid, int locid, int plan, int fact);
 
         // отчет - план-график
-        Task<Dictionary<int, int>> GetReportsSchedule(int munid);
+        Task<Dictionary<int, int>> GetReportsSchedule(string startDate, string endDate, int munid, int locid);
 
         // метод найти контракт по муниципалитету
         Task<int> GetContractFromMuniciaplity(int id);

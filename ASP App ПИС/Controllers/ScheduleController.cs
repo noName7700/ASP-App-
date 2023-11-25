@@ -55,47 +55,73 @@ namespace ASP_App_ПИС.Controllers
         [Route("/schedule/add")]
         public async Task<IActionResult> AddPost()
         {
-            if (Request.Form["dateapproval"] != "")
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
+            var dateapproval = DateTime.Parse(Request.Form["dateapproval"]);
+
+            Schedule sch = new Schedule { localityid = localityid, dateapproval = dateapproval };
+            await _service.AddSchedule(sch);
+
+            Schedule lastSched = await _service.GetLastSchedule(localityid);
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            // вместе со всем добавить строку в журнал
+            Journal jo = new Journal
             {
-                var startdateForm = DateTime.Parse(Request.Form["startdate"]);
-                var enddateForm = DateTime.Parse(Request.Form["enddate"]);
-                var countanimalForm = int.Parse(Request.Form["count-animal"]);
+                nametable = 1,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastSched.id,
+                description = $"Добавлен план-график: {localityid} - {dateapproval.ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
 
-                TaskMonth tm = new TaskMonth
-                {
-                    startdate = startdateForm,
-                    enddate = enddateForm,
-                    countanimal = countanimalForm
-                };
-                await _service.AddTaskMonth(tm);
-                TaskMonth lastTm = await _service.GetLastTaskMonth();
-
-                var claims = HttpContext.Request.HttpContext.User.Claims;
-                var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
-                var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-                int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
-                Locality loc = await _service.GetOneLocality(localityid);
-                Schedule sch = new Schedule { localityid = loc.id,taskmonthid = lastTm.id, dateapproval = DateTime.Parse(Request.Form["dateapproval"]) };
-                await _service.AddSchedule(sch);
-
-                Schedule lastSched = await _service.GetLastSchedule(loc.id);
-                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-
-                // вместе со всем добавить строку в журнал
-                Journal jo = new Journal
-                {
-                    nametable = 1,
-                    usercaptureid = userid,
-                    datetimechange = DateTime.Now,
-                    idobject = lastSched.id,
-                    description = $"{loc.name} - {lastSched.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
-                    $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
-                };
-                await _service.AddJournal(jo);
-
-                return Redirect("/schedule/");
-            }
             return Redirect("/schedule/");
+
+
+            //if (Request.Form["dateapproval"] != "")
+            //{
+            //    var startdateForm = DateTime.Parse(Request.Form["startdate"]);
+            //    var enddateForm = DateTime.Parse(Request.Form["enddate"]);
+            //    var countanimalForm = int.Parse(Request.Form["count-animal"]);
+
+            //    TaskMonth tm = new TaskMonth
+            //    {
+            //        startdate = startdateForm,
+            //        enddate = enddateForm,
+            //        countanimal = countanimalForm
+            //    };
+            //    await _service.AddTaskMonth(tm);
+            //    TaskMonth lastTm = await _service.GetLastTaskMonth();
+
+            //    var claims = HttpContext.Request.HttpContext.User.Claims;
+            //    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            //    var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            //    int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
+            //    Locality loc = await _service.GetOneLocality(localityid);
+            //    Schedule sch = new Schedule { localityid = loc.id,taskmonthid = lastTm.id, dateapproval = DateTime.Parse(Request.Form["dateapproval"]) };
+            //    await _service.AddSchedule(sch);
+
+            //    Schedule lastSched = await _service.GetLastSchedule(loc.id);
+            //    int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            //    // вместе со всем добавить строку в журнал
+            //    Journal jo = new Journal
+            //    {
+            //        nametable = 1,
+            //        usercaptureid = userid,
+            //        datetimechange = DateTime.Now,
+            //        idobject = lastSched.id,
+            //        description = $"{loc.name} - {lastSched.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
+            //        $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
+            //    };
+            //    await _service.AddJournal(jo);
+
+            //    return Redirect("/schedule/");
+            //}
+            //return Redirect("/schedule/");
         }
     }
 }

@@ -1,5 +1,12 @@
 ﻿@using Domain;
-@model IEnumerable<Municipality>;
+@using System.Security.Claims
+@model Dictionary<IEnumerable<Locality>, IEnumerable<Municipality>>;
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+}
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -19,18 +26,76 @@
             </div>
             <div class="ibox-body">
                     <form class="form-horizontal" method="post">
-
                         <div class="form-group row">
-                            <label for="nameloc" class="col-sm-2 col-form-label">Наименование населенного пункта:</label>
+                        <label for="startdate_ex" class="col-sm-2 col-form-label">Начальная дата:</label>
                             <div class="col-sm-8">
-                                <select id="nameloc" class="form-control" name="municipality">
-                                    @foreach (var mun in Model)
-                                    {
-                                        <option value="@mun.id">@mun.name</option>
-                                    }
-                                </select>
+                                <input type="date" id="startdate_ex" class="form-control form-control-sm" placeholder="" aria-controls="example-table" name="startdate">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                        <label for="enddate_ex" class="col-sm-2 col-form-label">Конечная дата:</label>
+                            <div class="col-sm-8">
+                                <input type="date" id="enddate_ex" class="form-control form-control-sm" placeholder="" aria-controls="example-table" name="enddate">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                        <label for="munname" class="col-sm-2 col-form-label">Наименование муниципалитета:</label>
+                            <div class="col-sm-8">
+                            <select class="form-control" id="munname" name="municipality" @if (!isAdmin) Write("disabled");>
+                                @foreach (var enummun in Model.Values)
+                                {
+                                    if (!isAdmin)
+                                    {
+                                        @foreach (var mun in enummun)
+                                        {
+                                            if (mun.id == munId)
+                                            {
+                                                <option value="@mun.id">@mun.name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach (var mun in enummun)
+                                        {
+                                            <option value="@mun.id">@mun.name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            </div>
+                        </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label" for="localityy">Населенный пункт</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" id="localityy" name="locality" @if (!isAdmin) Write("disabled");>
+                                @foreach (var enumloc in Model.Keys)
+                                {
+                                    if (!isAdmin)
+                                    {
+                                        @foreach (var loc in enumloc)
+                                        {
+                                            if (loc.id == locId)
+                                            {
+                                                <option value="@loc.id">@loc.name</option>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @foreach (var loc in enumloc)
+                                        {
+                                            <option value="@loc.id">@loc.name</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
 
                         <div class="col-sm-10 ml-sm-auto">
                             <button href="/report/schedule" type="submit" class="btn btn-info">Создать</button>

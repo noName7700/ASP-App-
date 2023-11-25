@@ -12,5 +12,7 @@ namespace Domain
         public DateTime startdate { get; set; }
         public DateTime enddate { get; set; }    
         public int countanimal { get; set; }
+        public int scheduleid {  get; set; }
+        public Schedule? Schedule { get; set; }
     }
 }

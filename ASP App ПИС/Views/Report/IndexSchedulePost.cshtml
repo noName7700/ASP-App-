@@ -26,6 +26,11 @@
                 <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                     <div class="row">
                         <div class="col-sm-12">
+
+                            <div class="col-sm-12">
+                                <p>Отчет о выполненной работе по планам-графикам с <i>@DateTime.Parse(ViewData["startdate"].ToString()).ToString("D")</i> по <i>@DateTime.Parse(ViewData["enddate"].ToString()).ToString("D")</i> по населенному пункту: @ViewData["locname"]</p>
+                            </div>
+
                             <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
                                 <thead>
                                     <tr role="row">
@@ -47,6 +52,11 @@
                     </div>
                 </div>
             </div>
+
+            <a class="btn btn-info" style="margin-bottom: 15px; margin-left: 15px;"  href="/report/schedule/export/@DateTime.Parse(ViewData["startdate"].ToString()).ToString("yyyy-MM-dd")/@DateTime.Parse(ViewData["enddate"].ToString()).ToString("yyyy-MM-dd")/@ViewData["munid"]/@ViewData["locid"]/@Model.Keys.First()/@Model[Model.Keys.First()]">
+                <span class="nav-label">Экспорт в Excel</span>
+            </a>
+
         </div>
     </div>
     <!-- END PAGE CONTENT-->

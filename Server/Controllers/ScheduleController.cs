@@ -47,23 +47,34 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
-            return await _context.schedule.Where(sch => sch.id == id).Select(sch => sch.TaskMonth).ToListAsync();
+            return await _context.taskmonth
+                .Include(t => t.Schedule)
+                .Where(t => t.Schedule.localityid == id)
+                .Select(t => t)
+                .ToListAsync();
         }
 
         [HttpGet]
         [Route("/api/Schedule/last/{locid}")]
         public async Task<Schedule> GetLast(int locid)
         {
-            return await _context.schedule.Where(s => s.localityid == locid).Select(s => s).OrderBy(s => s.id).LastAsync();
+            return await _context.schedule
+                .Where(s => s.localityid == locid)
+                .Select(s => s)
+                .OrderBy(s => s.id)
+                .LastAsync();
         }
 
         [HttpGet]
         [Route("/api/Schedule/task/{id}")]
         public async Task<Schedule> GetFromTaskMonthId(int id)
         {
-            return await _context.schedule
-                .Include(sc => sc.Locality)
-                .Where(s => s.taskmonthid == id).Select(s => s).FirstAsync();
+            return await _context.taskmonth
+                .Include(t => t.Schedule)
+                .ThenInclude(sc => sc.Locality)
+                .Where(t => t.id == id)
+                .Select(t => t.Schedule)
+                .FirstAsync();
         }
 
         // добавить новый план-график
