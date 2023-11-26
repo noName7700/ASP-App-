@@ -116,9 +116,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Locality>();
         }
 
-        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id)
+        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int conid)
         {
-            var response = await _client.GetAsync($"/api/TaskMonth/{id}");
+            var response = await _client.GetAsync($"/api/TaskMonth/{id}/{conid}");
             return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
         }
 
@@ -323,9 +323,9 @@ namespace ASP_App_ПИС.Services
         //    return await _client.PostAsync($"/api/Municipality/add-loc", content);
         //}
 
-        public async Task<double> GetReportsMoney(string startDate, string endDate, int munid)
+        public async Task<double> GetReportsMoney(int conid)
         {
-            var response = await _client.GetAsync($"/api/Reports/money/{startDate}/{endDate}/{munid}");
+            var response = await _client.GetAsync($"/api/Reports/money/{conid}");
             return await response.ReadContentAsync<double>();
         }
 
@@ -383,6 +383,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Contract_Locality>();
         }
 
+        public async Task<Contract_Locality> GetDateContract_LocalityForDate(int id, string datecapture)
+        {
+            var response = await _client.GetAsync($"/api/Contract_Locality/date/{id}/{datecapture}");
+            return await response.ReadContentAsync<Contract_Locality>();
+        }
 
         public async Task<HttpResponseMessage> EditTariphLocality(int id, Contract_Locality value)
         {
@@ -518,6 +523,24 @@ namespace ASP_App_ПИС.Services
         public async Task<HttpResponseMessage> DeleteRole(int id)
         {
             return await _client.DeleteAsync($"/api/Role/delete/{id}");
+        }
+
+        public async Task<IEnumerable<Contract_Locality>> GetContract_Localities()
+        {
+            var response = await _client.GetAsync("/api/Contract_Locality");
+            return await response.ReadContentAsync<List<Contract_Locality>>();
+        }
+
+        public async Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Contract_Locality/{id}");
+            return await response.ReadContentAsync<List<Contract_Locality>>();
+        }
+
+        public async Task<IEnumerable<Contract>> GetContractsFromMunId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Contract/all/{id}");
+            return await response.ReadContentAsync<List<Contract>>();
         }
     }
 }

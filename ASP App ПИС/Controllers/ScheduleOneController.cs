@@ -17,10 +17,10 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.DateAsc)
+        [Route("/scheduleone/{id}/{conid}")]
+        public async Task<IActionResult> Index(int id, int conid, string search, SortState sort = SortState.DateAsc)
         {
-            var tasks = await _service.GetTaskMonth(id);
+            var tasks = await _service.GetTaskMonth(id, conid);
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -89,7 +89,7 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/scheduleone/{id}");
+            return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
         }
 
         [HttpGet]

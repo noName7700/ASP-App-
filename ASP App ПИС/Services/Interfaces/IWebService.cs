@@ -28,7 +28,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Animal> GetAnimal(int id);
         Task<Locality> GetLocality(int id);
         Task<Locality> GetOneLocality(int id);
-        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id);
+        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int conid);
         Task<TaskMonth> GetTaskMonthOne(int id);
         Task<Contract> GetContractOne(int id);
         Task<Animal> GetAnimalOne(int id);
@@ -59,7 +59,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         //Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value);
 
         // отчет - деньги
-        Task<double> GetReportsMoney(string startDate, string endDate, int munid);
+        Task<double> GetReportsMoney(int conid);
         Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d);
         Task<FileStreamResult> GetExcelSchedule(string startdate, string enddate, int munid, int locid, int plan, int fact);
 
@@ -94,5 +94,9 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddRole(Role value);
         Task<HttpResponseMessage> EditRole(int id, Role value);
         Task<HttpResponseMessage> DeleteRole(int id);
+        Task<IEnumerable<Contract_Locality>> GetContract_Localities();
+        Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id);
+        Task<Contract_Locality> GetDateContract_LocalityForDate(int id, string datecapture);
+        Task<IEnumerable<Contract>> GetContractsFromMunId(int id);
     }
 }

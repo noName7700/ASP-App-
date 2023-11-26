@@ -82,8 +82,32 @@ namespace Server.Controllers
         [Route("/api/Schedule/add")]
         public async Task Post([FromBody] Schedule value)
         {
-            await _context.schedule.AddAsync(value);
-            await _context.SaveChangesAsync();
+            // тут я проверяю, что если мы добавляем план-график для контракта
+            // для которого уже есть контракт, то мы выводим ошибку
+            var loc = await _context.locality
+                .Where(l => l.id == value.localityid)
+                .Select(l => l)
+                .FirstOrDefaultAsync();
+
+            var con = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Where(cl => cl.localityid == loc.id && cl.Contract.dateconclusion <= value.dateapproval && cl.Contract.validityperiod >= value.dateapproval)
+                .Select(cl => cl.Contract)
+                .FirstOrDefaultAsync();
+
+            var countSchedule = await _context.schedule
+                .Where(sc => sc.contractid == con.id)
+                .CountAsync();
+
+            if (countSchedule == 0)
+            {
+                await _context.schedule.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
+            //else
+            //{
+            //    ошибка
+            //}
         }
 
         // удалить выбранное задание на месяц (т.е. строку из таблицы планов-графиков)

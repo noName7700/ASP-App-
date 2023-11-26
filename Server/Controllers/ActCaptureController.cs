@@ -16,7 +16,6 @@ namespace Server.Controllers
             _context = context;
         }
 
-        //ЭТО Я ДОБАВИЛА СЕЙЧАС
         // вывести все акты отлова (т.е. нас пункты:))
         [HttpGet]
         public async Task<IEnumerable<Locality>> Get()

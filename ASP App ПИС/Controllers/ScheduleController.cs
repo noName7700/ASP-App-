@@ -60,8 +60,14 @@ namespace ASP_App_ПИС.Controllers
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
             var dateapproval = DateTime.Parse(Request.Form["dateapproval"]);
+            var conid = (await _service.GetDateContract_LocalityForDate(localityid, dateapproval.ToString("yyyy-MM-dd"))).contractid;
 
-            Schedule sch = new Schedule { localityid = localityid, dateapproval = dateapproval };
+            Schedule sch = new Schedule 
+            { 
+                localityid = localityid, 
+                dateapproval = dateapproval,
+                contractid = conid
+            };
             await _service.AddSchedule(sch);
 
             Schedule lastSched = await _service.GetLastSchedule(localityid);

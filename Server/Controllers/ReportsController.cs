@@ -35,24 +35,36 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/Reports/money/{startDate}/{endDate}/{munid}")]
-        public async Task<double> Get(string startDate, string endDate, int munid)
+        [Route("/api/Reports/money/{conid}")]
+        public async Task<double> Get(int conid)
         {
+            var munid = await _context.contract.Where(c => c.id == conid).Select(c => c.municipalityid).FirstOrDefaultAsync();
             var needLocalities = await _context.locality.Select(l => l).Where(m => m.municipalityid == munid).Select(h => h.id).ToListAsync();
-            DateTime startdate = DateTime.Parse(startDate);
-            DateTime enddate = DateTime.Parse(endDate);
+            //DateTime startdate = DateTime.Parse(startDate);
+            //DateTime enddate = DateTime.Parse(endDate);
+
+            var check = await _context.contract_locality
+                .Where(cl => cl.contractid == conid)
+                .ToListAsync();
 
             // тут словарь: нас пункт id - тариф
             var loc_tar = await _context.contract_locality
+                .Where(cl => cl.contractid == conid)
                 .Select(lc => new { lc.localityid, lc.tariph })
                 .ToDictionaryAsync(lc => lc.localityid, lc => lc.tariph);
+
+            var conLoc = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Where(cl => cl.contractid == conid)
+                .Select(cl => cl.Contract)
+                .FirstOrDefaultAsync();
 
 
             // то что фактически получилось, я пробегаюсь по всем актам отлова из этого нас пункта и считаю цену потом складываю
             double summ = 0;
             foreach (var act in _context.actcapture)
             {
-                if (act.datecapture >= startdate && act.datecapture <= enddate 
+                if (act.datecapture >= conLoc.dateconclusion && act.datecapture <= conLoc.validityperiod 
                     && needLocalities.Contains(act.localityid))
                 {
                     summ += loc_tar[act.localityid];

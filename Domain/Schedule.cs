@@ -14,5 +14,7 @@ namespace Domain
         public int localityid { get; set; }
         public Locality? Locality { get; set; }
         public DateTime dateapproval { get; set; }
+        public int contractid { get; set; }
+        public Contract? Contract { get; set; }
     }
 }

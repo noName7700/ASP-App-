@@ -61,8 +61,19 @@ namespace Server.Controllers
         [Route("/api/Locality/add")]
         public async Task Post([FromBody] Locality value)
         {
-            await _context.locality.AddAsync(value);
-            await _context.SaveChangesAsync();
+            var countLoc = await _context.locality
+                .Where(l => l.municipalityid == value.municipalityid && l.name == value.name)
+                .CountAsync();
+
+            if (countLoc == 0)
+            {
+                await _context.locality.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
+            //else
+            //{
+            //    ошибка
+            //}
         }
 
         // изменить нас пункт

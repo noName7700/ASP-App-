@@ -73,8 +73,19 @@ namespace Server.Controllers
         [Route("/api/Municipality/add")]
         public async Task Post([FromBody] Municipality value)
         {
-            await _context.municipality.AddAsync(value);
-            await _context.SaveChangesAsync();
+            var countMun = await _context.municipality
+                .Where(m => m.name == value.name)
+                .CountAsync();
+
+            if (countMun == 0)
+            {
+                await _context.municipality.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
+            //else
+            //{
+            //    ошибка
+            //}
         }
 
         [HttpGet]

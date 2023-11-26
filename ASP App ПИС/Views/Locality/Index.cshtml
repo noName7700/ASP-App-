@@ -1,5 +1,5 @@
 ﻿@using Domain;
-@model Dictionary<IEnumerable<Locality>, IEnumerable<Contract_Locality>>;
+@model IEnumerable<Locality>;
 @{
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
@@ -42,18 +42,14 @@
                                 Наименование
                                 <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Тариф</th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach(var loc_tar in Model)
+                    @foreach(var loc in Model)
                     {
-                        @foreach (var loc in loc_tar.Key)
-                        {
                             <tr role="row" class="odd">
                             <td>@loc.name</td>
-                            <td>@loc_tar.Value.Where(cl => cl.localityid == loc.id).Select(cl => cl.tariph).FirstOrDefault()</td>
                         <td>
                             @if (isAdmin)
                                                 {
@@ -62,7 +58,6 @@
                                                 }
                                             </td>
                     </tr>
-                        }
                     }
                     </tbody>
                 </table>

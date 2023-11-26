@@ -19,7 +19,13 @@ namespace ASP_App_ПИС.Controllers
 
         public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
+            // получаю все контракты
             var contracts = await _service.GetContracts();
+
+            // получаю все contract_locality
+            var con_loc = await _service.GetContract_Localities();
+            ViewData["con_locs"] = con_loc;
+            
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -41,6 +47,8 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> Add()
         {
             var muns = await _service.GetMunicipalities();
+            var locs = await _service.GetLocalities();
+            ViewData["locs"] = locs;
             return View(muns);
         }
 
@@ -59,8 +67,25 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.AddContract(con);
 
-            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            // нахожу последний контракт
             Contract conLast = await _service.GetLastContract();
+
+            // нахожу все нужные нас пункты по id муниципалитета пользователя (для админа как-то по другому)
+            var locs = await _service.GetLocalitiesFromMunId(munId);
+
+            // добавляю все записи в contract_locality
+            foreach (var loc in locs)
+            {
+                Contract_Locality con_loc = new Contract_Locality
+                {
+                    contractid = conLast.id,
+                    localityid = loc.id,
+                    tariph = double.Parse(Request.Form[loc.id.ToString()])
+                };
+                await _service.AddContractLocality(con_loc);
+            }
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             Journal jo = new Journal
             {
                 nametable = 2,
@@ -80,6 +105,7 @@ namespace ASP_App_ПИС.Controllers
         {
             Contract con = await _service.GetContractOne(id);
             ViewData["munid"] = munid;
+            ViewData["con_locs"] = await _service.GetContract_LocalityFromConId(id);
             return View(con);
         }
 
@@ -95,6 +121,21 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             Contract contractEdit = await _service.GetContractOne(id);
+
+            // изменяю записи в contract_locality
+            var con_locs = await _service.GetContract_LocalityFromConId(id);
+            foreach (var cl in con_locs)
+            {
+                var locid = cl.localityid;
+                Contract_Locality con_loc = new Contract_Locality
+                {
+                    contractid = contractEdit.id,
+                    localityid = locid,
+                    tariph = double.Parse(Request.Form[cl.id.ToString()])
+                };
+                await _service.EditTariphLocality(cl.id, con_loc);
+            }
+
             Journal jo = new Journal
             {
                 nametable = 2,

@@ -19,8 +19,11 @@ namespace ASP_App_ПИС.Controllers
         [Route("/report/money")]
         public async Task<IActionResult> IndexMoney()
         {
-            var municipalities = await _service.GetMunicipalities();
-            return View(municipalities);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+            var contracts = await _service.GetContractsFromMunId(munid);
+            //var municipalities = await _service.GetMunicipalities();
+            return View(contracts);
         }
 
         [HttpPost]
@@ -30,9 +33,14 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
             ViewData["munid"] = munid;
-            var priceItog = await _service.GetReportsMoney(Request.Form["startdate"], Request.Form["enddate"], munid);
-            ViewData["startdate"] = Request.Form["startdate"];
-            ViewData["enddate"] = Request.Form["enddate"];
+            //var priceItog = await _service.GetReportsMoney(Request.Form["startdate"], Request.Form["enddate"], munid);
+            int idContract = int.Parse(Request.Form["contract"]);
+            var priceItog = await _service.GetReportsMoney(idContract);
+
+            // нахожу контракт
+            var con = await _service.GetContractOne(idContract);
+            ViewData["startdate"] = con.dateconclusion.ToString("D");
+            ViewData["enddate"] = con.validityperiod.ToString("D");
             return View(priceItog);
         }
 

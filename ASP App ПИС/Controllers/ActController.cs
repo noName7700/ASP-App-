@@ -81,8 +81,8 @@ namespace ASP_App_ПИС.Controllers
 
             // сначала добавляю акт отлова
             int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
-            // нахожу контракт по нас. пункту
-            var conid = (await _service.GetOneContract_Locality(localityid)).contractid;
+            // нахожу контракт по нас. пункту и дате отлова
+            var conid = (await _service.GetDateContract_LocalityForDate(localityid, DateTime.Parse(Request.Form["datecapture"]).ToString("yyyy-MM-dd"))).contractid;
 
             ActCapture act = new ActCapture
             {

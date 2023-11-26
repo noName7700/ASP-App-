@@ -25,12 +25,12 @@ namespace Server.Controllers
         }
 
         // вывести задания на месяц
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<TaskMonth>> Get(int id)
+        [HttpGet("{id}/{conid}")]
+        public async Task<IEnumerable<TaskMonth>> Get(int id, int conid)
         {
             return await _context.taskmonth
                 .Include(t => t.Schedule)
-                .Where(t => t.Schedule.localityid == id)
+                .Where(t => t.Schedule.localityid == id && t.Schedule.contractid == conid)
                 .Select(t => t)
                 .ToListAsync();
         }
@@ -40,6 +40,7 @@ namespace Server.Controllers
         public async Task<TaskMonth> GetLast()
         {
             return await _context.taskmonth
+                .Include(t => t.Schedule)
                 .Select(t => t)
                 .OrderBy(t => t.id)
                 .LastAsync();
