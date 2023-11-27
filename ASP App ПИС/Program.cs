@@ -8,7 +8,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/login");
 builder.Services.AddAuthorization();
 
-builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri("https://localhost:44370/"));
+var port = builder.Configuration.GetValue("ServerPort", "7022");
+
+builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri($"https://localhost:{port}/"));
 
 var app = builder.Build();
 

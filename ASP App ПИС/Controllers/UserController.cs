@@ -12,12 +12,13 @@ namespace ASP_App_ПИС.Controllers
     public class UserController : Controller
     {
         private IWebService _service;
-        public UserController(IWebService service)
+        private IConfiguration _configuration;
+        public UserController(IWebService service, IConfiguration configuration)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration;
         }
 
-        
         [HttpGet]
         [Route("/login")]
         public IActionResult Index()
@@ -88,6 +89,7 @@ namespace ASP_App_ПИС.Controllers
             ViewData["locs"] = await _service.GetLocalities();
             ViewData["orgs"] = await _service.GetOrganizations();
             ViewData["roles"] = await _service.GetRoles();
+            ViewData["config"] = _configuration;
             return View();
         }
 

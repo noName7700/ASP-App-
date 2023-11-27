@@ -12,10 +12,12 @@ namespace ASP_App_ПИС.Controllers
     public class ScheduleController : Controller
     {
         private IWebService _service;
+        private IConfiguration _configuration;
 
-        public ScheduleController(IWebService service)
+        public ScheduleController(IWebService service, IConfiguration config)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = config;
         }
 
         public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
@@ -48,6 +50,7 @@ namespace ASP_App_ПИС.Controllers
             IEnumerable<Locality> locs = await _service.GetLocalities();
             IEnumerable<Municipality> muns = await _service.GetMunicipalities();
             var locs_muns = new Dictionary<IEnumerable<Locality>, IEnumerable<Municipality>> { { locs, muns} };
+            ViewData["config"] = _configuration;
             return View(locs_muns);
         }
 
@@ -69,6 +72,11 @@ namespace ASP_App_ПИС.Controllers
                 contractid = conid
             };
             await _service.AddSchedule(sch);
+            if ((int)_service.AddSchedule(sch).Result.StatusCode == StatusCodes.Status403Forbidden)
+            {
+                Console.WriteLine(await _service.AddSchedule(sch).Result.Content.ReadAsStringAsync());
+                return RedirectToPage("/schedule");
+            }
 
             Schedule lastSched = await _service.GetLastSchedule(localityid);
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);

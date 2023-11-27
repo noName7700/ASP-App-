@@ -104,10 +104,11 @@ namespace Server.Controllers
                 await _context.schedule.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    ошибка
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync("Так нельзя((");
+            }
         }
 
         // удалить выбранное задание на месяц (т.е. строку из таблицы планов-графиков)
