@@ -129,7 +129,7 @@ namespace Server.Controllers
             else
             {
                 Response.StatusCode = 403;
-                await Response.WriteAsync("Так нельзя((");
+                await Response.WriteAsync("Для данного населенного пункта по контракту план-график уже составлен");
             }
         }
 

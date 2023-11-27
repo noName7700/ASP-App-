@@ -5,6 +5,7 @@ using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Xml;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -47,6 +48,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/schedule/add")]
         public async Task<IActionResult> Add()
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                Console.WriteLine(err);
+            }
             IEnumerable<Locality> locs = await _service.GetLocalities();
             IEnumerable<Municipality> muns = await _service.GetMunicipalities();
             var locs_muns = new Dictionary<IEnumerable<Locality>, IEnumerable<Municipality>> { { locs, muns} };
@@ -74,8 +79,8 @@ namespace ASP_App_ПИС.Controllers
             await _service.AddSchedule(sch);
             if ((int)_service.AddSchedule(sch).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
-                Console.WriteLine(await _service.AddSchedule(sch).Result.Content.ReadAsStringAsync());
-                return RedirectToPage("/schedule");
+                var err = await _service.AddSchedule(sch).Result.Content.ReadAsStringAsync();
+                return RedirectToAction("add", "schedule", new { err = err } );
             }
 
             Schedule lastSched = await _service.GetLastSchedule(localityid);
