@@ -72,11 +72,10 @@ namespace ASP_App_ПИС.Controllers
                 scheduleid = lastSch.id
             };
 
-            await _service.AddTaskMonth(tm);
             if ((int)_service.AddTaskMonth(tm).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
                 var err = await _service.AddTaskMonth(tm).Result.Content.ReadAsStringAsync();
-                return RedirectToAction(this.Url.Action(), new { err = err });
+                return RedirectToAction("/scheduleone/add/{id}", new { err = err });
             }
             else
             {
@@ -99,7 +98,6 @@ namespace ASP_App_ПИС.Controllers
 
                 return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
             }
-
         }
 
         [HttpGet]

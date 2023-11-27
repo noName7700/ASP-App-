@@ -76,6 +76,7 @@ namespace ASP_App_ПИС.Controllers
                 dateapproval = dateapproval,
                 contractid = conid
             };
+
             await _service.AddSchedule(sch);
             if ((int)_service.AddSchedule(sch).Result.StatusCode == StatusCodes.Status403Forbidden)
             {

@@ -58,19 +58,10 @@ namespace Server.Controllers
             var schedule = new Schedule();
 
             foreach(var sc in await _context.schedule.Include(sc => sc.Contract).ToListAsync())
-            {
                 if (sc.localityid == locid && sc.Contract.dateconclusion <= startDate && sc.Contract.validityperiod >= startDate)
                     schedule = sc;
-            }
 
-            if (schedule != new Schedule())
-                return schedule;
-            else
-            {
-                Response.StatusCode = 403;
-                await Response.WriteAsync($"Для данного населенного в дату {startDate.ToString("dd.MM.yyyy")} нет действующего контракта");
-                return null;
-            }
+            return schedule;
         }
 
 
