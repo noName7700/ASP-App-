@@ -542,5 +542,11 @@ namespace ASP_App_ПИС.Services
             var response = await _client.GetAsync($"/api/Contract/all/{id}");
             return await response.ReadContentAsync<List<Contract>>();
         }
+
+        public async Task<Schedule> GetOneScheduleFromLocDate(int locid, string startdate)
+        {
+            var response = await _client.GetAsync($"/api/Schedule/one/{locid}/{startdate}");
+            return await response.ReadContentAsync<Schedule>();
+        }
     }
 }

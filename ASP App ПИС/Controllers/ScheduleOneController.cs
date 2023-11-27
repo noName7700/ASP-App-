@@ -4,6 +4,7 @@ using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -56,7 +57,7 @@ namespace ASP_App_ПИС.Controllers
             var startdateForm = DateTime.Parse(Request.Form["startdate"]);
             var enddateForm = DateTime.Parse(Request.Form["enddate"]);
             var countanimalForm = int.Parse(Request.Form["count-animal"]);
-            Schedule lastSch = await _service.GetLastSchedule(id);
+            Schedule lastSch = await _service.GetOneScheduleFromLocDate(id, DateTime.Parse(Request.Form["startdate"]).ToString("yyyy-MM-dd"));
 
             TaskMonth tm = new TaskMonth
             {
@@ -65,31 +66,38 @@ namespace ASP_App_ПИС.Controllers
                 countanimal = countanimalForm,
                 scheduleid = lastSch.id
             };
-            await _service.AddTaskMonth(tm);
-            TaskMonth lastTm = await _service.GetLastTaskMonth();
-            //Schedule lastSch = await _service.GetLastSchedule(id);
-            //Schedule sch = new Schedule { localityid = id, taskmonthid = lastTm.id, dateapproval = lastSch.dateapproval };
-            //await _service.AddSchedule(sch);
 
-            var claims = HttpContext.Request.HttpContext.User.Claims;
-            //Schedule lastSched = await _service.GetLastSchedule(id);
-            Locality loc = await _service.GetOneLocality(id);
-            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-
-
-            // вместе со всем добавить строку в журнал
-            Journal jo = new Journal
+            if (startdateForm >= lastSch.dateapproval)
             {
-                nametable = 1,
-                usercaptureid = userid,
-                datetimechange = DateTime.Now,
-                idobject = lastTm.id,
-                description = $"{loc.name} - {lastSch.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
-                $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
-            };
-            await _service.AddJournal(jo);
+                await _service.AddTaskMonth(tm);
+                TaskMonth lastTm = await _service.GetLastTaskMonth();
+                //Schedule lastSch = await _service.GetLastSchedule(id);
+                //Schedule sch = new Schedule { localityid = id, taskmonthid = lastTm.id, dateapproval = lastSch.dateapproval };
+                //await _service.AddSchedule(sch);
 
-            return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
+                var claims = HttpContext.Request.HttpContext.User.Claims;
+                //Schedule lastSched = await _service.GetLastSchedule(id);
+                Locality loc = await _service.GetOneLocality(id);
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+
+                // вместе со всем добавить строку в журнал
+                Journal jo = new Journal
+                {
+                    nametable = 1,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = lastTm.id,
+                    description = $"{loc.name} - {lastSch.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
+                    $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
+                };
+                await _service.AddJournal(jo);
+
+                return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
+            }
+            return Redirect("/schedule/"); // это чтоб код заработал просто
+            // ошибка какая-то тут нужна
+
         }
 
         [HttpGet]
@@ -157,7 +165,7 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/scheduleone/{schedule.localityid}");
+            return Redirect($"/scheduleone/{schedule.localityid}/{schedule.contractid}");
         }
     }
 }

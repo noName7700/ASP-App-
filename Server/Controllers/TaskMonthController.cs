@@ -61,8 +61,19 @@ namespace Server.Controllers
         [Route("/api/TaskMonth/add")]
         public async Task Post([FromBody] TaskMonth value)
         {
-            await _context.taskmonth.AddAsync(value);
-            await _context.SaveChangesAsync();
+            var sched = await _context.schedule
+                .Where(sch => sch.id == value.scheduleid)
+                .FirstOrDefaultAsync();
+
+            if (value.startdate >= sched.dateapproval)
+            {
+                await _context.taskmonth.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
+            //else
+            //{
+            //    ошибка
+            //}
         }
 
         // изменить задание на месяц

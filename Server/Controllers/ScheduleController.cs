@@ -2,6 +2,7 @@
 using Server.Application;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Server.Controllers
 {
@@ -64,6 +65,27 @@ namespace Server.Controllers
                 .OrderBy(s => s.id)
                 .LastAsync();
         }
+
+        [HttpGet]
+        [Route("/api/Schedule/one/{locid}/{startdate}")]
+        public async Task<Schedule> GetOne(int locid, string startdate)
+        {
+            var startDate = DateTime.Parse(startdate);
+            var schedule = new Schedule();
+
+            foreach(var sc in await _context.schedule.ToListAsync())
+            {
+                if (sc.localityid == locid && sc.dateapproval <= startDate)
+                    schedule = sc;
+            }
+
+            return schedule;
+            //return await _context.schedule
+            //    .Where(s => s.localityid == locid && s.dateapproval <= startDate)
+            //    .Select(s => s)
+            //    .FirstOrDefaultAsync();
+        }
+
 
         [HttpGet]
         [Route("/api/Schedule/task/{id}")]

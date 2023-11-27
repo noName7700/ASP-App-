@@ -104,24 +104,8 @@ namespace Server.Controllers
         [Route("/api/Contract_Locality/add")]
         public async Task Post([FromBody] Contract_Locality value)
         {
-            var contractValue = await _context.contract
-                .Where(c => c.id == value.contractid)
-                .Select(c => c)
-                .FirstOrDefaultAsync();
-
-            var countContract = await _context.contract
-                .Where(c => c.municipalityid == contractValue.municipalityid && c.validityperiod >= contractValue.dateconclusion)
-                .CountAsync();
-
-            if (countContract == 0)
-            {
-                await _context.contract_locality.AddAsync(value);
-                await _context.SaveChangesAsync();
-            }
-            //else
-            //{
-            //    тут выводится ошибка
-            //}
+            await _context.contract_locality.AddAsync(value);
+            await _context.SaveChangesAsync();
         }
     }
 }
