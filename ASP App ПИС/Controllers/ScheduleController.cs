@@ -50,7 +50,7 @@ namespace ASP_App_ПИС.Controllers
         {
             if (Request.Query.TryGetValue("err", out StringValues err))
             {
-                Console.WriteLine(err);
+                ViewData["err"] = err;
             }
             IEnumerable<Locality> locs = await _service.GetLocalities();
             IEnumerable<Municipality> muns = await _service.GetMunicipalities();
