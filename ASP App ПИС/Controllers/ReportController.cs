@@ -20,9 +20,18 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> IndexMoney()
         {
             var claims = HttpContext.Request.HttpContext.User.Claims;
-            int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-            var contracts = await _service.GetContractsFromMunId(munid);
-            //var municipalities = await _service.GetMunicipalities();
+            var municipalities = await _service.GetMunicipalities();
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            int munid; IEnumerable<Contract> contracts;
+            if (isAdmin)
+            {
+                contracts = await _service.GetContracts();
+            }
+            else
+            {
+                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+                contracts = await _service.GetContractsFromMunId(munid);
+            }
             return View(contracts);
         }
 
