@@ -76,7 +76,7 @@ namespace ASP_App_ПИС.Controllers
             if ((int)_service.AddTaskMonth(tm).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
                 var err = await _service.AddTaskMonth(tm).Result.Content.ReadAsStringAsync();
-                return RedirectToAction(this.Url.Action(), new { err = err });
+                return RedirectToPage($"/scheduleone/add/{id}", new { err = err });
             }
             else
             {
