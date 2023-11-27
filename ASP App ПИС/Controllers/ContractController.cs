@@ -5,6 +5,7 @@ using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -12,10 +13,12 @@ namespace ASP_App_ПИС.Controllers
     public class ContractController : Controller
     {
         private IWebService _service;
+        private IConfiguration _configuration;
 
-        public ContractController(IWebService service)
+        public ContractController(IWebService service, IConfiguration configuration)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
@@ -47,9 +50,14 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             var muns = await _service.GetMunicipalities();
             var locs = await _service.GetLocalities();
             ViewData["locs"] = locs;
+            ViewData["config"] = _configuration;
             return View(muns);
         }
 
@@ -65,49 +73,49 @@ namespace ASP_App_ПИС.Controllers
                 .Where(c => c.municipalityid == munidRes && c.validityperiod >= DateTime.Parse(Request.Form["validityperiod"]))
                 .Count();
 
-            if (countContract == 0)
+            Contract con = new Contract
             {
-                Contract con = new Contract
-                {
-                    validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
-                    dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]),
-                    municipalityid = munidRes
-                };
-                await _service.AddContract(con);
+                validityperiod = DateTime.Parse(Request.Form["validityperiod"]),
+                dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]),
+                municipalityid = munidRes
+            };
+            await _service.AddContract(con);
 
-                // нахожу последний контракт
-                Contract conLast = await _service.GetLastContract();
-
-                // нахожу все нужные нас пункты по id муниципалитета пользователя (для админа как-то по другому)
-                var locs = await _service.GetLocalitiesFromMunId(munId);
-
-                // добавляю все записи в contract_locality
-                foreach (var loc in locs)
-                {
-                    Contract_Locality con_loc = new Contract_Locality
-                    {
-                        contractid = conLast.id,
-                        localityid = loc.id,
-                        tariph = double.Parse(Request.Form[loc.id.ToString()])
-                    };
-                    await _service.AddContractLocality(con_loc);
-                }
-
-                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-                Journal jo = new Journal
-                {
-                    nametable = 2,
-                    usercaptureid = userid,
-                    datetimechange = DateTime.Now,
-                    idobject = conLast.id,
-                    description = $"Добавлен контракт: {conLast.Municipality.name} - {conLast.validityperiod.ToString("dd.MM.yyyy")} - {conLast.dateconclusion.ToString("dd.MM.yyyy")}"
-                };
-                await _service.AddJournal(jo);
+            if ((int)_service.AddContract(con).Result.StatusCode == StatusCodes.Status403Forbidden)
+            {
+                var err = await _service.AddContract(con).Result.Content.ReadAsStringAsync();
+                return RedirectToAction("add", "contract", new { err = err });
             }
-            //else
-            //{
-            //    ошибка
-            //}
+
+            // нахожу последний контракт
+            Contract conLast = await _service.GetLastContract();
+
+            // нахожу все нужные нас пункты по id муниципалитета пользователя (для админа как-то по другому)
+            var locs = await _service.GetLocalitiesFromMunId(munId);
+
+            // добавляю все записи в contract_locality
+            foreach (var loc in locs)
+            {
+                Contract_Locality con_loc = new Contract_Locality
+                {
+                    contractid = conLast.id,
+                    localityid = loc.id,
+                    tariph = double.Parse(Request.Form[loc.id.ToString()])
+                };
+                await _service.AddContractLocality(con_loc);
+                
+            }
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Journal jo = new Journal
+            {
+                nametable = 2,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = conLast.id,
+                description = $"Добавлен контракт: {conLast.Municipality.name} - {conLast.validityperiod.ToString("dd.MM.yyyy")} - {conLast.dateconclusion.ToString("dd.MM.yyyy")}"
+            };
+            await _service.AddJournal(jo);
 
             return Redirect("/contract/");
         }

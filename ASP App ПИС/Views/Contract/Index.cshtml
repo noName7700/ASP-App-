@@ -61,25 +61,25 @@
                                 <td>@con.id</td>
                                 <td>@con.validityperiod.ToShortDateString()</td>
                                 <td>@con.dateconclusion.ToShortDateString()</td>
-                                            <td>@foreach (Contract_Locality cl in (IEnumerable<Contract_Locality>)ViewData["con_locs"])
-                                                {
-                                                    if (cl.contractid == con.id)
-                                                    {
-                                                        <span>@cl.Locality.name: @cl.tariph<br></span>
-                                                    }
-                                                }
-                                            </td>
+                                <td>@foreach (Contract_Locality cl in (IEnumerable<Contract_Locality>)ViewData["con_locs"])
+                                    {
+                                        if (cl.contractid == con.id)
+                                        {
+                                            <span>@cl.Locality.name: @cl.tariph<br></span>
+                                        }
+                                    }
+                                </td>
 
                                 <td>
                                     @if (con.municipalityid == munId && !isAdmin)
-                                                {
-                                                    <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                }
-                                                else if (isAdmin)
-                                                                                {
-                                                    <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                }
-                                            </td>
+                                    {
+                                        <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                    }
+                                    else if (isAdmin)
+                                                                    {
+                                        <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                    }
+                                </td>
                             </tr>
                             }
                             </tbody>

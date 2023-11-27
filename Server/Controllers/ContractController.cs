@@ -80,10 +80,11 @@ namespace Server.Controllers
                 await _context.contract.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    тут что-то отправляю типа ошибка "Нельзя добавить новый контрак, т.к. дата действия предыдущего еще не истекла" 
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync("Нельзя добавить новый контракт, так как дата действия предыдущего еще не истекла");
+            }
         }
 
         [HttpPut]
