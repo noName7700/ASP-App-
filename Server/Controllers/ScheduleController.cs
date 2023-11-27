@@ -21,7 +21,6 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Schedule>> Get()
         {
-            // вывод планов графиков в виде: нас.пункт(название) - дата подписи
             return await _context.schedule
                 .Include(sch => sch.Locality)
                 .GroupBy(sch => new { sch.Locality.name, sch.dateapproval })
@@ -30,21 +29,6 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
-        /*// получить планы-графики относящиеся к одному нас. пункту
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<Schedule>> Get(int id)
-        {
-            // тут возвращаю планы-графики относящиеся к одному нас.пункту
-            // несколько, потому что несколько taskmonth у нас
-            return await _context.schedule
-                .Include(sch => sch.Locality)
-                .Include(sch => sch.TaskMonth)
-                .Select(sch => sch)
-                .Where(s => s.localityid == id)
-                .ToListAsync();
-        }*/
-
-        // вывести задания на месяц по id плана-графика
         [HttpGet("{id}")]
         public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
@@ -73,17 +57,20 @@ namespace Server.Controllers
             var startDate = DateTime.Parse(startdate);
             var schedule = new Schedule();
 
-            foreach(var sc in await _context.schedule.ToListAsync())
+            foreach(var sc in await _context.schedule.Include(sc => sc.Contract).ToListAsync())
             {
-                if (sc.localityid == locid && sc.dateapproval <= startDate)
+                if (sc.localityid == locid && sc.Contract.dateconclusion <= startDate && sc.Contract.validityperiod >= startDate)
                     schedule = sc;
             }
 
-            return schedule;
-            //return await _context.schedule
-            //    .Where(s => s.localityid == locid && s.dateapproval <= startDate)
-            //    .Select(s => s)
-            //    .FirstOrDefaultAsync();
+            if (schedule != new Schedule())
+                return schedule;
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Для данного населенного в дату {startDate.ToString("dd.MM.yyyy")} нет действующего контракта");
+                return null;
+            }
         }
 
 
@@ -99,13 +86,10 @@ namespace Server.Controllers
                 .FirstAsync();
         }
 
-        // добавить новый план-график
         [HttpPost]
         [Route("/api/Schedule/add")]
         public async Task Post([FromBody] Schedule value)
         {
-            // тут я проверяю, что если мы добавляем план-график для контракта
-            // для которого уже есть контракт, то мы выводим ошибку
             var loc = await _context.locality
                 .Where(l => l.id == value.localityid)
                 .Select(l => l)
@@ -133,7 +117,6 @@ namespace Server.Controllers
             }
         }
 
-        // удалить выбранное задание на месяц (т.е. строку из таблицы планов-графиков)
         [HttpDelete]
         [Route("/api/Schedule/delete/{id}")]
         public async Task Delete(int id)
@@ -145,8 +128,5 @@ namespace Server.Controllers
                 await _context.SaveChangesAsync();
             }
         }
-
-        // изменять тут можно только задания на месяц, но это уже сделано в TaskMonthController
-        // можно добавить план-график (тут план-график это одна строка с одним заданием на месяц)
     }
 }

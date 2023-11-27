@@ -5,6 +5,7 @@ using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -47,6 +48,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/scheduleone/add/{id}")]
         public IActionResult Add(int id)
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             return View();
         }
 
@@ -67,21 +72,20 @@ namespace ASP_App_ПИС.Controllers
                 scheduleid = lastSch.id
             };
 
-            if (startdateForm >= lastSch.dateapproval)
+            await _service.AddTaskMonth(tm);
+            if ((int)_service.AddTaskMonth(tm).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
-                await _service.AddTaskMonth(tm);
+                var err = await _service.AddTaskMonth(tm).Result.Content.ReadAsStringAsync();
+                return RedirectToAction(this.Url.Action(), new { err = err });
+            }
+            else
+            {
                 TaskMonth lastTm = await _service.GetLastTaskMonth();
-                //Schedule lastSch = await _service.GetLastSchedule(id);
-                //Schedule sch = new Schedule { localityid = id, taskmonthid = lastTm.id, dateapproval = lastSch.dateapproval };
-                //await _service.AddSchedule(sch);
 
                 var claims = HttpContext.Request.HttpContext.User.Claims;
-                //Schedule lastSched = await _service.GetLastSchedule(id);
                 Locality loc = await _service.GetOneLocality(id);
                 int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-
-                // вместе со всем добавить строку в журнал
                 Journal jo = new Journal
                 {
                     nametable = 1,
@@ -95,8 +99,6 @@ namespace ASP_App_ПИС.Controllers
 
                 return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
             }
-            return Redirect("/schedule/"); // это чтоб код заработал просто
-            // ошибка какая-то тут нужна
 
         }
 

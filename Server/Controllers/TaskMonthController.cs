@@ -16,15 +16,12 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // вывести все задания на месяц
-
         [HttpGet]
         public async Task<IEnumerable<TaskMonth>> Get()
         {
             return await _context.taskmonth.ToListAsync();
         }
 
-        // вывести задания на месяц
         [HttpGet("{id}/{conid}")]
         public async Task<IEnumerable<TaskMonth>> Get(int id, int conid)
         {
@@ -56,27 +53,22 @@ namespace Server.Controllers
                 .FirstAsync();
         }
 
-        // добавить новое задание на месяц
         [HttpPost]
         [Route("/api/TaskMonth/add")]
         public async Task Post([FromBody] TaskMonth value)
         {
-            var sched = await _context.schedule
-                .Where(sch => sch.id == value.scheduleid)
-                .FirstOrDefaultAsync();
-
-            if (value.startdate >= sched.dateapproval)
+            if (value != null && value.scheduleid != 0)
             {
                 await _context.taskmonth.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    ошибка
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Для данного населенного в дату {value.startdate.ToString("dd.MM.yyyy")} нет действующего контракта");
+            }
         }
 
-        // изменить задание на месяц
         [HttpPut]
         [Route("/api/TaskMonth/put/{id}")]
         public async Task Put(int id, [FromBody] TaskMonth value)
@@ -91,7 +83,6 @@ namespace Server.Controllers
             }
         }
 
-        // удалить задание на месяц
         [HttpDelete]
         [Route("/api/TaskMonth/delete/{id}")]
         public async Task Delete(int id)
