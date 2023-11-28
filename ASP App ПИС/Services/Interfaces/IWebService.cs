@@ -25,6 +25,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Animal> GetLastAnimal();
         Task<Locality> GetLastLocality();
         Task<IEnumerable<ActCapture>> GetAct(int locid);
+        Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid);
         Task<Animal> GetAnimal(int id);
         Task<Locality> GetLocality(int id);
         Task<Locality> GetOneLocality(int id);
@@ -62,9 +63,10 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<double> GetReportsMoney(int conid);
         Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d);
         Task<FileStreamResult> GetExcelSchedule(string startdate, string enddate, int munid, int locid, int plan, int fact);
+        Task<FileStreamResult> GetExcelJournal(int id);
 
         // отчет - план-график
-        Task<Dictionary<int, int>> GetReportsSchedule(string startDate, string endDate, int munid, int locid);
+        Task<Dictionary<int, int>> GetReportsSchedule(int conid, int locid);
 
         // метод найти контракт по муниципалитету
         Task<int> GetContractFromMuniciaplity(int id);

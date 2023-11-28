@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Text.RegularExpressions;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Organization")]
-    public class OrganizationController
+    public class OrganizationController : Controller
     {
         ApplicationContext _context;
 
@@ -46,8 +47,16 @@ namespace Server.Controllers
         [Route("/api/Organization/add")]
         public async Task Post([FromBody] Organization value)
         {
-            await _context.organization.AddAsync(value);
-            await _context.SaveChangesAsync();
+            if (long.TryParse(value.telephone, out long n) && value.telephone.Length == 11)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");
+            }
+            else
+            {
+                await _context.organization.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
         }
 
         [HttpPut]

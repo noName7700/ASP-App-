@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -41,6 +42,10 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             if (isAdmin)
                 return View();
@@ -54,27 +59,29 @@ namespace ASP_App_ПИС.Controllers
             var name = Request.Form["name"];
             var telephone = Request.Form["telephone"];
             var email = Request.Form["email"];
-            if (name != "" && telephone != "" && email != "")
+
+            Organization org = new Organization { name = name, telephone = telephone, email = email };
+            //await _service.AddOrganization(org);
+            if ((int)_service.AddOrganization(org).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
-                Organization org = new Organization { name = name, telephone = telephone, email = email };
-                await _service.AddOrganization(org);
-
-                var claims = HttpContext.Request.HttpContext.User.Claims;
-                Organization orgLast = await _service.GetLastOrganization();
-                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-
-                Journal jo = new Journal
-                {
-                    nametable = 5,
-                    usercaptureid = userid,
-                    datetimechange = DateTime.Now,
-                    idobject = orgLast.id,
-                    description = $"Добавлена организация: {orgLast.name} - {orgLast.telephone} - {orgLast.email}"
-                };
-                await _service.AddJournal(jo);
-
-                return Redirect("/organization/");
+                var err = await _service.AddOrganization(org).Result.Content.ReadAsStringAsync();
+                return RedirectToPage("/organization/add", new { err = err });
             }
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            Organization orgLast = await _service.GetLastOrganization();
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 5,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = orgLast.id,
+                description = $"Добавлена организация: {orgLast.name} - {orgLast.telephone} - {orgLast.email}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/organization/");
         }
 

@@ -1,5 +1,5 @@
 ﻿@using Domain;
-@model IEnumerable<Locality>
+@model IEnumerable<Contract>
 @{
     var claims = Context.Request.HttpContext.User.Claims;
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
@@ -20,18 +20,13 @@
     <form class="navbar-search" method="get">
         <div class="rel" style="display:flex; align-items:center;width:350px">
             <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование населенного пункта">
+            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование муниципалитета">
         </div>
     </form>
     <hr>
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-body">
-                @if (isAdmin)
-                {
-                    <div style="margin-bottom: 17px;">
-                        <a href="/journal/4">Посмотреть журнал изменений</a></div>
-                }
                         <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
                             <div class="row"><div class="col-sm-12 col-md-6">
                                 <div class="dataTables_length" id="example-table_length">
@@ -39,18 +34,32 @@
                             <thead>
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                        Населенный пункт
+                                        Муниципалитет
                                             <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                     </th>
-                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                            Номер
+                                        </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                            Дата заключения
+                                        </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                            Дата действия
+                                        </th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                        Действия
+                                        </th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach(var loc in Model)
+                            @foreach(var con in Model)
                             {
                                 <tr role="row" class="odd">
-                                <td>@loc.name</td>
-                                <td><a href="/act/@loc.id">Просмотр <i class="fa fa-eye font-14"></i></a></td>
+                                    <td>@con.Municipality.name</td>
+                                    <td>@con.id</td>
+                                    <td>@con.dateconclusion.ToString("D")</td>
+                                    <td>@con.validityperiod.ToString("D")</td>
+                                    <td><a href="/act/view/@con.id">Просмотр <i class="fa fa-eye font-14"></i></a></td>
                                 </tr>
                             }
                             </tbody>

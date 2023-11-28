@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Text.RegularExpressions;
 
 namespace Server.Controllers
 {
@@ -16,21 +17,12 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // вывести все населенные пункты
         [HttpGet]
         public async Task<IEnumerable<Locality>> Get()
         {
             return await _context.locality.ToListAsync();
         }
 
-        //// вывести один нас пункт
-        //[HttpGet("{id}")]
-        //public async Task<Locality> Get(int id)
-        //{
-        //    return await _context.locality.FirstOrDefaultAsync(l => l.id == id);
-        //}
-
-        // вывести нас пункты одного муниципалитета
         [HttpGet("{id}")]
         public async Task<IEnumerable<Locality>> Get(int id)
         {
@@ -45,7 +37,10 @@ namespace Server.Controllers
         [Route("/api/Locality/one/{id}")]
         public async Task<Locality> GetOne(int id)
         {
-            return await _context.locality.Where(l => l.id == id).FirstAsync();
+            return await _context.locality
+                .Include(l => l.Municipality)
+                .Where(l => l.id == id)
+                .FirstAsync();
         }
 
         [HttpGet]
@@ -55,8 +50,6 @@ namespace Server.Controllers
             return await _context.locality.Select(t => t).OrderBy(t => t.id).LastAsync();
         }
 
-
-        // добавить новый нас пункт
         [HttpPost]
         [Route("/api/Locality/add")]
         public async Task Post([FromBody] Locality value)
@@ -65,18 +58,23 @@ namespace Server.Controllers
                 .Where(l => l.municipalityid == value.municipalityid && l.name == value.name)
                 .CountAsync();
 
-            if (countLoc == 0)
+            if (!Regex.IsMatch(value.name, @"^[a-zA-Z]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Название населенного пункта должно содержать только буквы.");
+            }
+            else if (countLoc == 0)
             {
                 await _context.locality.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    ошибка
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Населенный пункт с таким названием уже существует.");
+            }
         }
 
-        // изменить нас пункт
         [HttpPut]
         [Route("/api/Locality/put/{id}")]
         public async Task Put(int id, [FromBody] Locality value)
@@ -89,7 +87,6 @@ namespace Server.Controllers
             }
         }
 
-        // удалить нас пункт
         [HttpDelete]
         [Route("/api/Locality/delete/{id}")]
         public async Task Delete(int id)

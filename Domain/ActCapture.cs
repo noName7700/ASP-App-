@@ -14,5 +14,7 @@ namespace Domain
         public Locality? Locality { get; set; }
         public int contractid { get; set; }
         public Contract? Contract { get; set; }
+        public int scheduleid { get; set; }
+        public Schedule? Schedule { get; set; }
     }
 }

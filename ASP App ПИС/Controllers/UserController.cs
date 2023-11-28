@@ -4,6 +4,7 @@ using Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -85,6 +86,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/user/add")]
         public new async Task<IActionResult> Add()
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             ViewData["muns"] = await _service.GetMunicipalities();
             ViewData["locs"] = await _service.GetLocalities();
             ViewData["orgs"] = await _service.GetOrganizations();
@@ -115,6 +120,11 @@ namespace ASP_App_ПИС.Controllers
                 isadmin = isAdmin
             };
             await _service.AddUser(user);
+            if ((int)_service.AddUser(user).Result.StatusCode == StatusCodes.Status403Forbidden)
+            {
+                var err = await _service.AddUser(user).Result.Content.ReadAsStringAsync();
+                return RedirectToPage("/user/add", new { err = err });
+            }
 
             var claims = HttpContext.Request.HttpContext.User.Claims;
             Usercapture userAdd = await _service.GetLastUser();

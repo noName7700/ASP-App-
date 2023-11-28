@@ -62,33 +62,25 @@ namespace Server.Controllers
                 if (cl.localityid == id && cl.Contract.dateconclusion <= date && cl.Contract.validityperiod >= date)
                     return cl;
             }
-            return null;
-            //var t = await _context.contract_locality
-            //    .Include(cl => cl.Contract)
-            //    .Include(cl => cl.Locality)
-            //    .Where(cl => cl.localityid == id && cl.Contract.dateconclusion <= date && cl.Contract.validityperiod >= date)
-            //    .Select(cl => cl)
-            //    .FirstOrDefaultAsync();
-            //return t;
+            return new Contract_Locality();
         }
 
-        // изменить нас пункт
         [HttpPut]
         [Route("/api/Contract_Locality/put/{id}")]
         public async Task Put(int id, [FromBody] Contract_Locality value)
         {
-            var contractValue = await _context.contract_locality
-                .Include(cl => cl.Contract)
-                .Where(cl => cl.id == id)
-                .Select(cl => cl.Contract)
-                .FirstOrDefaultAsync();
+            //var contractValue = await _context.contract_locality
+            //    .Include(cl => cl.Contract)
+            //    .Where(cl => cl.id == id)
+            //    .Select(cl => cl.Contract)
+            //    .FirstOrDefaultAsync();
 
-            var countContract = await _context.contract
-                .Where(c => c.municipalityid == contractValue.municipalityid && c.validityperiod >= contractValue.dateconclusion)
-                .CountAsync();
+            //var countContract = await _context.contract
+            //    .Where(c => c.municipalityid == contractValue.municipalityid && c.validityperiod >= contractValue.dateconclusion)
+            //    .CountAsync();
 
             var currentConLoc = await _context.contract_locality.FirstOrDefaultAsync(l => l.id == id);
-            if (currentConLoc != null || countContract == 0)
+            if (currentConLoc != null)
             {
                 currentConLoc.tariph = value.tariph;
                 await _context.SaveChangesAsync();

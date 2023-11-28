@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Server.Application;
-using Domain;
+﻿using Domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Server.Application;
+using System.Text.RegularExpressions;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Municipality")]
-    public class MunicipalityController
+    public class MunicipalityController : Controller
     {
         ApplicationContext _context;
 
@@ -16,7 +17,6 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // все муниципалитеты
         [HttpGet]
         public async Task<IEnumerable<Municipality>> Get()
         {
@@ -43,32 +43,6 @@ namespace Server.Controllers
                 .LastAsync();
         }
 
-        /*        // вывести нас пункты одного муниципалитета
-                [HttpGet("{id}")]
-                public async Task<List<Locality>> Get(int id)
-                {
-                    return await _context.municipality
-                        .Include(m => m.Locality)
-                        .Include(m => m.MunicipalityName)
-                        .Where(m => m.munid == id)
-                        .Select(m => m.Locality)
-                        .ToListAsync();
-                }*/
-
-        //[HttpGet("{id}")]
-        //public async Task<IEnumerable<Locality>> Get(int id)
-        //{
-        //    string nameCurrentMunicipality = _context.municipality.Where(m => m.id == id).Select(m => m.name).FirstOrDefault();
-
-        //    return await _context.municipality
-        //        .Include(m => m.Locality)
-        //        .Include(m => m.Contract)
-        //        .Select(m => m.Locality)
-        //        .Where(m => m.name == nameCurrentMunicipality)
-        //        .ToListAsync();
-        //}
-
-        // создать новый муниципалитет
         [HttpPost]
         [Route("/api/Municipality/add")]
         public async Task Post([FromBody] Municipality value)
@@ -77,15 +51,21 @@ namespace Server.Controllers
                 .Where(m => m.name == value.name)
                 .CountAsync();
 
-            if (countMun == 0)
+            if (!Regex.IsMatch(value.name, @"^[a-zA-Z]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Название муниципалитета должно содержать только буквы.");
+            }
+            else if (countMun == 0)
             {
                 await _context.municipality.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    ошибка
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Муниципалитет с таким названием уже существует.");
+            }
         }
 
         [HttpGet]

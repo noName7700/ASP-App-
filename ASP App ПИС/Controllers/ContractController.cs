@@ -79,7 +79,7 @@ namespace ASP_App_ПИС.Controllers
                 dateconclusion = DateTime.Parse(Request.Form["dateconclusion"]),
                 municipalityid = munidRes
             };
-            await _service.AddContract(con);
+            //await _service.AddContract(con);
 
             if ((int)_service.AddContract(con).Result.StatusCode == StatusCodes.Status403Forbidden)
             {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Text.RegularExpressions;
 
 namespace Server.Controllers
 {
@@ -45,8 +46,31 @@ namespace Server.Controllers
         [Route("/api/User/add")]
         public async Task Post([FromBody] Usercapture value)
         {
-            await _context.usercapture.AddAsync(value);
-            await _context.SaveChangesAsync();
+            if (!Regex.IsMatch(value.surname, @"^[a-zA-Z]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Фамилия должна состоять только из букв.");
+            }
+            else if (!Regex.IsMatch(value.name, @"^[a-zA-Z]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Имя должно состоять только из букв.");
+            }
+            else if (!Regex.IsMatch(value.patronymic, @"^[a-zA-Z]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Отчество должно состоять только из букв.");
+            }
+            else if (long.TryParse(value.telephone, out long n) && value.telephone.Length == 11)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");
+            }
+            else
+            {
+                await _context.usercapture.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

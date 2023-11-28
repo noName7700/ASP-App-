@@ -3,6 +3,7 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -44,6 +45,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/locality/add/{id}")]
         public IActionResult Add(int id)
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             if (isAdmin)
                 return View(id);
@@ -54,13 +59,14 @@ namespace ASP_App_ПИС.Controllers
         [Route("/locality/add/{id}")]
         public async Task<IActionResult> AddPost(int id)
         {
-            if (Request.Form["name"] != "")
+            Locality loc = new Locality { name = Request.Form["name"], municipalityid = id };
+            //await _service.AddLocality(loc);
+            if ((int)_service.AddLocality(loc).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
-                Locality loc = new Locality { name = Request.Form["name"], municipalityid = id };
-                await _service.AddLocality(loc);
-                
-                return Redirect($"/locality/{id}");
+                var err = await _service.AddLocality(loc).Result.Content.ReadAsStringAsync();
+                return RedirectToPage($"/locality/add/{id}", new { err = err });
             }
+
             return Redirect($"/locality/{id}");
         }
 

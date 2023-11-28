@@ -92,6 +92,12 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
+        public async Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid)
+        {
+            var response = await _client.GetAsync($"/api/ActCapture/all/{conlocid}");
+            return await response.ReadContentAsync<IEnumerable<ActCapture>>();
+        }
+
         public async Task<ActCapture> GetOneAct(int id)
         {
             var response = await _client.GetAsync($"/api/ActCapture/one/{id}");
@@ -329,12 +335,11 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<double>();
         }
 
-        public async Task<Dictionary<int, int>> GetReportsSchedule(string startDate, string endDate, int munid, int locid)
+        public async Task<Dictionary<int, int>> GetReportsSchedule(int conid, int locid)
         {
-            var response = await _client.GetAsync($"/api/Reports/schedule/{startDate}/{endDate}/{munid}/{locid}");
+            var response = await _client.GetAsync($"/api/Reports/schedule/{conid}/{locid}");
             return await response.ReadContentAsync<Dictionary<int, int>>();
         }
-
         
         public async Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d)
         {
@@ -547,6 +552,14 @@ namespace ASP_App_ПИС.Services
         {
             var response = await _client.GetAsync($"/api/Schedule/one/{locid}/{startdate}");
             return await response.ReadContentAsync<Schedule>();
+        }
+
+        public async Task<FileStreamResult> GetExcelJournal(int id)
+        {
+            var stream = await _client.GetStreamAsync($"/api/Journal/export/{id}");
+            FileStreamResult file = new FileStreamResult(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            file.FileDownloadName = "Журнал изменений.xlsx";
+            return file;
         }
     }
 }

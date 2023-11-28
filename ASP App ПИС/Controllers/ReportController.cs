@@ -64,10 +64,23 @@ namespace ASP_App_ПИС.Controllers
         [Route("/report/schedule")]
         public async Task<IActionResult> IndexSchedule()
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var municipalities = await _service.GetMunicipalities();
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            int munid; IEnumerable<Contract> contracts;
+            if (isAdmin)
+            {
+                contracts = await _service.GetContracts();
+            }
+            else
+            {
+                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+                contracts = await _service.GetContractsFromMunId(munid);
+            }
+
             IEnumerable<Locality> locs = await _service.GetLocalities();
-            IEnumerable<Municipality> muns = await _service.GetMunicipalities();
-            var locs_muns = new Dictionary<IEnumerable<Locality>, IEnumerable<Municipality>> { { locs, muns } };
-            return View(locs_muns);
+            ViewData["locs"] = locs;
+            return View(contracts);
         }
 
         [HttpPost]
@@ -75,15 +88,18 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> IndexSchedulePost()
         {
             var claims = HttpContext.Request.HttpContext.User.Claims;
-            var munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-            int locid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+
+            var conid = int.Parse(Request.Form["contract"]);
+            int locid = isAdmin ? int.Parse(Request.Form["locality"]) : int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
             Locality loc = await _service.GetOneLocality(locid);
-            var countAnimals = await _service.GetReportsSchedule(Request.Form["startdate"], Request.Form["enddate"], munid, locid);
-            ViewData["startdate"] = Request.Form["startdate"];
-            ViewData["enddate"] = Request.Form["enddate"];
+            Contract con = await _service.GetContractOne(conid);
+            var countAnimals = await _service.GetReportsSchedule(conid, locid);
+            ViewData["startdate"] = con.dateconclusion.ToString("yyyy-MM-dd");
+            ViewData["enddate"] = con.validityperiod.ToString("yyyy-MM-dd");
             ViewData["locname"] = loc.name;
             ViewData["locid"] = locid;
-            ViewData["munid"] = munid;
+            //ViewData["munid"] = loc.Municipality;
             return View(countAnimals);
         }
 

@@ -86,17 +86,26 @@ namespace Server.Controllers
                 .Select(l => l)
                 .FirstOrDefaultAsync();
 
-            var con = await _context.contract_locality
-                .Include(cl => cl.Contract)
-                .Where(cl => cl.localityid == loc.id && cl.Contract.dateconclusion <= value.dateapproval && cl.Contract.validityperiod >= value.dateapproval)
-                .Select(cl => cl.Contract)
-                .FirstOrDefaultAsync();
+            //var con = await _context.contract_locality
+            //    .Include(cl => cl.Contract)
+            //    .Where(cl => cl.localityid == loc.id && cl.Contract.dateconclusion <= value.dateapproval && cl.Contract.validityperiod >= value.dateapproval)
+            //    .Select(cl => cl.Contract)
+            //    .FirstOrDefaultAsync();
 
-            var countSchedule = await _context.schedule
-                .Where(sc => sc.contractid == con.id)
-                .CountAsync();
+            int countSchedule = 0;
+            if (value.contractid != 0)
+            {
+                countSchedule = await _context.schedule
+                    .Where(sc => sc.contractid == value.contractid)
+                    .CountAsync();
+            }
 
-            if (countSchedule == 0)
+            if (value.contractid == 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.dateapproval.ToString("D")} для данного населенного пункта нет действующего контракта.");
+            }
+            else if (countSchedule == 0)
             {
                 await _context.schedule.AddAsync(value);
                 await _context.SaveChangesAsync();

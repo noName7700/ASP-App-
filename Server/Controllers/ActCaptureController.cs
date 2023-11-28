@@ -16,7 +16,6 @@ namespace Server.Controllers
             _context = context;
         }
 
-        // вывести все акты отлова (т.е. нас пункты:))
         [HttpGet]
         public async Task<IEnumerable<Locality>> Get()
         {
@@ -25,15 +24,29 @@ namespace Server.Controllers
                 .ToListAsync();
         }
 
-        // ЭТО ИЗМЕНИЛА СЕЙЧАС
-        // вывести акты отлова в одном нас пункте
-        // т.е. группировка животных по дате типа (дата - животные в эту дату)
         [HttpGet("{locid}")]
         public async Task<IEnumerable<ActCapture>> Get(int locid)
         {
             return await _context.actcapture
                 .Include(a => a.Locality)
                 .Where(a => a.localityid == locid)
+                .Select(a => a)
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/ActCapture/all/{conlocid}")]
+        public async Task<IEnumerable<ActCapture>> GetAll(int conlocid)
+        {
+            var con_loc = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Include(cl => cl.Locality)
+                .Where(cl => cl.id == conlocid)
+                .FirstOrDefaultAsync();
+
+            return await _context.actcapture
+                .Include(a => a.Locality)
+                .Where(a => a.contractid == con_loc.Contract.id && a.localityid == con_loc.Locality.id)
                 .Select(a => a)
                 .ToListAsync();
         }
@@ -70,25 +83,45 @@ namespace Server.Controllers
                 .FirstAsync();
         }
 
-        // тут вывести акты отлова с сортировкой по дате
-        /*[HttpGet("{datestart}/{dateend}/{locid}")]
-        public async Task<IEnumerable<ActCapture>> Get(DateTime datestart, DateTime dateend, int locid)
-        {
-            return await _context.actcapture
-                .Include(act => act.Animal)
-                .Include(act => act.Locality)
-                .Select(ac => ac)
-                .Where(ac => ac.datecapture.Kind >= datestart.Kind && ac.datecapture.Kind <= dateend.Kind && ac.localityid == locid)
-                .ToListAsync();
-        }*/
-
-        // добавить акт отлова (т.е. одну запись с одним животным)
         [HttpPost]
         [Route("/api/ActCapture/add")]
         public async Task Post([FromBody] ActCapture value)
         {
-            await _context.actcapture.AddAsync(value);
-            await _context.SaveChangesAsync();
+            var oldAct = await _context.actcapture
+                .Where(a => a.datecapture == value.datecapture && a.localityid == value.localityid && a.contractid == value.contractid)
+                .FirstOrDefaultAsync();
+
+            var schedule = await _context.schedule
+                .Where(s => s.id == value.scheduleid)
+                .FirstOrDefaultAsync();
+            TaskMonth taskmonth = new TaskMonth();
+            if (schedule != null)
+            {
+                taskmonth = await _context.taskmonth
+                    .Where(t => t.scheduleid == schedule.id && t.startdate <= value.datecapture && t.enddate >= value.datecapture)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (schedule == null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} нет действующего контракта.");
+            }
+            else if (taskmonth == null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} по плану-графику не проводился отлов.");
+            }
+            else if (oldAct != null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} уже есть акт отлова.");
+            }
+            else
+            {
+                await _context.actcapture.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
         }
 
         [HttpPut]

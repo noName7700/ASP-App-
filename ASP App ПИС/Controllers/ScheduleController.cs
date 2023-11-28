@@ -77,7 +77,7 @@ namespace ASP_App_ПИС.Controllers
                 contractid = conid
             };
 
-            await _service.AddSchedule(sch);
+            //await _service.AddSchedule(sch);
             if ((int)_service.AddSchedule(sch).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
                 var err = await _service.AddSchedule(sch).Result.Content.ReadAsStringAsync();

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System;
 using Microsoft.AspNetCore.Builder;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -44,6 +45,10 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             var isAdmin = bool.Parse( HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             if (isAdmin)
                 return View();
@@ -54,26 +59,27 @@ namespace ASP_App_ПИС.Controllers
         [Route("/municipality/add")]
         public async Task<IActionResult> AddPost()
         {
-            if (Request.Form["name"] != "")
+            Municipality mun = new Municipality { name = Request.Form["name"] };
+            //await _service.AddMunicipality(mun);
+            if ((int)_service.AddMunicipality(mun).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
-                Municipality mun = new Municipality { name = Request.Form["name"] };
-                await _service.AddMunicipality(mun);
-
-                var claims = HttpContext.Request.HttpContext.User.Claims;
-                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-                Municipality munLast = await _service.GetLastMunicipality();
-                Journal jo = new Journal
-                {
-                    nametable = 3,
-                    usercaptureid = userid,
-                    datetimechange = DateTime.Now,
-                    idobject = munLast.id,
-                    description = $"Добавлен муниципалитет: {munLast.name}"
-                };
-                await _service.AddJournal(jo);
-
-                return Redirect("/municipality/");
+                var err = await _service.AddMunicipality(mun).Result.Content.ReadAsStringAsync();
+                return RedirectToPage($"/municipality/add", new { err = err });
             }
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            Municipality munLast = await _service.GetLastMunicipality();
+            Journal jo = new Journal
+            {
+                nametable = 3,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = munLast.id,
+                description = $"Добавлен муниципалитет: {munLast.name}"
+            };
+            await _service.AddJournal(jo);
+
             return Redirect("/municipality/");
         }
     }

@@ -77,33 +77,34 @@ namespace ASP_App_ПИС.Controllers
                 var err = await _service.AddTaskMonth(tm).Result.Content.ReadAsStringAsync();
                 return RedirectToPage($"/scheduleone/add/{id}", new { err = err });
             }
-            else
+            TaskMonth lastTm = await _service.GetLastTaskMonth();
+
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            Locality loc = await _service.GetOneLocality(id);
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
             {
-                TaskMonth lastTm = await _service.GetLastTaskMonth();
+                nametable = 1,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastTm.id,
+                description = $"{loc.name} - {lastSch.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
+                $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
+            };
+            await _service.AddJournal(jo);
 
-                var claims = HttpContext.Request.HttpContext.User.Claims;
-                Locality loc = await _service.GetOneLocality(id);
-                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
-
-                Journal jo = new Journal
-                {
-                    nametable = 1,
-                    usercaptureid = userid,
-                    datetimechange = DateTime.Now,
-                    idobject = lastTm.id,
-                    description = $"{loc.name} - {lastSch.dateapproval.ToString("dd.MM.yyyy")}. Добавлена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
-                    $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
-                };
-                await _service.AddJournal(jo);
-
-                return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
-            }
+            return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
         }
 
         [HttpGet]
         [Route("/scheduleone/edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
+            if (Request.Query.TryGetValue("err", out StringValues err))
+            {
+                ViewData["err"] = err;
+            }
             TaskMonth tm = await _service.GetTaskMonthOne(id);
             return View(tm);
         }
@@ -121,7 +122,12 @@ namespace ASP_App_ПИС.Controllers
                 enddate = enddateForm,
                 countanimal = countanimalForm
             };
-            await _service.EditTaskMonth(id, tm);
+            //await _service.EditTaskMonth(id, tm);
+            if ((int)_service.EditTaskMonth(id, tm).Result.StatusCode == StatusCodes.Status403Forbidden)
+            {
+                var err = await _service.EditTaskMonth(id, tm).Result.Content.ReadAsStringAsync();
+                return RedirectToPage($"/scheduleone/add/{id}", new { err = err });
+            }
 
             var claims = HttpContext.Request.HttpContext.User.Claims;
             Schedule sched = await _service.GetScheduleFromTaskMonthId(id);

@@ -145,7 +145,15 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DescDesc => jous.OrderByDescending(j => j.description)
             };
 
+            ViewData["tablenum"] = id;
             return View(jous);
+        }
+
+        [HttpGet]
+        [Route("/journal/export/{id}")]
+        public async Task<FileStreamResult> ExportJournal(int id)
+        {
+            return await _service.GetExcelJournal(id);
         }
     }
 }

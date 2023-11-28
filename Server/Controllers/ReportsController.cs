@@ -72,51 +72,36 @@ namespace Server.Controllers
             }
 
             return summ;
-
-            // почему Linq не работает
-
-            //var t = await _context.actcapture
-            //    .Where(act => act.datecapture.Year >= startdate.Year
-            //    && act.datecapture.Month >= startdate.Month
-            //    && act.datecapture.Day >= startdate.Day
-            //    && act.datecapture.Year <= enddate.Year
-            //    && act.datecapture.Month <= enddate.Month
-            //    && act.datecapture.Day <= enddate.Day
-            //    && needLocalities.Contains(act.localityid))
-            //    .SumAsync(act => loc_tar[act.localityid]);
         }
 
         [HttpGet]
-        [Route("/api/Reports/schedule/{startDate}/{endDate}/{munid}/{locid}")]
-        public async Task<Dictionary<int, int>> Get(string startDate, string endDate, int munid, int locid)
+        [Route("/api/Reports/schedule/{conid}/{locid}")]
+        public async Task<Dictionary<int, int>> Get(int conid, int locid)
         {
-            DateTime startdate = DateTime.Parse(startDate);
-            DateTime enddate = DateTime.Parse(endDate);
-
             //считаю по планам-графикам то что запланировано
-            int summPlan = 0;
-            foreach (var task in _context.taskmonth.Include(t => t.Schedule))
-                if (task.Schedule.localityid == locid && task.enddate >= startdate && task.enddate <= enddate)
-                    summPlan += task.countanimal;
+            //int summPlan = 0;
+            //foreach (var task in _context.taskmonth.Include(t => t.Schedule))
+            //    if (task.Schedule.localityid == locid && task.Schedule.contractid == conid)
+            //        summPlan += task.countanimal;
 
 
-            //var countPlanAnimal = await _context.taskmonth
-            //    .Include(t => t.Schedule)
-            //    .Where(t => t.Schedule.localityid == locid && t.enddate >= startdate && t.enddate <= enddate)
-            //    .SumAsync(t => t.countanimal);
+            var countPlanAnimal = await _context.taskmonth
+                .Include(t => t.Schedule)
+                .Where(task => task.Schedule.localityid == locid && task.Schedule.contractid == conid)
+                .SumAsync(t => t.countanimal);
 
             // считаю по актам отлова то что в итоге
-            int countAn = 0;
-            foreach (var an in _context.animal.Include(a => a.ActCapture))
-                if (an.ActCapture.localityid == locid && an.ActCapture.datecapture >= startdate && an.ActCapture.datecapture <= enddate)
-                    countAn += 1;
+            //int countAn = 0;
+            //foreach (var an in _context.animal.Include(a => a.ActCapture))
+            //    if (an.ActCapture.localityid == locid && an.ActCapture.datecapture >= startdate && an.ActCapture.datecapture <= enddate)
+            //        countAn += 1;
 
-            //var countAnimal = await _context.animal
-            //    .Include(an => an.ActCapture)
-            //    .Where(an => an.ActCapture.localityid == locid && an.ActCapture.datecapture >= startdate && an.ActCapture.datecapture <= enddate)
-            //    .CountAsync();
+            var countAnimal = await _context.animal
+                .Include(an => an.ActCapture)
+                .Where(an => an.ActCapture.localityid == locid && an.ActCapture.contractid == conid)
+                .CountAsync();
 
-            return new Dictionary<int, int> { { summPlan, countAn } };
+            return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
         }
 
         [HttpGet]
