@@ -101,5 +101,6 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Contract_Locality> GetDateContract_LocalityForDate(int id, string datecapture);
         Task<IEnumerable<Contract>> GetContractsFromMunId(int id);
         Task<Schedule> GetOneScheduleFromLocDate(int locid, string startdate);
+        Task<Contract_Locality> GetOneContract_LocalityFromId(int id);
     }
 }

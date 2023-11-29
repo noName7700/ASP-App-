@@ -561,5 +561,11 @@ namespace ASP_App_ПИС.Services
             file.FileDownloadName = "Журнал изменений.xlsx";
             return file;
         }
+
+        public async Task<Contract_Locality> GetOneContract_LocalityFromId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Contract_Locality/one/id/{id}");
+            return await response.ReadContentAsync<Contract_Locality>();
+        }
     }
 }

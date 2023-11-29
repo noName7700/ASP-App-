@@ -52,6 +52,19 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Contract_Locality/one/id/{id}")]
+        public async Task<Contract_Locality> GetOneId(int id)
+        {
+            var t = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Include(cl => cl.Locality)
+                .Where(cl => cl.id == id)
+                .Select(cl => cl)
+                .FirstOrDefaultAsync();
+            return t;
+        }
+
+        [HttpGet]
         [Route("/api/Contract_Locality/date/{id}/{datecapture}")]
         public async Task<Contract_Locality> GetDate(int id, string datecapture)
         {

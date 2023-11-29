@@ -88,7 +88,8 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            var localityname = await _service.GetOneLocality(id);
+            var conloc = await _service.GetOneContract_LocalityFromId(id);
+            var localityname = await _service.GetOneLocality(conloc.localityid);
             ViewData["localityname"] = localityname.name;
 
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
