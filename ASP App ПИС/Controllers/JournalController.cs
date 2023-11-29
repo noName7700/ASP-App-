@@ -8,10 +8,12 @@ namespace ASP_App_ПИС.Controllers
     public class JournalController : Controller
     {
         private IWebService _service;
+        private IConfiguration _configuration;
 
-        public JournalController(IWebService service)
+        public JournalController(IWebService service, IConfiguration configuration)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -146,6 +148,7 @@ namespace ASP_App_ПИС.Controllers
             };
 
             ViewData["tablenum"] = id;
+            ViewData["config"] = _configuration;
             return View(jous);
         }
 
