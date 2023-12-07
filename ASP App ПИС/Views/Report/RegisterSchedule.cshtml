@@ -1,32 +1,23 @@
 ﻿@using Domain;
-@model Report;
-@using System.Security.Claims
-@{
-    var claims = Context.Request.HttpContext.User.Claims;
-    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
-}
+@model IEnumerable<Report>;
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Отчёт о выполнении работы за контракт</h1>
+        <h1 class="page-title">Реестр отчетов по планам-графикам</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
             <li class="breadcrumb-item">
-                <a href="/report/register/money">Реестр отчётов</a>
-            </li>
-            <li class="breadcrumb-item">
-                Отчёт
+                Реестр отчётов
             </li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Отчёт</div>
+                <div class="ibox-title">Реестр</div>
             </div>
             <div class="page-content fade-in-up">
                 <div class="ibox">
@@ -43,32 +34,24 @@
                                         <thead>
                                             <tr role="row">
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Муниципалитет
+                                                    Статус
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Период
+                                                    Дата установки статуса
                                                 </th>
-                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Полученная сумма
-                                                </th>
-                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Действия</th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Отчёт</th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach (var rep in Model)
+                                            {
                                                 <tr role="row" class="odd">
-                                                    <td>@Model.Municipality.name</td>
-                                                    <td>с @Model.startdate.ToString("D") по @Model.enddate.ToString("D")</td>
-                                                    <td>@Model.summ</td>
-                                                <td>
-                                                    @if (Model.statuc.ToLower() != "согласован в омсу" && (role == "Оператор ОМСУ" ||
-                                                        role == "Куратор ОМСУ" || role == "Подписант ОМСУ" || isAdmin))
-                                                    {
-                                                        <a href="/report/edit/money/@Model.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                    }
-                                                </td>
+                                                    <td>@rep.statuc</td>
+                                                    <td>@rep.datestatus.ToString("D")</td>
+                                                    <td><a href="/report/register/schedule/post/@rep.id">Просмотр<i class="fa fa-eye font-14"></i></a></td>
                                                 </tr>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>

@@ -10,13 +10,13 @@
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
-        <h1 class="page-title">Отчёт о выполнении работы за контракт</h1>
+        <h1 class="page-title">Отчёт о выполнении работы по планам-графикам</h1>
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="index.html"><i class="la la-home font-20"></i></a>
             </li>
             <li class="breadcrumb-item">
-                <a href="/report/register/money">Реестр отчётов</a>
+                <a href="/report/register/schedule">Реестр отчётов</a>
             </li>
             <li class="breadcrumb-item">
                 Отчёт
@@ -46,29 +46,38 @@
                                                     Муниципалитет
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Населенный пункт
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Период
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Полученная сумма
+                                                    Плановое количество животных
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
-                                                    Действия</th>
+                                                    Фактическое количество животных
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Действия
+                                                </th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                <tr role="row" class="odd">
-                                                    <td>@Model.Municipality.name</td>
-                                                    <td>с @Model.startdate.ToString("D") по @Model.enddate.ToString("D")</td>
-                                                    <td>@Model.summ</td>
+                                            <tr role="row" class="odd">
+                                                <td>@Model.Municipality.name</td>
+                                                <td>@Model.localityname</td>
+                                                <td>с @Model.startdate.ToString("D") по @Model.enddate.ToString("D")</td>
+                                                <td>@Model.plancount</td>
+                                                <td>@Model.factcount</td>
                                                 <td>
                                                     @if (Model.statuc.ToLower() != "согласован в омсу" && (role == "Оператор ОМСУ" ||
-                                                        role == "Куратор ОМСУ" || role == "Подписант ОМСУ" || isAdmin))
+                                                    role == "Куратор ОМСУ" || role == "Подписант ОМСУ" || isAdmin))
                                                     {
-                                                        <a href="/report/edit/money/@Model.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                                        <a href="/report/edit/schedule/@Model.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
                                                     }
                                                 </td>
-                                                </tr>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

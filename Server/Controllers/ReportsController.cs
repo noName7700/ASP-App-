@@ -118,6 +118,16 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Reports/register/schedule")]
+        public async Task<IEnumerable<Report>> GetRegisterSchedule()
+        {
+            return await _context.report
+                .Include(r => r.Municipality)
+                .Where(r => r.numreport == 2)
+                .ToListAsync();
+        }
+
+        [HttpGet]
         [Route("/api/Reports/register/money/{id}")]
         public async Task<Report> GetOneRegisterMoney(int id)
         {
