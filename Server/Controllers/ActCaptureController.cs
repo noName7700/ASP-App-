@@ -83,6 +83,15 @@ namespace Server.Controllers
                 .FirstAsync();
         }
 
+        [HttpGet]
+        [Route("/api/ActCapture/alll")]
+        public async Task<IEnumerable<Animal>> GetFromScheduleId()
+        {
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .ToListAsync();
+        }
+
         [HttpPost]
         [Route("/api/ActCapture/add")]
         public async Task Post([FromBody] ActCapture value)

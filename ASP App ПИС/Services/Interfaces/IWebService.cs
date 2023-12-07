@@ -29,7 +29,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Animal> GetAnimal(int id);
         Task<Locality> GetLocality(int id);
         Task<Locality> GetOneLocality(int id);
-        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int conid);
+        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id);
         Task<TaskMonth> GetTaskMonthOne(int id);
         Task<Contract> GetContractOne(int id);
         Task<Animal> GetAnimalOne(int id);
@@ -100,7 +100,13 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id);
         Task<Contract_Locality> GetDateContract_LocalityForDate(int id, string datecapture);
         Task<IEnumerable<Contract>> GetContractsFromMunId(int id);
-        Task<Schedule> GetOneScheduleFromLocDate(int locid, string startdate);
+        Task<Schedule> GetOneScheduleFromLocDate(int conlocid);
         Task<Contract_Locality> GetOneContract_LocalityFromId(int id);
+        Task<IEnumerable<Organization>> GetOneOrganizationFromLocId(int id);
+        Task<IEnumerable<Animal>> GetActsCapture();
+        Task<IEnumerable<Report>> GetRegisterMoney();
+        Task<Report> GetOneRegisterMoney(int id);
+        Task<HttpResponseMessage> AddReport(Report value);
+        Task<HttpResponseMessage> EditReport(int id, Report value);
     }
 }

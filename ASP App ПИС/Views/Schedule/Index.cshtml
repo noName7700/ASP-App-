@@ -1,8 +1,12 @@
 ﻿@using Domain;
-@model IEnumerable<Schedule> 
+@model IEnumerable<Schedule>;
+@using System.Security.Claims
 @{
     var claims = Context.Request.HttpContext.User.Claims;
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
+    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
 }
 
 <div class="content-wrapper">
@@ -47,17 +51,43 @@
                                         Дата утверждения
                                         <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                     </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                            Статус
+                                        </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">План-график</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach(var sch in Model)
                             {
-                            <tr role="row" class="odd">
-                                            <td>@sch.Locality.name</td>
-                                            <td>@sch.dateapproval.ToShortDateString()</td>
-                                            <td><a href="/scheduleone/@sch.localityid/@sch.contractid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
-                            </tr>
+                                if ((role == "Оператор по отлову" && sch.Contract_Locality.localityid == locId && !isAdmin) || isAdmin ||
+                                        (role != "Оператор по отлову" && sch.Contract_Locality.Locality.municipalityid == munId))
+                                {
+                                    <tr role="row" class="odd">
+                                    <td>@sch.Contract_Locality.Locality.name</td>
+                                    <td>@sch.dateapproval.ToShortDateString()</td>
+                                    <td>
+                                        @if (sch.Contract_Locality.Contract.validityperiod < DateTime.Now &&
+                                        ((IEnumerable<Animal>)ViewData["acts"]).Where(a => a.ActCapture.scheduleid == sch.id).ToList().Count == 0)
+                                        {
+                                            <span>Истек без отлова</span>
+                                        }
+                                        else if (sch.Contract_Locality.Contract.validityperiod < DateTime.Now)
+                                        {
+                                            <span>Исполнен</span>
+                                        }
+                                        else if (sch.dateapproval <= DateTime.Now && sch.Contract_Locality.Contract.validityperiod > DateTime.Now)
+                                        {
+                                            <span>В исполнении</span>
+                                        }
+                                        else if (sch.dateapproval > DateTime.Now)
+                                        {
+                                            <span>Не действует</span>
+                                        }
+                                    </td>
+                                    <td><a href="/scheduleone/@sch.contract_localityid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
+                                    </tr>
+                                }
                             }
                             </tbody>
                         </table>

@@ -43,7 +43,8 @@ namespace ASP_App_ПИС.Controllers
                 new Claim(ClaimTypes.Name, user.name),
                 new Claim(ClaimTypes.Surname, user.surname),
                 new Claim(ClaimTypes.Locality, user.localityid.ToString()),
-                new Claim(ClaimTypes.StateOrProvince, user.municipalityid.ToString())
+                new Claim(ClaimTypes.StateOrProvince, user.municipalityid.ToString()),
+                new Claim(ClaimTypes.Anonymous, user.Organization.id.ToString())
                 };
             claims.Add(new Claim("IsAdmin", user.isadmin.ToString(), "bool"));
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Cookies");
@@ -119,7 +120,7 @@ namespace ASP_App_ПИС.Controllers
                 password = Request.Form["password"],
                 isadmin = isAdmin
             };
-            await _service.AddUser(user);
+            //await _service.AddUser(user);
             if ((int)_service.AddUser(user).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
                 var err = await _service.AddUser(user).Result.Content.ReadAsStringAsync();

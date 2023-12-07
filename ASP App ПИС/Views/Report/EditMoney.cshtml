@@ -1,0 +1,107 @@
+﻿@using Domain;
+@model Report;
+@using System.Security.Claims
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
+}
+
+<div class="content-wrapper">
+    <!-- START PAGE CONTENT-->
+    <div class="page-heading">
+        <h1 class="page-title">Отчёт о выполненной работе за контракт</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html"><i class="la la-home font-20"></i></a>
+            </li>
+            <li class="breadcrumb-item">Отчёт</li>
+        </ol>
+    </div>
+    <div class="page-content fade-in-up">
+        <div class="ibox">
+            <div class="ibox-head">
+                <div class="ibox-title">Отчёт о выполненной работе за контракт</div>
+            </div>
+            <div class="ibox-body">
+                <form class="form-horizontal" method="post">
+                    @* <div class="form-group row">
+                    <label for="startdate_ex" class="col-sm-2 col-form-label">Начальная дата:</label>
+                    <div class="col-sm-8">
+                    <input type="date" id="startdate_ex" class="form-control form-control-sm" placeholder="" aria-controls="example-table" name="startdate">
+                    </div>
+                    </div>
+
+                    <div class="form-group row">
+                    <label for="enddate_ex" class="col-sm-2 col-form-label">Конечная дата:</label>
+                    <div class="col-sm-8">
+                    <input type="date" id="enddate_ex" class="form-control form-control-sm" placeholder="" aria-controls="example-table" name="enddate">
+                    </div>
+                    </div> *@
+
+                    @* <div class="form-group row">
+                    <label for="namemun_ex" class="col-sm-2 col-form-label">Наименование муниципалитета:</label>
+                    <div class="col-sm-8">
+                    <select class="form-control" id="namemun_ex" name="municipality" @if (!isAdmin) Write("disabled");>
+                    if (!isAdmin)
+                    {
+                    @foreach (var mun in Model)
+                    {
+                    if (mun.id == munId)
+                    {
+                    <option value="@mun.id">@mun.name</option>
+                    }
+                    }
+                    }
+                    else
+                    {
+                    @foreach (var mun in Model)
+                    {
+                    <option value="@mun.id">@mun.name</option>
+                    }
+                    }
+                    </select>
+                    </div>
+                    </div> *@
+
+                    <div class="form-group row">
+                        <label for="status" class="col-sm-2 col-form-label">Статус:</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" id="status" type="text" name="status" value=@Model.statuc required />
+                        </div>
+                    </div>
+
+                    @if (Model.statuc == "Доработка" && role == "Оператор ОМСУ")
+                    {
+                        <div class="form-group row">
+                            <label for="namemun_ex" class="col-sm-2 col-form-label">Контракт:</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="namemun_ex" name="contract">
+                                    @foreach (var con in (IEnumerable<Contract>)ViewData["cons"])
+                                    {
+                                        if (Model.startdate == con.dateconclusion && Model.enddate == con.validityperiod)
+                                        {
+                                            <option selected value="@con.id"><span>@con.Municipality.name</span> | <span>@con.dateconclusion.ToString("dd.MM.yyyy")</span> | <span>@con.validityperiod.ToString("dd.MM.yyyy")</span></option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@con.id"><span>@con.Municipality.name</span> | <span>@con.dateconclusion.ToString("dd.MM.yyyy")</span> | <span>@con.validityperiod.ToString("dd.MM.yyyy")</span></option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
+
+                    <input type="hidden" name="_method" value="PUT">
+                    <div class="col-sm-10 ml-sm-auto">
+                        <button type="submit" class="btn btn-info">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE CONTENT-->
+</div>

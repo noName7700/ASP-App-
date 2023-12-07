@@ -16,6 +16,22 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
+        [Route("/report/register/money")]
+        public async Task<IActionResult> RegisterMoney()
+        {
+            var regMoney = await _service.GetRegisterMoney();
+            return View(regMoney);
+        }
+
+        [HttpGet]
+        [Route("/report/register/money/post/{id}")]
+        public async Task<IActionResult> RegisterMoneyPost(int id) // id - id в таблице Report
+        {
+            var rep = await _service.GetOneRegisterMoney(id);
+            return View(rep);
+        }
+
+        [HttpGet]
         [Route("/report/money")]
         public async Task<IActionResult> IndexMoney()
         {
@@ -50,7 +66,94 @@ namespace ASP_App_ПИС.Controllers
             var con = await _service.GetContractOne(idContract);
             ViewData["startdate"] = con.dateconclusion.ToString("D");
             ViewData["enddate"] = con.validityperiod.ToString("D");
+
+            Report rep = new Report
+            {
+                numreport = 1,
+                statuc = "Черновик",
+                startdate = con.dateconclusion,
+                enddate = con.validityperiod,
+                localityname = "0",
+                summ = priceItog,
+                plancount = 0,
+                factcount = 0,
+                datestatus = DateTime.Now,
+                municipalityid = con.municipalityid
+            };
+            await _service.AddReport(rep);
             return View(priceItog);
+        }
+
+        [HttpGet]
+        [Route("/report/edit/money/{id}")]
+        public async Task<IActionResult> EditMoney(int id)
+        {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+
+            IEnumerable<Contract> contracts;
+            if (isAdmin)
+            {
+                contracts = await _service.GetContracts();
+            }
+            else
+            {
+                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+                contracts = await _service.GetContractsFromMunId(munid);
+            }
+            ViewData["cons"] = contracts;
+
+            var rep = await _service.GetOneRegisterMoney(id);
+            return View(rep);
+        }
+
+        [HttpPost]
+        [Route("/report/edit/money/{id}")]
+        public async Task<IActionResult> EditMoneyPut(int id)
+        {
+            var repCur = await _service.GetOneRegisterMoney(id);
+            double priceItog; DateTime start; DateTime end; int munid;
+            if (repCur.statuc == "Доработка")
+            {
+                int idContract = int.Parse(Request.Form["contract"]);
+                priceItog = await _service.GetReportsMoney(idContract);
+                // нахожу контракт
+                var con = await _service.GetContractOne(idContract);
+                start = con.dateconclusion;
+                end = con.validityperiod;
+                munid = con.municipalityid;
+            }
+            else
+            {
+                start = repCur.startdate;
+                end = repCur.enddate;
+                priceItog = repCur.summ;
+                munid = repCur.municipalityid;
+            }
+            Report rep = new Report
+            {
+                numreport = 1,
+                statuc = Request.Form["status"],
+                startdate = start,
+                enddate = end,
+                localityname = "0",
+                summ = priceItog,
+                plancount = 0,
+                factcount = 0,
+                datestatus = DateTime.Now,
+                municipalityid = munid
+            };
+            await _service.EditReport(id, rep);
+
+            // тут как-то на почту оператору омсу отправить уведомление что требуется доработка такого-то отчета
+            if (Request.Form["status"] == "Доработка")
+            {
+                // тут нужно отправить сообщение на почту оператору омсу, а в списке userов найти его так, чтобы муниципалитет
+                // юзера совпадал с муниципалитетом измененного отчета и отправить ему по почте
+            }
+
+            return Redirect("/report/register/money");
         }
 
         [HttpGet]

@@ -24,10 +24,12 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
         {
             var schedules = await _service.GetSchedules();
+            var acts = await _service.GetActsCapture();
+            ViewData["acts"] = acts;
 
             if (!string.IsNullOrEmpty(search))
             {
-                schedules = schedules.Where(m => m.Locality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                schedules = schedules.Where(m => m.Contract_Locality.Locality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
 
@@ -35,8 +37,8 @@ namespace ASP_App_ПИС.Controllers
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
             schedules = sort switch
             {
-                SortState.NameAsc => schedules.OrderBy(sc => sc.Locality.name),
-                SortState.NameDesc => schedules.OrderByDescending(sc => sc.Locality.name),
+                SortState.NameAsc => schedules.OrderBy(sc => sc.Contract_Locality.Locality.name),
+                SortState.NameDesc => schedules.OrderByDescending(sc => sc.Contract_Locality.Locality.name),
                 SortState.DateAsc => schedules.OrderBy(sc => sc.dateapproval),
                 SortState.DateDesc => schedules.OrderByDescending(sc => sc.dateapproval)
             };
@@ -68,13 +70,12 @@ namespace ASP_App_ПИС.Controllers
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
             var dateapproval = DateTime.Parse(Request.Form["dateapproval"]);
-            var conid = (await _service.GetDateContract_LocalityForDate(localityid, dateapproval.ToString("yyyy-MM-dd"))).contractid;
+            var conlocid = await _service.GetDateContract_LocalityForDate(localityid, dateapproval.ToString("yyyy-MM-dd"));
 
             Schedule sch = new Schedule 
-            { 
-                localityid = localityid, 
+            {
                 dateapproval = dateapproval,
-                contractid = conid
+                contract_localityid = conlocid.id
             };
 
             //await _service.AddSchedule(sch);

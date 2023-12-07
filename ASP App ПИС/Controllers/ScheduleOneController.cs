@@ -19,10 +19,11 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        [Route("/scheduleone/{id}/{conid}")]
-        public async Task<IActionResult> Index(int id, int conid, string search, SortState sort = SortState.DateAsc)
+        // тут изменила - теперь это id cont_loc
+        [Route("/scheduleone/{id}")]
+        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.DateAsc)
         {
-            var tasks = await _service.GetTaskMonth(id, conid);
+            var tasks = await _service.GetTaskMonth(id);
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -39,8 +40,8 @@ namespace ASP_App_ПИС.Controllers
             };
 
             ViewData["id"] = id;
-            var loc = await _service.GetOneLocality(id);
-            ViewData["locality"] = loc.name;
+            var conloc = await _service.GetOneContract_LocalityFromId(id);
+            ViewData["locality"] = conloc.Locality.name;
             return View(tasks);
         }
 
@@ -62,7 +63,7 @@ namespace ASP_App_ПИС.Controllers
             var startdateForm = DateTime.Parse(Request.Form["startdate"]);
             var enddateForm = DateTime.Parse(Request.Form["enddate"]);
             var countanimalForm = int.Parse(Request.Form["count-animal"]);
-            Schedule lastSch = await _service.GetOneScheduleFromLocDate(id, DateTime.Parse(Request.Form["startdate"]).ToString("yyyy-MM-dd"));
+            Schedule lastSch = await _service.GetOneScheduleFromLocDate(id);
 
             TaskMonth tm = new TaskMonth
             {
@@ -80,7 +81,7 @@ namespace ASP_App_ПИС.Controllers
             TaskMonth lastTm = await _service.GetLastTaskMonth();
 
             var claims = HttpContext.Request.HttpContext.User.Claims;
-            Locality loc = await _service.GetOneLocality(id);
+            Locality loc = (await _service.GetOneContract_LocalityFromId(id)).Locality;
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
             Journal jo = new Journal
@@ -94,7 +95,7 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/scheduleone/{id}/{lastTm.Schedule.contractid}");
+            return Redirect($"/scheduleone/{id}");
         }
 
         [HttpGet]
@@ -139,7 +140,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = id,
-                description = $"{sched.Locality.name} - {sched.dateapproval.ToString("dd.MM.yyyy")}. Изменена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
+                description = $"{sched.Contract_Locality.Locality.name} - {sched.dateapproval.ToString("dd.MM.yyyy")}. Изменена задача на месяц: {startdateForm.ToString("dd.MM.yyyy")} - " +
                 $"{enddateForm.ToString("dd.MM.yyyy")} - {countanimalForm}"
             };
             await _service.AddJournal(jo);
@@ -166,12 +167,12 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = id,
-                description = $"{schedule.Locality.name} - {schedule.dateapproval.ToString("dd.MM.yyyy")}. Удалена задача на месяц: {task.startdate.ToString("dd.MM.yyyy")} - " +
+                description = $"{schedule.Contract_Locality.Locality.name} - {schedule.dateapproval.ToString("dd.MM.yyyy")}. Удалена задача на месяц: {task.startdate.ToString("dd.MM.yyyy")} - " +
                 $"{task.enddate.ToString("dd.MM.yyyy")} - {task.countanimal}"
             };
             await _service.AddJournal(jo);
 
-            return Redirect($"/scheduleone/{schedule.localityid}/{schedule.contractid}");
+            return Redirect($"/scheduleone/{schedule.contract_localityid}");
         }
     }
 }

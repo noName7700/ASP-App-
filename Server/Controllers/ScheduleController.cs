@@ -22,8 +22,11 @@ namespace Server.Controllers
         public async Task<IEnumerable<Schedule>> Get()
         {
             return await _context.schedule
-                .Include(sch => sch.Locality)
-                .GroupBy(sch => new { sch.Locality.name, sch.dateapproval })
+                .Include(s => s.Contract_Locality)
+                .ThenInclude(cl => cl.Locality)
+                .Include(s => s.Contract_Locality)
+                .ThenInclude(cl => cl.Contract)
+                .GroupBy(sch => new { sch.Contract_Locality.Locality.name, sch.dateapproval })
                 .OrderByDescending(sch => sch.Key.name)
                 .Select(f => f.First())
                 .ToListAsync();
@@ -32,11 +35,17 @@ namespace Server.Controllers
         [HttpGet("{id}")]
         public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
-            return await _context.taskmonth
+            var tt = await _context.taskmonth
                 .Include(t => t.Schedule)
-                .Where(t => t.Schedule.localityid == id)
+                .ThenInclude(s => s.Contract_Locality)
+                .ThenInclude(cl => cl.Locality)
+                .Include(t => t.Schedule)
+                .ThenInclude(s => s.Contract_Locality)
+                .ThenInclude(cl => cl.Contract)
+                .Where(t => t.Schedule.Contract_Locality.localityid == id)
                 .Select(t => t)
                 .ToListAsync();
+            return tt;
         }
 
         [HttpGet]
@@ -44,21 +53,21 @@ namespace Server.Controllers
         public async Task<Schedule> GetLast(int locid)
         {
             return await _context.schedule
-                .Where(s => s.localityid == locid)
+                .Include(s => s.Contract_Locality)
+                .Where(s => s.Contract_Locality.localityid == locid)
                 .Select(s => s)
                 .OrderBy(s => s.id)
                 .LastAsync();
         }
 
         [HttpGet]
-        [Route("/api/Schedule/one/{locid}/{startdate}")]
-        public async Task<Schedule> GetOne(int locid, string startdate)
+        [Route("/api/Schedule/one/{conlocid}")]
+        public async Task<Schedule> GetOne(int conlocid)
         {
-            var startDate = DateTime.Parse(startdate);
             var schedule = new Schedule();
 
-            foreach(var sc in await _context.schedule.Include(sc => sc.Contract).ToListAsync())
-                if (sc.localityid == locid && sc.Contract.dateconclusion <= startDate && sc.Contract.validityperiod >= startDate)
+            foreach(var sc in await _context.schedule.Include(sc => sc.Contract_Locality).ThenInclude(cl => cl.Contract).ToListAsync())
+                if (sc.Contract_Locality.id == conlocid)
                     schedule = sc;
 
             return schedule;
@@ -71,6 +80,7 @@ namespace Server.Controllers
         {
             return await _context.taskmonth
                 .Include(t => t.Schedule)
+                .ThenInclude(s => s.Contract_Locality)
                 .ThenInclude(sc => sc.Locality)
                 .Where(t => t.id == id)
                 .Select(t => t.Schedule)
@@ -81,9 +91,10 @@ namespace Server.Controllers
         [Route("/api/Schedule/add")]
         public async Task Post([FromBody] Schedule value)
         {
-            var loc = await _context.locality
-                .Where(l => l.id == value.localityid)
-                .Select(l => l)
+            var conloc = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Include(cl => cl.Locality)
+                .Where(cl => cl.id == value.contract_localityid)
                 .FirstOrDefaultAsync();
 
             //var con = await _context.contract_locality
@@ -93,14 +104,14 @@ namespace Server.Controllers
             //    .FirstOrDefaultAsync();
 
             int countSchedule = 0;
-            if (value.contractid != 0)
+            if (value.contract_localityid != 0)
             {
                 countSchedule = await _context.schedule
-                    .Where(sc => sc.contractid == value.contractid)
+                    .Where(sc => sc.contract_localityid == value.contract_localityid)
                     .CountAsync();
             }
 
-            if (value.contractid == 0)
+            if (value.contract_localityid == 0)
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"В дату {value.dateapproval.ToString("D")} для данного населенного пункта нет действующего контракта.");

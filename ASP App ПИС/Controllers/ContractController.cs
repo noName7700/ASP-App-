@@ -56,8 +56,11 @@ namespace ASP_App_ПИС.Controllers
             }
             var muns = await _service.GetMunicipalities();
             var locs = await _service.GetLocalities();
+
+            var orgInLoc = await _service.GetOrganizations();
             ViewData["locs"] = locs;
             ViewData["config"] = _configuration;
+            ViewData["orgs"] = orgInLoc;
             return View(muns);
         }
 
@@ -96,11 +99,13 @@ namespace ASP_App_ПИС.Controllers
             // добавляю все записи в contract_locality
             foreach (var loc in locs)
             {
+                var a = Request.Form[loc.name];
                 Contract_Locality con_loc = new Contract_Locality
                 {
                     contractid = conLast.id,
                     localityid = loc.id,
-                    tariph = double.Parse(Request.Form[loc.id.ToString()])
+                    tariph = double.Parse(Request.Form[loc.id.ToString()]),
+                    organizationid = int.Parse(Request.Form[loc.name.ToString()])
                 };
                 await _service.AddContractLocality(con_loc);
                 

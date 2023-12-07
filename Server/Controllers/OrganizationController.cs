@@ -21,22 +21,36 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Organization>> Get()
         {
-            return await _context.organization.ToListAsync();
+            return await _context.organization
+                .Include(o => o.Locality)
+                .ToListAsync();
         }
 
         [HttpGet]
         [Route("/api/Organization/one/{id}")]
         public async Task<Organization> GetOne(int id)
         {
-            return await _context.organization.FirstOrDefaultAsync(o => o.id == id);
+            return await _context.organization
+                .Include(o => o.Locality)
+                .FirstOrDefaultAsync(o => o.id == id);
+        }
+
+        [HttpGet]
+        [Route("/api/Organization/one/loc/{id}")]
+        public async Task<IEnumerable<Organization>> GetOneFromLocId(int id)
+        {
+            return await _context.organization
+                .Include(o => o.Locality)
+                .Where(o => o.localityid == id)
+                .ToListAsync();
         }
 
         [HttpGet]
         [Route("/api/Organization/last")]
         public async Task<Organization> GetLast()
         {
-            return await _context
-                .organization
+            return await _context.organization
+                .Include(o => o.Locality)
                 .Select(t => t)
                 .OrderBy(t => t.id)
                 .LastAsync();
@@ -47,7 +61,7 @@ namespace Server.Controllers
         [Route("/api/Organization/add")]
         public async Task Post([FromBody] Organization value)
         {
-            if (long.TryParse(value.telephone, out long n) && value.telephone.Length == 11)
+            if (long.TryParse(value.telephone, out long n) && value.telephone.Length != 11)
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");

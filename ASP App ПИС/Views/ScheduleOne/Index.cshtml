@@ -6,6 +6,7 @@
     var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
     var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
 }
 
 <div class="content-wrapper">
@@ -58,29 +59,27 @@
                         <td>@tm.enddate.ToShortDateString()</td>
                         <td>@tm.countanimal</td>
                         <td>
-                            @if (tm.Schedule.localityid == locId && !isAdmin)
-                                                {
-                                                    <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                    <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
-                                                }
-                                                else if (isAdmin)
-                                                {
-                                                    <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                    <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
-                                                }
-                                            </td>
+                            @if (role == "Оператор по отлову" || isAdmin)
+                            {
+                                <a href="/scheduleone/edit/@tm.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                <a class="delete" href="/scheduleone/delete/@tm.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
+                            }
+                        </td>
                     </tr>
                     }
                     </tbody>
                 </table>
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="example-table_length">
-                                        <a href="/scheduleone/add/@ViewData["id"]"><button class="btn btn-success">Добавить</button></a>
-                                    </div>
-                                </div>
+                @if (role == "Оператор по отлову" || isAdmin)
+                {
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="example-table_length">
+                                <a href="/scheduleone/add/@ViewData["id"]"><button class="btn btn-success">Добавить</button></a>
                             </div>
-                </div>
+                        </div>
+                    </div>
+                }
+                    </div>
                 </div>
                 </div>
             </div>

@@ -122,9 +122,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Locality>();
         }
 
-        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int conid)
+        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id)
         {
-            var response = await _client.GetAsync($"/api/TaskMonth/{id}/{conid}");
+            var response = await _client.GetAsync($"/api/TaskMonth/{id}");
             return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
         }
 
@@ -548,9 +548,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Contract>>();
         }
 
-        public async Task<Schedule> GetOneScheduleFromLocDate(int locid, string startdate)
+        public async Task<Schedule> GetOneScheduleFromLocDate(int conlocid)
         {
-            var response = await _client.GetAsync($"/api/Schedule/one/{locid}/{startdate}");
+            var response = await _client.GetAsync($"/api/Schedule/one/{conlocid}");
             return await response.ReadContentAsync<Schedule>();
         }
 
@@ -566,6 +566,52 @@ namespace ASP_App_ПИС.Services
         {
             var response = await _client.GetAsync($"/api/Contract_Locality/one/id/{id}");
             return await response.ReadContentAsync<Contract_Locality>();
+        }
+
+        public async Task<IEnumerable<Organization>> GetOneOrganizationFromLocId(int id)
+        {
+            var response = await _client.GetAsync($"/api/Organization/one/loc/{id}");
+            return await response.ReadContentAsync<IEnumerable<Organization>>();
+        }
+
+        public async Task<IEnumerable<Animal>> GetActsCapture()
+        {
+            var response = await _client.GetAsync($"/api/ActCapture/alll");
+            return await response.ReadContentAsync<IEnumerable<Animal>>();
+        }
+
+        public async Task<IEnumerable<Report>> GetRegisterMoney()
+        {
+            var response = await _client.GetAsync($"/api/Reports/register/money");
+            return await response.ReadContentAsync<IEnumerable<Report>>();
+        }
+
+        public async Task<Report> GetOneRegisterMoney(int id)
+        {
+            var response = await _client.GetAsync($"/api/Reports/register/money/{id}");
+            return await response.ReadContentAsync<Report>();
+        }
+
+        public async Task<HttpResponseMessage> AddReport(Report value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
+            int indexT = jsonString.IndexOf('T', 170);
+            jsonString = jsonString.Remove(indexT + 9, 14);
+            jsonString = jsonString.Insert(indexT + 9, ".0Z");
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PostAsync($"/api/Reports/add", content);
+        }
+
+        public async Task<HttpResponseMessage> EditReport(int id, Report value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            jsonString = jsonString.Replace("T00:00:00", "T00:00:00.0Z");
+            int indexT = jsonString.IndexOf('T', 170);
+            jsonString = jsonString.Remove(indexT + 9, 14);
+            jsonString = jsonString.Insert(indexT + 9, ".0Z");
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PutAsync($"/api/Reports/put/{id}", content);
         }
     }
 }

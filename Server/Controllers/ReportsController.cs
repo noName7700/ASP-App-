@@ -19,6 +19,8 @@ using ClosedXML.Excel;
 using System.IO;
 using System.Globalization;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System.Data;
 //using closedxml.excel;
 
 namespace Server.Controllers
@@ -87,7 +89,8 @@ namespace Server.Controllers
 
             var countPlanAnimal = await _context.taskmonth
                 .Include(t => t.Schedule)
-                .Where(task => task.Schedule.localityid == locid && task.Schedule.contractid == conid)
+                .ThenInclude(s => s.Contract_Locality)
+                .Where(task => task.Schedule.Contract_Locality.localityid == locid && task.Schedule.Contract_Locality.contractid == conid)
                 .SumAsync(t => t.countanimal);
 
             // считаю по актам отлова то что в итоге
@@ -102,6 +105,50 @@ namespace Server.Controllers
                 .CountAsync();
 
             return new Dictionary<int, int> { { countPlanAnimal, countAnimal } };
+        }
+
+        [HttpGet]
+        [Route("/api/Reports/register/money")]
+        public async Task<IEnumerable<Report>> GetRegisterMoney()
+        {
+            return await _context.report
+                .Include(r => r.Municipality)
+                .Where(r => r.numreport == 1)
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/Reports/register/money/{id}")]
+        public async Task<Report> GetOneRegisterMoney(int id)
+        {
+            return await _context.report
+                .Include(r => r.Municipality)
+                .Where(r => r.id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        [HttpPost]
+        [Route("/api/Reports/add")]
+        public async Task Post([FromBody] Report value)
+        {
+            await _context.report.AddAsync(value);
+            await _context.SaveChangesAsync();
+        }
+
+        [HttpPut]
+        [Route("/api/Reports/put/{id}")]
+        public async Task Put(int id, [FromBody] Report value)
+        {
+            var currentRep = await _context.report.FirstOrDefaultAsync(t => t.id == id);
+            if (currentRep != null)
+            {                
+                currentRep.startdate = value.startdate;
+                currentRep.enddate = value.enddate;
+                currentRep.summ = value.summ;
+                currentRep.statuc = value.statuc;
+                currentRep.datestatus = value.datestatus;
+                await _context.SaveChangesAsync();
+            }
         }
 
         [HttpGet]

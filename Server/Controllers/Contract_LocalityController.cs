@@ -20,6 +20,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<Contract_Locality>> Get()
         {
             return await _context.contract_locality
+                .Include(cl => cl.Organization)
                 .Include(cl => cl.Contract)
                 .Include(cl => cl.Locality)
                 .Select(cl => cl)
@@ -30,6 +31,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<Contract_Locality>> Get(int id)
         {
             var t = await _context.contract_locality
+                .Include(cl => cl.Organization)
                 .Include(cl => cl.Locality)
                 .Include(cl => cl.Contract)
                 .Where(cl => cl.contractid == id)
@@ -43,6 +45,7 @@ namespace Server.Controllers
         public async Task<Contract_Locality> GetOne(int id)
         {
             var t = await _context.contract_locality
+                .Include(cl => cl.Organization)
                 .Include(cl => cl.Contract)
                 .Include(cl => cl.Locality)
                 .Where(cl => cl.localityid == id)
@@ -56,6 +59,7 @@ namespace Server.Controllers
         public async Task<Contract_Locality> GetOneId(int id)
         {
             var t = await _context.contract_locality
+                .Include(cl => cl.Organization)
                 .Include(cl => cl.Contract)
                 .Include(cl => cl.Locality)
                 .Where(cl => cl.id == id)

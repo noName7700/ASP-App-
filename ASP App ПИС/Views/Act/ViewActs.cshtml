@@ -6,6 +6,7 @@
     var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
     var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
 }
 
 <div class="content-wrapper">
@@ -54,33 +55,39 @@
                             <tbody>
                             @foreach(var act in Model)
                             {
-                                <tr role="row" class="odd">
-                                <td>@act.datecapture.ToShortDateString()</td>
-                                            <td>
-                                @if (act.localityid == locId && !isAdmin)
-                                {
-                                        
-                                            @* <a href="/act/edit/@act.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a> *@
-                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
-                                            <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.id"><i class="fa fa-eye font-14"></i></a></button>
-                                                
-                                            }
-                                            else if (isAdmin)
-                                            {
-                                                
-                                                    @* <a href="/act/edit/@act.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a> *@
-                                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
-                                                    <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.id"><i class="fa fa-eye font-14"></i></a></button>
-                                                
-                                            }
-                                            </td>
-                                        </tr>
+                                        @if (act.localityid == locId && !isAdmin || isAdmin)
+                                        {
+                                            <tr role="row" class="odd">
+                                                <td>@act.datecapture.ToShortDateString()</td>
+                                                <td>
+                                                    @if (act.localityid == locId && !isAdmin && role == "Оператор по отлову")
+                                                    {
 
-                            }
+                                                        @* <a href="/act/edit/@act.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a> *@
+                                                        <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
+                                                        <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.id"><i class="fa fa-eye font-14"></i></a></button>
+
+                                                    }
+                                                    else if (isAdmin)
+                                                    {
+
+                                                        @* <a href="/act/edit/@act.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a> *@
+                                                        <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button>
+                                                        <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.id"><i class="fa fa-eye font-14"></i></a></button>
+
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    }
                             </tbody>
                         </table>
+                        @if (role == "Оператор по отлову" || isAdmin)
+                        {
                             <a href="/act/add"><button class="btn btn-success">Добавить</button></a>
-                    </div>
+                        }
+                        </div>
                 </div>
             </div>
             <!-- END PAGE CONTENT-->

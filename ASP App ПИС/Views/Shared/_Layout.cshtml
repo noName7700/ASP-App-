@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims
 @{
     var claims = Context.Request.HttpContext.User.Claims;
-    var role = claims.Where(c => c.Type == ClaimTypes.Role).First();
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
     var name = claims.Where(c => c.Type == ClaimTypes.Name).First();
     var surname = claims.Where(c => c.Type == ClaimTypes.Surname).First();
     var login = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).First();
@@ -68,7 +68,7 @@
                         <img src="~/img/admin-avatar.png" width="45px" />
                     </div>
                     <div class="admin-info">
-                        <div class="font-strong">@surname.Value @name.Value</div><small>@role.Value</small></div>
+                        <div class="font-strong">@surname.Value @name.Value</div><small>@role</small></div>
                 </div>
                 <ul class="side-menu metismenu">
                     <li>
@@ -84,9 +84,12 @@
                             <li>
                                 <a href="/schedule/">Планы-графики</a>
                             </li>
-                            <li>
-                                <a href="/schedule/add">Добавить план-график</a>
-                            </li>
+                            @if (isAdmin || (!isAdmin && role == "Оператор по отлову"))
+                            {
+                                <li>
+                                    <a href="/schedule/add">Добавить план-график</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <li>
@@ -96,9 +99,12 @@
                             <li>
                                 <a href="/contract/">Контракты</a>
                             </li>
-                            <li>
-                                <a href="/contract/add">Добавить контракт</a>
-                            </li>
+                            @if (isAdmin || (!isAdmin && role == "Оператор ОМСУ"))
+                            {
+                                <li>
+                                    <a href="/contract/add">Добавить контракт</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <li>
@@ -123,9 +129,12 @@
                             <li>
                                 <a href="/act/">Акты отлова</a>
                             </li>
-                            <li>
-                                <a href="/act/add">Добавить акт отлова</a>
-                            </li>
+                            @if (isAdmin || (!isAdmin && role == "Оператор по отлову"))
+                            {
+                                <li>
+                                    <a href="/act/add">Добавить акт отлова</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <li>
@@ -178,10 +187,20 @@
                         </li>
                     }
                     <li class="heading">ОТЧЕТЫ</li>
+
                     <li>
-                        <a href="/report/money"><i class="sidebar-item-icon fa fa-clipboard"></i>
-                            <span class="nav-label">Отчет о выполненной<br> работе за контракт</span>
+                        <a href="javascript:;">
+                            <i class="sidebar-item-icon fa fa-clipboard"></i>
+                            <span class="nav-label"></span>Отчет о выполненной<br> работе за контракт<i class="fa fa-angle-left arrow"></i>
                         </a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="/report/register/money">Реест отчётов</a>
+                            </li>
+                                <li>
+                                <a href="/report/money">Добавить отчёт</a>
+                                </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="/report/schedule">

@@ -22,12 +22,13 @@ namespace Server.Controllers
             return await _context.taskmonth.ToListAsync();
         }
 
-        [HttpGet("{id}/{conid}")]
-        public async Task<IEnumerable<TaskMonth>> Get(int id, int conid)
+        [HttpGet("{id}")]
+        public async Task<IEnumerable<TaskMonth>> Get(int id)
         {
             return await _context.taskmonth
                 .Include(t => t.Schedule)
-                .Where(t => t.Schedule.localityid == id && t.Schedule.contractid == conid)
+                .ThenInclude(s => s.Contract_Locality)
+                .Where(t => t.Schedule.Contract_Locality.id == id)
                 .Select(t => t)
                 .ToListAsync();
         }
@@ -57,10 +58,27 @@ namespace Server.Controllers
         [Route("/api/TaskMonth/add")]
         public async Task Post([FromBody] TaskMonth value)
         {
+            Contract_Locality contr = null;
+            if (value.scheduleid != 0)
+            {
+                var sched = await _context.schedule
+                    .Include(sc => sc.Contract_Locality)
+                    .ThenInclude(cl => cl.Contract)
+                    .Where(sc => sc.id == value.scheduleid)
+                    .FirstOrDefaultAsync();
+                contr = sched.Contract_Locality;
+            }
+
             if (value != null && value.scheduleid != 0 && value.startdate >= value.enddate)
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Дата начала не может быть позже даты окончания.");
+            }
+            else if (contr.Contract.validityperiod < value.startdate || contr.Contract.validityperiod < value.enddate ||
+                contr.Contract.dateconclusion > value.startdate || contr.Contract.dateconclusion > value.enddate)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Для данного населенного пункта в дату {value.startdate.ToString("dd.MM.yyyy")} контракт не действовал.");
             }
             else if (value != null && value.scheduleid != 0)
             {

@@ -6,6 +6,7 @@
     var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
     var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
 }
 
 <div class="content-wrapper">
@@ -56,31 +57,34 @@
                             <tbody>
                             @foreach(var con in Model)
                             {
-                            <tr role="row" class="odd">
-                                <td>@con.Municipality.name</td>
-                                <td>@con.id</td>
-                                <td>@con.validityperiod.ToShortDateString()</td>
-                                <td>@con.dateconclusion.ToShortDateString()</td>
-                                <td>@foreach (Contract_Locality cl in (IEnumerable<Contract_Locality>)ViewData["con_locs"])
-                                    {
-                                        if (cl.contractid == con.id)
-                                        {
-                                            <span>@cl.Locality.name: @cl.tariph<br></span>
-                                        }
-                                    }
-                                </td>
+                                if (con.municipalityid == munId)
+                                {
+                                    <tr role="row" class="odd">
+                                        <td>@con.Municipality.name</td>
+                                        <td>@con.id</td>
+                                        <td>@con.validityperiod.ToShortDateString()</td>
+                                        <td>@con.dateconclusion.ToShortDateString()</td>
+                                        <td>@foreach (Contract_Locality cl in (IEnumerable<Contract_Locality>)ViewData["con_locs"])
+                                            {
+                                                if (cl.contractid == con.id)
+                                                {
+                                                    <span>@cl.Locality.name: @cl.Organization.name - @cl.tariph<br></span>
+                                                }
+                                            }
+                                        </td>
 
-                                <td>
-                                    @if (con.municipalityid == munId && !isAdmin)
-                                    {
-                                        <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                    }
-                                    else if (isAdmin)
-                                                                    {
-                                        <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                    }
-                                </td>
-                            </tr>
+                                        <td>
+                                            @if (con.municipalityid == munId && !isAdmin && role == "Оператор ОМСУ")
+                                            {
+                                                <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                            }
+                                            else if (isAdmin)
+                                            {
+                                                <a href="/contract/edit/@con.id/@con.municipalityid"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             }
                             </tbody>
                         </table>

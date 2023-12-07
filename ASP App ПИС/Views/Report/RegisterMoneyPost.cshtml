@@ -1,0 +1,70 @@
+﻿@using Domain;
+@model Report;
+
+<div class="content-wrapper">
+    <!-- START PAGE CONTENT-->
+    <div class="page-heading">
+        <h1 class="page-title">Отчёт о выполнении работы за контракт</h1>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html"><i class="la la-home font-20"></i></a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/report/register/money">Реестр отчётов</a>
+            </li>
+            <li class="breadcrumb-item">
+                Отчёт
+            </li>
+        </ol>
+    </div>
+    <div class="page-content fade-in-up">
+        <div class="ibox">
+            <div class="ibox-head">
+                <div class="ibox-title">Отчёт</div>
+            </div>
+            <div class="page-content fade-in-up">
+                <div class="ibox">
+                    <div class="ibox-body">
+                        <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="example-table_length">
+                                    </div>
+                                </div>
+                            </div><div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-striped table-bordered table-hover dataTable" id="example-table" cellspacing="0" width="100%" role="grid" aria-describedby="example-table_info" style="width: 100%;">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Муниципалитет
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Период
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Полученная сумма
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Действия</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr role="row" class="odd">
+                                                    <td>@Model.Municipality.name</td>
+                                                    <td>с @Model.startdate.ToString("D") по @Model.enddate.ToString("D")</td>
+                                                    <td>@Model.summ</td>
+                                                <td><a href="/report/edit/money/@Model.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a></td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- END PAGE CONTENT-->
+            </div>
+

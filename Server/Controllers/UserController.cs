@@ -46,22 +46,22 @@ namespace Server.Controllers
         [Route("/api/User/add")]
         public async Task Post([FromBody] Usercapture value)
         {
-            if (!Regex.IsMatch(value.surname, @"^[a-zA-Z]+$"))
+            if (!Regex.IsMatch(value.surname, @"\p{IsCyrillic}"))
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Фамилия должна состоять только из букв.");
             }
-            else if (!Regex.IsMatch(value.name, @"^[a-zA-Z]+$"))
+            else if (!Regex.IsMatch(value.name, @"\p{IsCyrillic}"))
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Имя должно состоять только из букв.");
             }
-            else if (!Regex.IsMatch(value.patronymic, @"^[a-zA-Z]+$"))
+            else if (!Regex.IsMatch(value.patronymic, @"\p{IsCyrillic}"))
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Отчество должно состоять только из букв.");
             }
-            else if (long.TryParse(value.telephone, out long n) && value.telephone.Length == 11)
+            else if (value.telephone.Length != 11)
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");

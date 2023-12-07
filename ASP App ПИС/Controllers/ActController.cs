@@ -60,6 +60,7 @@ namespace ASP_App_ПИС.Controllers
             // назожу все строки из contract_locality и вывожу
             var conLoc = await _service.GetContract_LocalityFromConId(id);
 
+
             if (!string.IsNullOrEmpty(search))
             {
                 conLoc = conLoc.Where(m => m.Locality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
@@ -125,14 +126,15 @@ namespace ASP_App_ПИС.Controllers
             // сначала добавляю акт отлова
             int localityid = isAdmin ? int.Parse(Request.Form["locality"]) : locId;
             // нахожу контракт по нас. пункту и дате отлова
-            var conid = (await _service.GetDateContract_LocalityForDate(localityid, DateTime.Parse(Request.Form["datecapture"]).ToString("yyyy-MM-dd"))).contractid;
-            var sched = await _service.GetOneScheduleFromLocDate(localityid, DateTime.Parse(Request.Form["datecapture"]).ToString("yyyy-MM-dd"));
+            //var conid = (await _service.GetDateContract_LocalityForDate(localityid, DateTime.Parse(Request.Form["datecapture"]).ToString("yyyy-MM-dd"))).contractid;
+            var conloc = await _service.GetDateContract_LocalityForDate(localityid, DateTime.Parse(Request.Form["datecapture"]).ToString("yyyy-MM-dd"));
+            var sched = await _service.GetOneScheduleFromLocDate(conloc.id);
 
             ActCapture act = new ActCapture
             {
                 datecapture = DateTime.Parse(Request.Form["datecapture"]),
                 localityid = localityid,
-                contractid = conid,
+                contractid = conloc.contractid,
                 scheduleid = sched.id
             };
             //await _service.AddAct(act);

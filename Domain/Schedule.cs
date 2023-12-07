@@ -11,10 +11,8 @@ namespace Domain
     public class Schedule
     { 
         public int id { get; set; }
-        public int localityid { get; set; }
-        public Locality? Locality { get; set; }
+        public int contract_localityid { get; set; }
+        public Contract_Locality? Contract_Locality { get; set; }
         public DateTime dateapproval { get; set; }
-        public int contractid { get; set; }
-        public Contract? Contract { get; set; }
     }
 }

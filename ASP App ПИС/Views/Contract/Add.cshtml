@@ -96,6 +96,14 @@
                                         <input class="form-control" id="@loc.id" type="number" name="@loc.id" required>
                                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                     </div>
+
+                                    <label class="col-sm-2 col-form-label" for="@loc.name">Организация:</label>
+                                    <select class="form-control" id="@loc.name" name="@loc.name" required>
+                                        @foreach (Organization org in (IEnumerable<Organization>)ViewData["orgs"])
+                                        {
+                                            <option value="@org.id">@org.name</option>
+                                        }
+                                    </select>
                                 </div>
                             } 
                         }
@@ -111,7 +119,7 @@
 </div>
 <script src="~/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
 <script>
-let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "7022"))
+let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "123"))
 let startVal = $('#munname').val();
 $.ajax({
     url: `https://localhost:${port}/api/Locality/` + startVal,

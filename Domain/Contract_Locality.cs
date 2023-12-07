@@ -14,5 +14,7 @@ namespace Domain
         public int localityid { get; set; }
         public Locality? Locality { get; set; }
         public double tariph { get; set; }
+        public int organizationid { get; set; }
+        public Organization? Organization { get; set; }
     }
 }
