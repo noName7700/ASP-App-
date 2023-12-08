@@ -1,7 +1,38 @@
-﻿    <div class="content-wrapper">
+﻿@using Domain;
+@model IEnumerable<Report>;
+
+    <style>
+        .link-operator {
+            text-decoration: none;
+            color: darkred;
+        }
+        .link-operator:hover {
+            font-weight: 700;
+            color: darkred;
+        }
+    </style>
+<div class="content-wrapper">
         <!-- START PAGE CONTENT-->
         <div class="page-content fade-in-up">
-            <div></div>
+                    @foreach(var rep in Model)
+                    {
+                        <div class="ibox" style="border-radius: 10px;">
+                            <div class="ibox-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        @if (rep.localityname == "0")
+                                        {
+                                            <a href="/report/register/money/post/@rep.id" class="link-operator">Необходима доработка отчета о выполненной работе за контракт №@rep.id</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/report/register/schedule/post/@rep.id" class="link-operator">Необходима доработка отчета о выполненной работе по планам-графикам №@rep.id</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
         </div>
         <!-- END PAGE CONTENT-->
     </div>

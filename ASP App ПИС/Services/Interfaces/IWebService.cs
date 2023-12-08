@@ -108,5 +108,6 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> EditReport(int id, Report value);
         Task<IEnumerable<Report>> GetRegisterSchedule();
         Task<Usercapture> GetOneUser(int id);
+        Task<IEnumerable<Report>> GetReportFromMun(int id);
     }
 }

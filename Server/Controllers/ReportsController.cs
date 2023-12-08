@@ -21,6 +21,7 @@ using System.Globalization;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data;
+using DocumentFormat.OpenXml.Office2010.Drawing;
 //using closedxml.excel;
 
 namespace Server.Controllers
@@ -114,6 +115,15 @@ namespace Server.Controllers
             return await _context.report
                 .Include(r => r.Municipality)
                 .Where(r => r.numreport == 1)
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/Reports/register/{id}")]
+        public async Task<IEnumerable<Report>> GetRegister(int id)
+        {
+            return await _context.report
+                .Where(rep => rep.municipalityid == id && rep.statuc.ToLower() == "доработка")
                 .ToListAsync();
         }
 

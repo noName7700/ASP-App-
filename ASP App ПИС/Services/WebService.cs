@@ -632,5 +632,11 @@ namespace ASP_App_ПИС.Services
             var response = await _client.GetAsync($"/api/User/one/{id}");
             return await response.ReadContentAsync<Usercapture>();
         }
+
+        public async Task<IEnumerable<Report>> GetReportFromMun(int id)
+        {
+            var response = await _client.GetAsync($"/api/Reports/register/{id}");
+            return await response.ReadContentAsync<IEnumerable<Report>>();
+        }
     }
 }
