@@ -21,7 +21,8 @@ namespace ASP_App_ПИС.Controllers
             _configuration = configuration;
         }
 
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, 
+            SortState sort = SortState.NameAsc)
         {
             // получаю все контракты
             var contracts = await _service.GetContracts();
@@ -36,12 +37,45 @@ namespace ASP_App_ПИС.Controllers
                 contracts = contracts.Where(m => m.Municipality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                contracts = contracts.Where(m => m.id.ToString().Contains(search1, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search1"] = search1;
+            }
+            if (!string.IsNullOrEmpty(search2))
+            {
+                if (DateTime.TryParse(search2, out DateTime date))
+                {
+                    DateTime searchDate = DateTime.Parse(search2);
+                    contracts = contracts.Where(m => m.dateconclusion == searchDate).Select(m => m).ToList();
+                    ViewData["search2"] = search2;
+                }
+            }
+            if (!string.IsNullOrEmpty(search3))
+            {
+                if (DateTime.TryParse(search3, out DateTime date))
+                {
+                    DateTime searchDate = DateTime.Parse(search3);
+                    contracts = contracts.Where(m => m.validityperiod == searchDate).Select(m => m).ToList();
+                    ViewData["search3"] = search3;
+                }
+            }
+
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
+            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
+            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
             contracts = sort switch
             {
                 SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
-                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name)
+                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name),
+                SortState.UserTelAsc => contracts.OrderBy(j => j.id),
+                SortState.UserTelDesc => contracts.OrderByDescending(j => j.id),
+                SortState.UserEmailAsc => contracts.OrderBy(j => j.dateconclusion),
+                SortState.UserEmailDesc => contracts.OrderByDescending(j => j.dateconclusion),
+                SortState.OrgNameAsc => contracts.OrderBy(j => j.validityperiod),
+                SortState.OrgNameDesc => contracts.OrderByDescending(j => j.validityperiod)
             };
 
             return View(contracts);

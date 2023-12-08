@@ -17,12 +17,57 @@
         </ol>
     </div>  
     <hr>
+    <div onclick="openSearches()"><span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span><i class="fa fa-angle-left arrow"></i></div>
+    <div id="searches" style="display: none;" style="margin-bottom: 10px;">
     <form class="navbar-search" method="get">
         <div class="rel" style="display:flex; align-items:center;width:350px">
             <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Название организации">
+            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="ФИО">
         </div>
     </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search1"]" name="search1" class="form-control" placeholder="Телефон">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search2"]" name="search2" class="form-control" placeholder="Email">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search3"]" name="search3" class="form-control" placeholder="Роль">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px; margin-top: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search4"]" name="search4" class="form-control" placeholder="Название муниципалитета">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search5"]" name="search5" class="form-control" placeholder="Название населенного пункта">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search6"]" name="search6" class="form-control" placeholder="Название организации">
+        </div>
+    </form>
+    </div>
     <hr>
     <div class="page-content fade-in-up">
         <div class="ibox">
@@ -38,38 +83,36 @@
                     <thead>
                         <tr role="row">
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 260px; font-size: 14px;">
-                                Фамилия
+                                ФИО
                                 <a asp-action="User" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
-                                Имя
-                            </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
-                                Отчество
-                            </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Телефон
+                                            <a asp-action="User" asp-route-sort="@ViewData["UserTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 E-mail
+                                            <a asp-action="User" asp-route-sort="@ViewData["UserEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Роль
+                                            <a asp-action="User" asp-route-sort="@ViewData["OrgNameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Муниципалитет
+                                            <a asp-action="User" asp-route-sort="@ViewData["UserRoleSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Населенный пункт
+                                            <a asp-action="User" asp-route-sort="@ViewData["OrgTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
                                         <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
                                 Организация
+                                            <a asp-action="User" asp-route-sort="@ViewData["OrgEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="15"></a>
                             </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
-                                Логин
                             </th>
-                                        <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
-                                Пароль
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px; font-size: 14px;">
+                                Действия
                             </th>
                         </tr>
                     </thead>
@@ -77,17 +120,14 @@
                     @foreach(var user in Model)
                     {
                         <tr role="row" class="odd">
-                            <td style="font-size: 14px;">@user.surname</td>
-                            <td style="font-size: 14px;">@user.name</td>
-                            <td style="font-size: 14px;">@user.patronymic</td>
+                            <td style="font-size: 14px;">@user.surname @user.name<br>@user.patronymic</td>
                             <td style="font-size: 14px;">@user.telephone</td>
                             <td style="font-size: 14px;">@user.email</td>
                             <td style="font-size: 14px;">@user.Role.name</td>
                             <td style="font-size: 14px;">@user.Municipality.name</td>
                             <td style="font-size: 14px;">@user.Locality.name</td>
                             <td style="font-size: 14px;">@user.Organization.name</td>
-                            <td style="font-size: 14px;">@user.login</td>
-                            <td style="font-size: 14px;">@user.password</td>
+                                            <td style="font-size: 14px;"><a href="/user/edit/@user.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a></td>
                         </tr>
                     }
                     </tbody>

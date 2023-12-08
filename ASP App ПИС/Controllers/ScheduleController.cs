@@ -21,7 +21,7 @@ namespace ASP_App_ПИС.Controllers
             _configuration = config;
         }
 
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, SortState sort = SortState.NameAsc)
         {
             var schedules = await _service.GetSchedules();
             var acts = await _service.GetActsCapture();
@@ -31,6 +31,14 @@ namespace ASP_App_ПИС.Controllers
             {
                 schedules = schedules.Where(m => m.Contract_Locality.Locality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
+            }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                if (DateTime.TryParse(search1, out DateTime date))
+                {
+                    schedules = schedules.Where(m => m.dateapproval == date).Select(m => m).ToList();
+                    ViewData["search1"] = search1;
+                }
             }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
@@ -87,6 +95,7 @@ namespace ASP_App_ПИС.Controllers
 
             Schedule lastSched = await _service.GetLastSchedule(localityid);
             int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            var locality = await _service.GetOneLocality(localityid);
 
             // вместе со всем добавить строку в журнал
             Journal jo = new Journal
@@ -95,7 +104,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = lastSched.id,
-                description = $"Добавлен план-график: {localityid} - {dateapproval.ToString("dd.MM.yyyy")}"
+                description = $"Добавлен план-график: {locality.name} - {dateapproval.ToString("dd.MM.yyyy")}"
             };
             await _service.AddJournal(jo);
 

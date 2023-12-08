@@ -3,6 +3,7 @@ using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ASP_App_ПИС.Models;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -18,10 +19,89 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/animal/{id}")]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, string search, string search1, string search2, string search3,
+            string search4, string search5, string search6, string search7, string search8, SortState sort = SortState.NameAsc)
         {
             ViewData["id"] = id;
             var animals = await _service.GetAnimals(id);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                animals = animals.Where(m => m.category.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                animals = animals.Where(m => m.sex.Contains(search1, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search1"] = search1;
+            }
+            if (!string.IsNullOrEmpty(search2))
+            {
+                animals = animals.Where(m => m.breed.Contains(search2, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search2"] = search2;
+            }
+            if (!string.IsNullOrEmpty(search3))
+            {
+                animals = animals.Where(m => m.size.Contains(search3, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search3"] = search3;
+            }
+            if (!string.IsNullOrEmpty(search4))
+            {
+                animals = animals.Where(m => m.wool.Contains(search4, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search4"] = search4;
+            }
+            if (!string.IsNullOrEmpty(search5))
+            {
+                animals = animals.Where(m => m.color.Contains(search5, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search5"] = search5;
+            }
+            if (!string.IsNullOrEmpty(search6))
+            {
+                animals = animals.Where(m => m.ears.Contains(search6, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search6"] = search6;
+            }
+            if (!string.IsNullOrEmpty(search7))
+            {
+                animals = animals.Where(m => m.tail.Contains(search7, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search7"] = search7;
+            }
+            if (!string.IsNullOrEmpty(search8))
+            {
+                animals = animals.Where(m => m.specsings.Contains(search8, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search8"] = search8;
+            }
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
+            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
+            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
+            ViewData["UserRoleSort"] = sort == SortState.UserRoleAsc ? SortState.UserRoleDesc : SortState.UserRoleAsc;
+            ViewData["OrgTelSort"] = sort == SortState.OrgTelAsc ? SortState.OrgTelDesc : SortState.OrgTelAsc;
+            ViewData["OrgEmailSort"] = sort == SortState.OrgEmailAsc ? SortState.OrgEmailDesc : SortState.OrgEmailAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
+            animals = sort switch
+            {
+                SortState.NameAsc => animals.OrderBy(j => j.category),
+                SortState.NameDesc => animals.OrderByDescending(j => j.category),
+                SortState.UserTelAsc => animals.OrderBy(j => j.sex),
+                SortState.UserTelDesc => animals.OrderByDescending(j => j.sex),
+                SortState.UserEmailAsc => animals.OrderBy(j => j.breed),
+                SortState.UserEmailDesc => animals.OrderByDescending(j => j.breed),
+                SortState.OrgNameAsc => animals.OrderBy(j => j.size),
+                SortState.OrgNameDesc => animals.OrderByDescending(j => j.size),
+                SortState.UserRoleAsc => animals.OrderBy(j => j.wool),
+                SortState.UserRoleDesc => animals.OrderByDescending(j => j.wool),
+                SortState.OrgTelAsc => animals.OrderBy(j => j.color),
+                SortState.OrgTelDesc => animals.OrderByDescending(j => j.color),
+                SortState.OrgEmailAsc => animals.OrderBy(j => j.ears),
+                SortState.OrgEmailDesc => animals.OrderByDescending(j => j.ears),
+                SortState.DateAsc => animals.OrderBy(j => j.tail),
+                SortState.DateDesc => animals.OrderByDescending(j => j.tail),
+                SortState.NumberAsc => animals.OrderBy(j => j.specsings),
+                SortState.NumberDesc => animals.OrderByDescending(j => j.specsings)
+            };
+
             return View(animals);
         }
 

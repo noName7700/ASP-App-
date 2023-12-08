@@ -619,5 +619,18 @@ namespace ASP_App_ПИС.Services
             var response = await _client.GetAsync($"/api/Reports/register/schedule");
             return await response.ReadContentAsync<IEnumerable<Report>>();
         }
+
+        public async Task<HttpResponseMessage> EditUser(int id, Usercapture value)
+        {
+            string jsonString = JsonSerializer.Serialize(value);
+            HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return await _client.PutAsync($"/api/User/put/{id}", content);
+        }
+
+        public async Task<Usercapture> GetOneUser(int id)
+        {
+            var response = await _client.GetAsync($"/api/User/one/{id}");
+            return await response.ReadContentAsync<Usercapture>();
+        }
     }
 }

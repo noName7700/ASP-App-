@@ -1,6 +1,6 @@
 ﻿@using System.Collections
-@using Domain
-@model int; // это id муниципалитета
+@using Domain;
+@model Usercapture; // это id муниципалитета
 
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
@@ -14,14 +14,14 @@
                 <a href="/user/">Список пользователей</a>
             </li>
             <li class="breadcrumb-item">
-                Добавить пользователя
+                Изменить пользователя
             </li>
         </ol>
     </div>
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
-                <div class="ibox-title">Новый пользователь</div>
+                <div class="ibox-title">Изменить пользователя</div>
             </div>
             @if (ViewData["err"] != null)
             {
@@ -35,7 +35,7 @@
                     <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="surname">Фамилия:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="surname" type="text" name="surname" required>
+                            <input class="form-control" id="surname" type="text" name="surname" value=@Model.surname required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
@@ -45,7 +45,7 @@
                     <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="name">Имя:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="name" type="text" name="name" required>
+                            <input class="form-control" id="name" type="text" name="name" value=@Model.name required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
@@ -55,7 +55,7 @@
                     <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="patron">Отчество (при наличии):</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="patron" type="text" name="patronymic" required>
+                            <input class="form-control" id="patron" type="text" name="patronymic" value=@Model.patronymic required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
@@ -66,7 +66,7 @@
                     <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="telephone">Номер телефона:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="telephone" type="tel" name="telephone" required>
+                            <input class="form-control" id="telephone" type="tel" name="telephone" value=@Model.telephone required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
@@ -77,7 +77,7 @@
                     <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="email">E-mail:</label>
                         <div class="col-sm-8">
-                            <input class="form-control" id="email" type="email" name="email" required>
+                            <input class="form-control" id="email" type="email" name="email" value=@Model.email required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             <span class="help-block">
                                 <span></span>
@@ -91,7 +91,14 @@
                             <select class="form-control" id="role" name="role" required>
                                 @foreach (Role rol in (IEnumerable)ViewData["roles"])
                                 {
-                                    <option value="@rol.id">@rol.name</option>
+                                    if (rol.id == Model.roleid)
+                                    {
+                                        <option selected value="@rol.id">@rol.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@rol.id">@rol.name</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -101,11 +108,18 @@
                         <label class="col-sm-2 col-form-label" for="munname">Муниципалитет:</label>
                         <div class="col-sm-8">
                             <select class="form-control" id="munname" name="municipality" required>
-                            <option value="0">-</option>
-                            @foreach (Municipality mun in (IEnumerable)ViewData["muns"])
-                            {
-                                <option value="@mun.id">@mun.name</option>
-                            }
+                                <option value="0">-</option>
+                                @foreach (Municipality mun in (IEnumerable)ViewData["muns"])
+                                {
+                                    if (mun.id == Model.municipalityid)
+                                    {
+                                        <option selected value="@mun.id">@mun.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@mun.id">@mun.name</option>
+                                    }
+                                }
                             </select>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
@@ -116,9 +130,16 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="localityy" name="locality" required>
                                 @foreach (Locality loc in (IEnumerable)ViewData["locs"])
-                            {
-                                <option value="@loc.id">@loc.name</option>
-                            }
+                                {
+                                    if (loc.id == Model.localityid)
+                                    {
+                                        <option selected value="@loc.id">@loc.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@loc.id">@loc.name</option>
+                                    }
+                                }
                             </select>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
@@ -129,15 +150,22 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="organization" name="organization" required>
                                 @foreach (Organization org in (IEnumerable)ViewData["orgs"])
-                            {
-                                <option value="@org.id">@org.name</option>
-                            }
+                                {
+                                    if (org.id == Model.organizationid)
+                                    {
+                                        <option selected value="@org.id">@org.name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@org.id">@org.name</option>
+                                    }
+                                }
                             </select>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                     </div>
 
-                    <div class="form-group row has-feedback">
+                    @* <div class="form-group row has-feedback">
                         <label class="col-sm-2 col-form-label" for="login">Логин:</label>
                         <div class="col-sm-8">
                             <input class="form-control" id="login" type="text" name="login" required>
@@ -157,10 +185,10 @@
                                 <span></span>
                             </span>
                         </div>
-                    </div>
+                    </div> *@
 
                     <div class="col-sm-10 ml-sm-auto">
-                        <a href="/user/add" ><button class="btn btn-info" type="submit">Добавить</button></a>
+                        <a href="/user/add"><button class="btn btn-info" type="submit">Добавить</button></a>
                     </div>
                 </form>
             </div>
@@ -170,39 +198,39 @@
 </div>
 <script src="~/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
 <script>
-let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "44370"))
-$('#locality-div').hide();
-$('#munname').change(function(e) {
-    let val = $(this).val();
-    console.log(val)
-    if (val != '0') {
-        $('#locality-div').show();
-        $.ajax({
-            url: `https://localhost:${port}/api/Locality/` + val,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: "GET",
-            dataType: "json",
-            success: function(data) {
-                let locs = $("#localityy");
-                locs.empty();
-                $.each(data, function(index, locality) {
-                    locs.append($("<option />",
-                        {
-                            value: locality.id,
-                            text: locality.name
-                        }));
-                })
-            },
-            error: function(result, status, err) {
-                console.log("error:" + result + " status" + status + " err" + err)
-            }
-        });
-    }
-    else {
+    let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "44370"))
         $('#locality-div').hide();
-    }
-});
+    $('#munname').change(function (e) {
+        let val = $(this).val();
+        console.log(val)
+        if (val != '0') {
+            $('#locality-div').show();
+            $.ajax({
+                url: `https://localhost:${port}/api/Locality/` + val,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    let locs = $("#localityy");
+                    locs.empty();
+                    $.each(data, function (index, locality) {
+                        locs.append($("<option />",
+                            {
+                                value: locality.id,
+                                text: locality.name
+                            }));
+                    })
+                },
+                error: function (result, status, err) {
+                    console.log("error:" + result + " status" + status + " err" + err)
+                }
+            });
+        }
+        else {
+            $('#locality-div').hide();
+        }
+    });
 </script>

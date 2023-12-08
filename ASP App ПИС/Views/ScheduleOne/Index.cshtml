@@ -24,13 +24,29 @@
         </ol>
     </div>
     <hr>
-    <form class="navbar-search" method="get">
+    <div onclick="openSearches()"><span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span><i class="fa fa-angle-left arrow"></i></div>
+    <div id="searches" style="display: none;">
+        <form class="navbar-search" method="get" style="margin-bottom: 10px;">
         <div class="rel" style="display:flex;width:500px">
-            <label for="namelocsearch" style="margin: auto 0;margin-left: 15px;width:270px;">Поиск по дате начала</label>
             <span class="search-icon" style="margin: auto 15px;"><i class="ti-search"></i></span>
-            <input id="namelocsearch" value="@ViewData["search"]" name="search" class="form-control" placeholder="dd.MM.yyyy">
+            <input id="namelocsearch" value="@ViewData["search"]" name="search" class="form-control" placeholder="Дата начала - dd.MM.yyyy">
         </div>
     </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search1"]" name="search1" class="form-control" placeholder="Дата окончания - dd.MM.yyyy">
+        </div>
+    </form>
+
+    <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+        <div class="rel" style="display:flex; align-items:center;width:350px">
+            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+            <input value="@ViewData["search2"]" name="search2" class="form-control" placeholder="Количество животных">
+        </div>
+    </form>
+    </div>
     <hr>
     <div class="page-content fade-in-up">
         <div class="ibox">
@@ -46,8 +62,14 @@
                                 Дата начала
                                 <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Дата окончания</th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Количество животных</th>
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                Дата окончания
+                                            <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                </th>
+                            <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                Количество животных
+                                            <a asp-action="Index" asp-route-sort="@ViewData["NumberSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                         </tr>
                     </thead>
@@ -93,4 +115,15 @@
     let res = confirm("Подтвердите действие");
     if (!res) return false;
 });
+
+    function openSearches() {
+        var blocks = document.getElementById("searches");
+
+        if (blocks.style.display !== "none") {
+            blocks.style.display = "none";
+        }
+        else {
+            blocks.style.display = "block";
+        }
+    };
 </script>

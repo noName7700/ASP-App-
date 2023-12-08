@@ -19,7 +19,7 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc)
         {
             // поменять - тут я нахожу все контракты по id пользователя и вывожу их
             // при нажатии на кнопку просмотр открывается страница ViewLocActs на которой населенные пункты по этому контракту (из contract_locality)
@@ -44,11 +44,46 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
+            if (!string.IsNullOrEmpty(search1))
+            {
+                contracts = contracts.Where(m => m.id.ToString().Contains(search1, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search1"] = search1;
+            }
+
+            if (!string.IsNullOrEmpty(search2))
+            {
+                if (DateTime.TryParse(search2, out DateTime date))
+                {
+                    DateTime searchDate = DateTime.Parse(search2);
+                    contracts = contracts.Where(m => m.dateconclusion == searchDate).Select(m => m).ToList();
+                    ViewData["search2"] = search2;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(search3))
+            {
+                if (DateTime.TryParse(search3, out DateTime date))
+                {
+                    DateTime searchDate = DateTime.Parse(search3);
+                    contracts = contracts.Where(m => m.validityperiod == searchDate).Select(m => m).ToList();
+                    ViewData["search3"] = search3;
+                }
+            }
+
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewData["DescSort"] = sort == SortState.DescAsc ? SortState.DescDesc : SortState.DescAsc;
             contracts = sort switch
             {
                 SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
-                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name)
+                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name),
+                SortState.NumberAsc => contracts.OrderBy(j => j.id),
+                SortState.NumberDesc => contracts.OrderByDescending(j => j.id),
+                SortState.DateAsc => contracts.OrderBy(j => j.dateconclusion),
+                SortState.DateDesc => contracts.OrderByDescending(j => j.dateconclusion),
+                SortState.DescAsc => contracts.OrderBy(j => j.validityperiod),
+                SortState.DescDesc => contracts.OrderByDescending(j => j.validityperiod)
             };
 
             return View(contracts);
@@ -84,9 +119,12 @@ namespace ASP_App_ПИС.Controllers
 
             if (!string.IsNullOrEmpty(search))
             {
-                DateTime searchDate = DateTime.Parse(search);
-                acts = acts.Where(ac => ac.datecapture == searchDate).Select(m => m).ToList();
-                ViewData["search"] = search;
+                if (DateTime.TryParse(search, out DateTime date))
+                {
+                    DateTime searchDate = DateTime.Parse(search);
+                    acts = acts.Where(ac => ac.datecapture == searchDate).Select(m => m).ToList();
+                    ViewData["search"] = search;
+                }
             }
 
             var conloc = await _service.GetOneContract_LocalityFromId(id);

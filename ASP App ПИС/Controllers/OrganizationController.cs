@@ -7,19 +7,22 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Configuration;
 
 namespace ASP_App_ПИС.Controllers
 {
     public class OrganizationController : Controller
     {
         private IWebService _service;
-        public OrganizationController(IWebService service)
+        private IConfiguration _configuration;
+        public OrganizationController(IWebService service, IConfiguration configuration)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc)
         {
             var orgs = await _service.GetOrganizations();
 
@@ -28,25 +31,52 @@ namespace ASP_App_ПИС.Controllers
                 orgs = orgs.Where(o => o.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(o => o).ToList();
                 ViewData["search"] = search;
             }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                orgs = orgs.Where(o => o.telephone.Contains(search1, StringComparison.InvariantCultureIgnoreCase)).Select(o => o).ToList();
+                ViewData["search1"] = search1;
+            }
+            if (!string.IsNullOrEmpty(search2))
+            {
+                orgs = orgs.Where(o => o.email.Contains(search2, StringComparison.InvariantCultureIgnoreCase)).Select(o => o).ToList();
+                ViewData["search2"] = search2;
+            }
+            if (!string.IsNullOrEmpty(search3))
+            {
+                orgs = orgs.Where(o => o.Locality.name.Contains(search3, StringComparison.InvariantCultureIgnoreCase)).Select(o => o).ToList();
+                ViewData["search3"] = search3;
+            }
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
+            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
+            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
             orgs = sort switch
             {
                 SortState.NameAsc => orgs.OrderBy(m => m.name),
-                SortState.NameDesc => orgs.OrderByDescending(m => m.name)
+                SortState.NameDesc => orgs.OrderByDescending(m => m.name),
+                SortState.UserTelAsc => orgs.OrderBy(j => j.telephone),
+                SortState.UserTelDesc => orgs.OrderByDescending(j => j.telephone),
+                SortState.UserEmailAsc => orgs.OrderBy(j => j.email),
+                SortState.UserEmailDesc => orgs.OrderByDescending(j => j.email),
+                SortState.OrgNameAsc => orgs.OrderBy(j => j.Locality.name),
+                SortState.OrgNameDesc => orgs.OrderByDescending(j => j.Locality.name)
             };
 
             return View(orgs);
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
             if (Request.Query.TryGetValue("err", out StringValues err))
             {
                 ViewData["err"] = err;
             }
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            ViewData["locs"] = await _service.GetLocalities();
+            ViewData["muns"] = await _service.GetMunicipalities();
+            ViewData["config"] = _configuration;
             if (isAdmin)
                 return View();
             return RedirectToAction("Index");
@@ -59,8 +89,9 @@ namespace ASP_App_ПИС.Controllers
             var name = Request.Form["name"];
             var telephone = Request.Form["telephone"];
             var email = Request.Form["email"];
+            var locid = int.Parse(Request.Form["locality"]);
 
-            Organization org = new Organization { name = name, telephone = telephone, email = email };
+            Organization org = new Organization { name = name, telephone = telephone, email = email, localityid = locid };
             //await _service.AddOrganization(org);
             if ((int)_service.AddOrganization(org).Result.StatusCode == StatusCodes.Status403Forbidden)
             {
@@ -78,7 +109,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = orgLast.id,
-                description = $"Добавлена организация: {orgLast.name} - {orgLast.telephone} - {orgLast.email}"
+                description = $"Добавлена организация: {orgLast.name} - {orgLast.telephone} - {orgLast.email} - {orgLast.Locality.name}"
             };
             await _service.AddJournal(jo);
 
@@ -101,7 +132,8 @@ namespace ASP_App_ПИС.Controllers
             {
                 name = Request.Form["name"],
                 telephone = Request.Form["telephone"],
-                email = Request.Form["email"]
+                email = Request.Form["email"],
+                localityid = int.Parse(Request.Form["locality"])
             };
             await _service.EditOrganization(id, org);
 
@@ -115,7 +147,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = orgEdit.id,
-                description = $"Изменена организация: {orgEdit.name} - {orgEdit.telephone} - {orgEdit.email}"
+                description = $"Изменена организация: {orgEdit.name} - {orgEdit.telephone} - {orgEdit.email} - {orgEdit.Locality.name}"
             };
             await _service.AddJournal(jo);
 

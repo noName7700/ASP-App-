@@ -21,7 +21,7 @@ namespace ASP_App_ПИС.Controllers
 
         // тут изменила - теперь это id cont_loc
         [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.DateAsc)
+        public async Task<IActionResult> Index(int id, string search, string search1, string search2, SortState sort = SortState.DateAsc)
         {
             var tasks = await _service.GetTaskMonth(id);
 
@@ -31,12 +31,34 @@ namespace ASP_App_ПИС.Controllers
                 tasks = tasks.Where(ts => ts.startdate == searchDate).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                if (DateTime.TryParse(search1, out DateTime date))
+                {
+                    tasks = tasks.Where(ts => ts.enddate == date).Select(m => m).ToList();
+                    ViewData["search1"] = search1;
+                }
+            }
+            if (!string.IsNullOrEmpty(search2))
+            {
+                if (int.TryParse(search2, out int count))
+                {
+                    tasks = tasks.Where(m => m.countanimal.ToString().Contains(search2, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                    ViewData["search2"] = search2;
+                }
+            }
 
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
             tasks = sort switch
             {
                 SortState.DateAsc => tasks.OrderBy(sc => sc.startdate),
-                SortState.DateDesc => tasks.OrderByDescending(sc => sc.startdate)
+                SortState.DateDesc => tasks.OrderByDescending(sc => sc.startdate),
+                SortState.NameAsc => tasks.OrderBy(j => j.enddate),
+                SortState.NameDesc => tasks.OrderByDescending(j => j.enddate),
+                SortState.NumberAsc => tasks.OrderBy(j => j.countanimal),
+                SortState.NumberDesc => tasks.OrderByDescending(j => j.countanimal)
             };
 
             ViewData["id"] = id;

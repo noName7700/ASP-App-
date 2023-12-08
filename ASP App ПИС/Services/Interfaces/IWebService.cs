@@ -57,9 +57,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> EditTaskMonth(int id, TaskMonth value);
         Task<HttpResponseMessage> DeleteTaskMonth(int id);
         Task<HttpResponseMessage> AddUser(Usercapture value);
-        //Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value);
-
-        // отчет - деньги
+        Task<HttpResponseMessage> EditUser(int id, Usercapture value);
         Task<double> GetReportsMoney(int conid);
         Task<FileStreamResult> GetExcelMoney(string startdate, string enddate, int munid, double d);
         Task<FileStreamResult> GetExcelSchedule(string startdate, string enddate, int munid, int locid, int plan, int fact);
@@ -109,5 +107,6 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> AddReport(Report value);
         Task<HttpResponseMessage> EditReport(int id, Report value);
         Task<IEnumerable<Report>> GetRegisterSchedule();
+        Task<Usercapture> GetOneUser(int id);
     }
 }

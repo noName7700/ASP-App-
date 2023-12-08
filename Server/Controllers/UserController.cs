@@ -42,6 +42,19 @@ namespace Server.Controllers
                 .LastAsync();
         }
 
+        [HttpGet]
+        [Route("/api/User/one/{id}")]
+        public async Task<Usercapture> GetOne(int id)
+        {
+            return await _context.usercapture
+                .Include(u => u.Municipality)
+                .Include(u => u.Locality)
+                .Include(u => u.Organization)
+                .Include(u => u.Role)
+                .Where(u => u.id == id)
+                .FirstOrDefaultAsync();
+        }
+
         [HttpPost]
         [Route("/api/User/add")]
         public async Task Post([FromBody] Usercapture value)
@@ -69,6 +82,51 @@ namespace Server.Controllers
             else
             {
                 await _context.usercapture.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        [HttpPut]
+        [Route("/api/User/put/{id}")]
+        public async Task Put(int id, [FromBody] Usercapture value)
+        {
+            var currentUser = await _context.usercapture.FirstOrDefaultAsync(t => t.id == id);
+            if (currentUser == null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Данные пользователя введены неверно");
+            }
+            if (!Regex.IsMatch(value.surname, @"\p{IsCyrillic}"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Фамилия должна состоять только из букв.");
+            }
+            else if (!Regex.IsMatch(value.name, @"\p{IsCyrillic}"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Имя должно состоять только из букв.");
+            }
+            else if (!Regex.IsMatch(value.patronymic, @"\p{IsCyrillic}"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Отчество должно состоять только из букв.");
+            }
+            else if (value.telephone.Length != 11)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");
+            }
+            else
+            {
+                currentUser.surname = value.surname;
+                currentUser.name = value.name;
+                currentUser.patronymic = value.patronymic;
+                currentUser.roleid = value.roleid;
+                currentUser.municipalityid = value.municipalityid;
+                currentUser.localityid = value.localityid;
+                currentUser.organizationid = value.organizationid;
+                currentUser.telephone = value.telephone;
+                currentUser.email = value.email;
                 await _context.SaveChangesAsync();
             }
         }

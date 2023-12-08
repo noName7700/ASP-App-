@@ -1,4 +1,5 @@
-﻿using ASP_App_ПИС.Services.Interfaces;
+﻿using ASP_App_ПИС.Models;
+using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,33 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/money")]
-        public async Task<IActionResult> RegisterMoney()
+        public async Task<IActionResult> RegisterMoney(string search, string search1, SortState sort = SortState.NameAsc)
         {
             var regMoney = await _service.GetRegisterMoney();
+            if (!string.IsNullOrEmpty(search))
+            {
+                regMoney = regMoney.Where(m => m.statuc.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                if (DateTime.TryParse(search1, out DateTime date))
+                {
+                    regMoney = regMoney.Where(m => m.datestatus == date).Select(m => m).ToList();
+                    ViewData["search1"] = search1;
+                }
+            }
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            regMoney = sort switch
+            {
+                SortState.NameAsc => regMoney.OrderBy(j => j.statuc),
+                SortState.NameDesc => regMoney.OrderByDescending(j => j.statuc),
+                SortState.DateAsc => regMoney.OrderBy(j => j.datestatus),
+                SortState.DateDesc => regMoney.OrderByDescending(j => j.datestatus)
+            };
+
             return View(regMoney);
         }
 
@@ -33,10 +58,34 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/schedule")]
-        public async Task<IActionResult> RegisterSchedule()
+        public async Task<IActionResult> RegisterSchedule(string search, string search1, SortState sort = SortState.NameAsc)
         {
-            var regMoney = await _service.GetRegisterSchedule();
-            return View(regMoney);
+            var regSchedule = await _service.GetRegisterSchedule();
+            if (!string.IsNullOrEmpty(search))
+            {
+                regSchedule = regSchedule.Where(m => m.statuc.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                ViewData["search"] = search;
+            }
+            if (!string.IsNullOrEmpty(search1))
+            {
+                if (DateTime.TryParse(search1, out DateTime date))
+                {
+                    regSchedule = regSchedule.Where(m => m.datestatus == date).Select(m => m).ToList();
+                    ViewData["search1"] = search1;
+                }
+            }
+
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            regSchedule = sort switch
+            {
+                SortState.NameAsc => regSchedule.OrderBy(j => j.statuc),
+                SortState.NameDesc => regSchedule.OrderByDescending(j => j.statuc),
+                SortState.DateAsc => regSchedule.OrderBy(j => j.datestatus),
+                SortState.DateDesc => regSchedule.OrderByDescending(j => j.datestatus)
+            };
+
+            return View(regSchedule);
         }
 
         [HttpGet]

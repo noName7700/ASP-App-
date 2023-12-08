@@ -22,12 +22,22 @@
                 </ol>
             </div>
     <hr>
-    <form class="navbar-search" method="get">
-        <div class="rel" style="display:flex; align-items:center;width:350px">
-            <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
-            <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Наименование населенного пункта">
-        </div>
-    </form>
+    <div onclick="openSearches()"><span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span><i class="fa fa-angle-left arrow"></i></div>
+    <div id="searches" style="display: none;">
+        <form class="navbar-search" method="get" style="margin-bottom: 10px; margin-top: 10px;">
+            <div class="rel" style="display:flex; align-items:center;width:350px">
+                <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+                <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Название населенного пункта">
+            </div>
+        </form>
+
+        <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+            <div class="rel" style="display:flex; align-items:center;width:350px">
+                <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+                <input value="@ViewData["search1"]" name="search1" class="form-control" placeholder="Дата утверждения - dd.MM.yyyy">
+            </div>
+        </form>
+    </div>
     <hr>
             <div class="page-content fade-in-up">
                 <div class="ibox">
@@ -98,3 +108,15 @@
             </div>
             <!-- END PAGE CONTENT-->
         </div>
+            <script>
+                function openSearches() {
+                    var blocks = document.getElementById("searches");
+
+                    if (blocks.style.display !== "none") {
+                        blocks.style.display = "none";
+                    }
+                    else {
+                        blocks.style.display = "block";
+                    }
+                };
+            </script>

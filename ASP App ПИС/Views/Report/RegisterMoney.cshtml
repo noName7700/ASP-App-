@@ -14,6 +14,25 @@
             </li>
         </ol>
     </div>
+    <hr>
+    <div onclick="openSearches()"><span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span><i class="fa fa-angle-left arrow"></i></div>
+    <div id="searches" style="display: none;">
+        <form class="navbar-search" method="get" style="margin-bottom: 10px; margin-top: 10px;">
+            <div class="rel" style="display:flex; align-items:center;width:350px">
+                <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+                <input value="@ViewData["search"]" name="search" class="form-control" placeholder="Статус">
+            </div>
+        </form>
+
+        <form class="navbar-search" method="get" style="margin-bottom: 10px;">
+            <div class="rel" style="display:flex; align-items:center;width:350px">
+                <span class="search-icon" style="margin: 0px 15px;"><i class="ti-search"></i></span>
+                <input value="@ViewData["search1"]" name="search1" class="form-control" placeholder="dd.MM.yyyy">
+            </div>
+        </form>
+    </div>
+    <hr>
+
     <div class="page-content fade-in-up">
         <div class="ibox">
             <div class="ibox-head">
@@ -35,9 +54,11 @@
                                             <tr role="row">
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Статус
+                                                    <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Дата установки статуса
+                                                    <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Отчёт</th>
 
@@ -62,4 +83,15 @@
     </div>
     <!-- END PAGE CONTENT-->
 </div>
+            <script>
+                function openSearches() {
+                    var blocks = document.getElementById("searches");
 
+                    if (blocks.style.display !== "none") {
+                        blocks.style.display = "none";
+                    }
+                    else {
+                        blocks.style.display = "block";
+                    }
+                };
+            </script>
