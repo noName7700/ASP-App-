@@ -172,9 +172,10 @@
 <script>
 let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "44370"))
 $('#locality-div').hide();
+$('#organization-div').hide();
 $('#munname').change(function(e) {
     let val = $(this).val();
-    console.log(val)
+    let locs = $("#localityy");
     if (val != '0') {
         $('#locality-div').show();
         $.ajax({
@@ -186,8 +187,8 @@ $('#munname').change(function(e) {
             type: "GET",
             dataType: "json",
             success: function(data) {
-                let locs = $("#localityy");
                 locs.empty();
+                firstLoc = data[0].id;
                 $.each(data, function(index, locality) {
                     locs.append($("<option />",
                         {
@@ -200,9 +201,68 @@ $('#munname').change(function(e) {
                 console.log("error:" + result + " status" + status + " err" + err)
             }
         });
+            let valLoc = $("#localityy option:selected").val();
+            console.log(valLoc);
+            $('#organization-div').show();
+            $.ajax({
+                url: `https://localhost:${port}/api/Organization/one/loc/` + valLoc,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    let orgs = $("#organization");
+                    orgs.empty();
+                    $.each(data, function(index, organization) {
+                        orgs.append($("<option />",
+                            {
+                                value: organization.id,
+                                text: organization.name
+                            }));
+                    })
+                },
+                error: function(result, status, err) {
+                    console.log("error:" + result + " status" + status + " err" + err)
+                }
+            });
     }
     else {
         $('#locality-div').hide();
+    }
+});
+
+$('#localityy').change(function(e) {
+    let val = $(this).val();
+    if (val != '0') {
+        $('#organization-div').show();
+        $.ajax({
+            url: `https://localhost:${port}/api/Organization/one/loc/` + val,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                let orgs = $("#organization");
+                orgs.empty();
+                $.each(data, function(index, org) {
+                    orgs.append($("<option />",
+                        {
+                            value: org.id,
+                            text: org.name
+                        }));
+                })
+            },
+            error: function(result, status, err) {
+                console.log("error:" + result + " status" + status + " err" + err)
+            }
+        });
+    }
+    else {
+        $('#organization-div').hide();
     }
 });
 </script>

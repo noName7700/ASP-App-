@@ -18,7 +18,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/locality/{id}")]
-        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.NameAsc, int page = 1)
         {
             var localities = await _service.GetLocalitiesFromMunId(id);
 
@@ -38,7 +38,14 @@ namespace ASP_App_ПИС.Controllers
             ViewData["id"] = id;
             var munname = await _service.GetMunicipalityForId(id);
             ViewData["munname"] = munname.name;
-            return View(localities);
+
+            // пагинация
+            int pageSize = 10; /* размер строк на одну стр */
+            var locsForPage = localities.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(localities.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(locsForPage); // !!!!!! тут передаю только 10 нас. пунктов, можешь потом удалить этот комментарий !!!!!!
         }
 
         [HttpGet]

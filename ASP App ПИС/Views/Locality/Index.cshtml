@@ -61,6 +61,26 @@
                     }
                     </tbody>
                 </table>
+
+                 <!-- ПАГИНАЦИЯ (надо бы еще стили подправить) -->
+                @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
+                {
+                    <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark">
+                        <button class="btn btn-default labeled">
+                            <span class="btn-label"><i class="fa fa-backward"></i></span>  Назад
+                        </button>
+                    </a>
+                }
+                @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
+                {
+                    <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark">
+                        <button class="btn btn-default labeled right">Вперед  
+                            <span class="btn-label"><i class="fa fa-forward"></i></span>
+                        </button>
+                    </a>
+                }
+                 <!-- КОНЕЦ ПАГИНАЦИИ-->
+
                 @if (isAdmin)
                 {
                     <div id="example-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4">

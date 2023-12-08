@@ -11,9 +11,11 @@ namespace ASP_App_ПИС.Controllers
     public class ReportController : Controller
     {
         private IWebService _service;
-        public ReportController(IWebService service)
+        private IConfiguration _configuration;
+        public ReportController(IWebService service, IConfiguration configuration)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -250,6 +252,7 @@ namespace ASP_App_ПИС.Controllers
 
             IEnumerable<Locality> locs = await _service.GetLocalities();
             ViewData["locs"] = locs;
+            ViewData["config"] = _configuration;
             return View(contracts);
         }
 
