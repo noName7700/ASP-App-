@@ -4,6 +4,21 @@
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 
+<style>
+    .labeled {
+        border-width: 0px;
+    }
+
+        .labeled:hover {
+            border: 1px solid gray;
+        }
+
+    .no-border, no-border:hover {
+        border-style: none;
+        padding: 0px;
+    }
+</style>
+
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -65,7 +80,7 @@
                  <!-- ПАГИНАЦИЯ (надо бы еще стили подправить) -->
                 @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
                 {
-                    <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark">
+                            <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
                         <button class="btn btn-default labeled">
                             <span class="btn-label"><i class="fa fa-backward"></i></span>  Назад
                         </button>
@@ -73,7 +88,7 @@
                 }
                 @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                 {
-                    <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark">
+                            <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
                         <button class="btn btn-default labeled right">Вперед  
                             <span class="btn-label"><i class="fa fa-forward"></i></span>
                         </button>

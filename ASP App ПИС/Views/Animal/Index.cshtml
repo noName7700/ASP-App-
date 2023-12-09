@@ -8,6 +8,21 @@
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 
+<style>
+    .labeled {
+        border-width: 0px;
+    }
+
+    .labeled:hover {
+        border: 1px solid gray;
+    }
+
+    .no-border, no-border:hover {
+        border-style: none;
+        padding: 0px;
+    }
+</style>
+
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -172,6 +187,24 @@
                     }
                     </tbody>
                 </table>
+                            <!-- ПАГИНАЦИЯ (надо бы еще стили подправить) -->
+                            @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
+                            {
+                                <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
+                                    <button class="btn btn-default labeled">
+                                        <span class="btn-label"><i class="fa fa-backward"></i></span>
+                                    </button>
+                                </a>
+                            }
+                            @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
+                            {
+                                <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                    <button class="btn btn-default labeled right">
+                                        <span class="btn-label"><i class="fa fa-forward"></i></span>
+                                    </button>
+                                </a>
+                            }
+                            <!-- КОНЕЦ ПАГИНАЦИИ-->
                             <a href="/animal/add/@ViewData["id"]"><button class="btn btn-success">Добавить</button></a>
                         
                         </div>
