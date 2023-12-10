@@ -21,6 +21,8 @@
         NumberAsc,
         NumberDesc,
         DescAsc,
-        DescDesc
+        DescDesc,
+        DateActionAsc,
+        DateActionDesc,
     }
 }
