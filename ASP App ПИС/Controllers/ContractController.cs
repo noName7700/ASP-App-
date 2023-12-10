@@ -63,19 +63,19 @@ namespace ASP_App_ПИС.Controllers
 
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
-            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
+            ViewData["NumberSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
+            ViewData["DateSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
             ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
             contracts = sort switch
             {
                 SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
                 SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name),
-                SortState.UserTelAsc => contracts.OrderBy(j => j.id),
-                SortState.UserTelDesc => contracts.OrderByDescending(j => j.id),
-                SortState.UserEmailAsc => contracts.OrderBy(j => j.dateconclusion),
-                SortState.UserEmailDesc => contracts.OrderByDescending(j => j.dateconclusion),
-                SortState.OrgNameAsc => contracts.OrderBy(j => j.validityperiod),
-                SortState.OrgNameDesc => contracts.OrderByDescending(j => j.validityperiod)
+                SortState.NumberAsc => contracts.OrderBy(j => j.id),
+                SortState.NumberDesc => contracts.OrderByDescending(j => j.id),
+                SortState.DateAsc => contracts.OrderBy(j => j.dateconclusion),
+                SortState.DateDesc => contracts.OrderByDescending(j => j.dateconclusion),
+                SortState.DateActionAsc => contracts.OrderBy(j => j.validityperiod),
+                SortState.DateActionDesc => contracts.OrderByDescending(j => j.validityperiod)
             };
 
             return View(contracts);
