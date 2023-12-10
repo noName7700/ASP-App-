@@ -77,12 +77,11 @@
                     </tbody>
                 </table>
 
-                 <!-- ПАГИНАЦИЯ (надо бы еще стили подправить) -->
                 @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
                 {
                     <a asp-action="Index" asp-route-sort="@((SortState)ViewData["NameSort"] == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
                         <button class="btn btn-default labeled">
-                            <span class="btn-label"><i class="fa fa-backward"></i></span>  Назад
+                            <span class="btn-label"><i class="fa fa-backward"></i></span>
                         </button>
                     </a>
                 }
@@ -94,7 +93,6 @@
                         </button>
                     </a>
                 }
-                 <!-- КОНЕЦ ПАГИНАЦИИ-->
 
                 @if (isAdmin)
                 {

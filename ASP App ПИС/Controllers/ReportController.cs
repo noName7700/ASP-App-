@@ -20,7 +20,7 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/money")]
-        public async Task<IActionResult> RegisterMoney(string search, string search1, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> RegisterMoney(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
         {
             var regMoney = await _service.GetRegisterMoney();
             if (!string.IsNullOrEmpty(search))
@@ -47,7 +47,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DateDesc => regMoney.OrderByDescending(j => j.datestatus)
             };
 
-            return View(regMoney);
+            int pageSize = 10;
+            var repsForPage = regMoney.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(regMoney.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(repsForPage);
         }
 
         [HttpGet]
@@ -60,7 +65,7 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/schedule")]
-        public async Task<IActionResult> RegisterSchedule(string search, string search1, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> RegisterSchedule(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
         {
             var regSchedule = await _service.GetRegisterSchedule();
             if (!string.IsNullOrEmpty(search))
@@ -87,7 +92,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DateDesc => regSchedule.OrderByDescending(j => j.datestatus)
             };
 
-            return View(regSchedule);
+            int pageSize = 10;
+            var repsForPage = regSchedule.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(regSchedule.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(repsForPage);
         }
 
         [HttpGet]
@@ -182,7 +192,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
             var repCur = await _service.GetOneRegisterMoney(id);
-            double priceItog; DateTime start; DateTime end; int munid;
+            double priceItog; DateTime start; DateTime end; int munid; string status;
             if (repCur.statuc == "Доработка" && role == "Оператор ОМСУ")
             {
                 int idContract = int.Parse(Request.Form["contract"]);
@@ -192,6 +202,7 @@ namespace ASP_App_ПИС.Controllers
                 start = con.dateconclusion;
                 end = con.validityperiod;
                 munid = con.municipalityid;
+                status = "Доработка";
             }
             else
             {
@@ -199,11 +210,12 @@ namespace ASP_App_ПИС.Controllers
                 end = repCur.enddate;
                 priceItog = repCur.summ;
                 munid = repCur.municipalityid;
+                status = Request.Form["status"];
             }
             Report rep = new Report
             {
                 numreport = 1,
-                statuc = Request.Form["status"],
+                statuc = status,
                 startdate = start,
                 enddate = end,
                 localityname = "0",

@@ -23,7 +23,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc, int page = 1)
         {
             var municipalities = await _service.GetMunicipalities();
 
@@ -39,7 +39,13 @@ namespace ASP_App_ПИС.Controllers
                 SortState.NameAsc => municipalities.OrderBy(m => m.name),
                 SortState.NameDesc => municipalities.OrderByDescending(m => m.name)
             };
-            return View(municipalities);
+
+            int pageSize = 10;
+            var munsForPage = municipalities.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(municipalities.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(munsForPage);
         }
 
         [HttpGet]

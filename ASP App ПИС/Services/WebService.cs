@@ -322,13 +322,6 @@ namespace ASP_App_ПИС.Services
             return await _client.PostAsync($"/api/User/add", content);
         }
 
-        //public async Task<HttpResponseMessage> AddMunLoc(Municipality_Locality value)
-        //{
-        //    string jsonString = JsonSerializer.Serialize(value);
-        //    HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-        //    return await _client.PostAsync($"/api/Municipality/add-loc", content);
-        //}
-
         public async Task<double> GetReportsMoney(int conid)
         {
             var response = await _client.GetAsync($"/api/Reports/money/{conid}");

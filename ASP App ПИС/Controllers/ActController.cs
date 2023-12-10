@@ -6,6 +6,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.Extensions.Primitives;
+using System.Drawing;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -19,7 +20,7 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
         {
             // поменять - тут я нахожу все контракты по id пользователя и вывожу их
             // при нажатии на кнопку просмотр открывается страница ViewLocActs на которой населенные пункты по этому контракту (из contract_locality)
@@ -86,11 +87,16 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DescDesc => contracts.OrderByDescending(j => j.validityperiod)
             };
 
-            return View(contracts);
+            int pageSize = 10;
+            var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(contracts.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(consForPage);
         }
 
         [Route("/act/view/{id}")]
-        public async Task<IActionResult> ViewLocActs(int id, string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> ViewLocActs(int id, string search, SortState sort = SortState.NameAsc, int page = 1)
         {
             // назожу все строки из contract_locality и вывожу
             var conLoc = await _service.GetContract_LocalityFromConId(id);
@@ -102,18 +108,23 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            //ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            //conLoc = sort switch
-            //{
-            //    SortState.NameAsc => conLoc.OrderBy(sc => sc.Locality.name),
-            //    SortState.NameDesc => conLoc.OrderByDescending(sc => sc.Locality.name)
-            //};
+            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            conLoc = sort switch
+            {
+                SortState.NameAsc => conLoc.OrderBy(sc => sc.Locality.name),
+                SortState.NameDesc => conLoc.OrderByDescending(sc => sc.Locality.name)
+            };
 
-            return View(conLoc);
+            int pageSize = 10;
+            var conlocsForPage = conLoc.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(conLoc.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(conlocsForPage);
         }
 
         [Route("/act/{id}")]
-        public async Task<IActionResult> ViewActs(int id, string search, SortState sort = SortState.DateAsc)
+        public async Task<IActionResult> ViewActs(int id, string search, SortState sort = SortState.DateAsc, int page = 1)
         {
             var acts = await _service.GetActsFromConLocId(id);
 
@@ -138,7 +149,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DateDesc => acts.OrderByDescending(sc => sc.datecapture)
             };
 
-            return View(acts);
+            int pageSize = 10;
+            var actsForPage = acts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(acts.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(actsForPage);
         }
 
         [HttpGet]

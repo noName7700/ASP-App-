@@ -22,7 +22,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
         {
             var orgs = await _service.GetOrganizations();
 
@@ -63,7 +63,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.OrgNameDesc => orgs.OrderByDescending(j => j.Locality.name)
             };
 
-            return View(orgs);
+            int pageSize = 10;
+            var orgsForPage = orgs.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(orgs.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(orgsForPage);
         }
 
         [HttpGet]
