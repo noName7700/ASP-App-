@@ -58,7 +58,7 @@ namespace Server.Controllers
                 .Where(l => l.municipalityid == value.municipalityid && l.name == value.name)
                 .CountAsync();
 
-            if (!Regex.IsMatch(value.name, @"^[a-zA-Z]+$"))
+            if (!Regex.IsMatch(value.name, @"^[а-яА-Я]+$"))
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Название населенного пункта должно содержать только буквы.");
