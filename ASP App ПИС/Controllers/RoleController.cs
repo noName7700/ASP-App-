@@ -18,7 +18,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc, int page = 1)
         {
             var roles = await _service.GetRoles();
 
@@ -35,7 +35,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.NameDesc => roles.OrderByDescending(m => m.name)
             };
 
-            return View(roles);
+            int pageSize = 10;
+            var rolsForPage = roles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(roles.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(rolsForPage);
         }
 
         [HttpGet]

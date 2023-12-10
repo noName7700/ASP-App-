@@ -21,7 +21,7 @@ namespace ASP_App_ПИС.Controllers
 
         // тут изменила - теперь это id cont_loc
         [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id, string search, string search1, string search2, SortState sort = SortState.DateAsc)
+        public async Task<IActionResult> Index(int id, string search, string search1, string search2, SortState sort = SortState.DateAsc, int page = 1)
         {
             var tasks = await _service.GetTaskMonth(id);
 
@@ -64,7 +64,13 @@ namespace ASP_App_ПИС.Controllers
             ViewData["id"] = id;
             var conloc = await _service.GetOneContract_LocalityFromId(id);
             ViewData["locality"] = conloc.Locality.name;
-            return View(tasks);
+
+            int pageSize = 10;
+            var tasksForPage = tasks.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(tasks.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(tasksForPage);
         }
 
         [HttpGet]

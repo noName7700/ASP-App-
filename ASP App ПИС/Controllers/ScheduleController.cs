@@ -21,7 +21,7 @@ namespace ASP_App_ПИС.Controllers
             _configuration = config;
         }
 
-        public async Task<IActionResult> Index(string search, string search1, SortState sort = SortState.NameAsc)
+        public async Task<IActionResult> Index(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
         {
             var schedules = await _service.GetSchedules();
             var acts = await _service.GetActsCapture();
@@ -51,7 +51,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.DateDesc => schedules.OrderByDescending(sc => sc.dateapproval)
             };
 
-            return View(schedules);
+            int pageSize = 10;
+            var schsForPage = schedules.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(schedules.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(schsForPage);
         }
 
         [HttpGet]

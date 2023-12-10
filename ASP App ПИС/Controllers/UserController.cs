@@ -64,7 +64,7 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         [Route("/user")]
         public new async Task<IActionResult> User(string search, string search1, string search2, string search3,
-            string search4, string search5, string search6, SortState sort = SortState.NameAsc)
+            string search4, string search5, string search6, SortState sort = SortState.NameAsc, int page = 1)
         {
             var users = await _service.GetUsers();
 
@@ -129,7 +129,12 @@ namespace ASP_App_ПИС.Controllers
                 SortState.OrgEmailDesc => users.OrderByDescending(j => j.Organization.name)
             };
 
-            return View(users);
+            int pageSize = 10;
+            var usersForPage = users.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(users.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(usersForPage);
         }
 
         [HttpGet]

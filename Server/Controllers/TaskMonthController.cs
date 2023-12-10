@@ -58,15 +58,19 @@ namespace Server.Controllers
         [Route("/api/TaskMonth/add")]
         public async Task Post([FromBody] TaskMonth value)
         {
-            Contract_Locality contr = null;
+            Contract_Locality contr = null; Schedule schedule = null; int countTasks = 0;
             if (value.scheduleid != 0)
             {
-                var sched = await _context.schedule
+                schedule = await _context.schedule
                     .Include(sc => sc.Contract_Locality)
                     .ThenInclude(cl => cl.Contract)
                     .Where(sc => sc.id == value.scheduleid)
                     .FirstOrDefaultAsync();
-                contr = sched.Contract_Locality;
+                contr = schedule.Contract_Locality;
+
+                countTasks = await _context.taskmonth
+                    .Where(t => t.scheduleid == value.scheduleid && t.enddate >= value.startdate)
+                    .CountAsync();
             }
 
             if (value != null && value.scheduleid != 0 && value.startdate >= value.enddate)
@@ -79,6 +83,16 @@ namespace Server.Controllers
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Для данного населенного пункта в дату {value.startdate.ToString("dd.MM.yyyy")} контракт не действовал.");
+            }
+            else if (schedule != null && (schedule.dateapproval >= value.startdate || schedule.dateapproval >= value.enddate))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Для данного населенного пункта план-график начинает действовать с {schedule.dateapproval.ToString("D")}");
+            }
+            else if (countTasks != 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Новое задание на месяц должно начинаться, когда прошлое закончилось.");
             }
             else if (value != null && value.scheduleid != 0)
             {

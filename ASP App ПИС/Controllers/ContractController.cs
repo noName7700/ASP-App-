@@ -22,7 +22,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, 
-            SortState sort = SortState.NameAsc)
+            SortState sort = SortState.NameAsc, int page = 1)
         {
             // получаю все контракты
             var contracts = await _service.GetContracts();
@@ -77,8 +77,13 @@ namespace ASP_App_ПИС.Controllers
                 SortState.OrgNameAsc => contracts.OrderBy(j => j.validityperiod),
                 SortState.OrgNameDesc => contracts.OrderByDescending(j => j.validityperiod)
             };
+            
+            int pageSize = 10;
+            var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(contracts.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
 
-            return View(contracts);
+            return View(consForPage);
         }
 
         [HttpGet]

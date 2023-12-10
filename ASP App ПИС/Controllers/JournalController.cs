@@ -19,7 +19,7 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         [Route("/journal/{id}")]
         public async Task<IActionResult> Index(int id, string search, string search1, string search2, string search3, string search4,
-            string search5, string search6, string search7, string search8, string search9, SortState sort = SortState.NameAsc)
+            string search5, string search6, string search7, string search8, string search9, SortState sort = SortState.NameAsc, int page = 1)
         {
             var jous = await _service.GetJournal(id);
 
@@ -149,7 +149,14 @@ namespace ASP_App_ПИС.Controllers
 
             ViewData["tablenum"] = id;
             ViewData["config"] = _configuration;
-            return View(jous);
+
+            // пагинация
+            int pageSize = 10; /* размер строк на одну стр */
+            var jousForPage = jous.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(jous.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(jousForPage);
         }
 
         [HttpGet]

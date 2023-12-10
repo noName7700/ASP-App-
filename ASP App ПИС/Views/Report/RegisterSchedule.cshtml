@@ -1,6 +1,26 @@
 ﻿@using Domain;
 @model IEnumerable<Report>;
+@using System.Security.Claims
+@{
+    var claims = Context.Request.HttpContext.User.Claims;
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+    var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+}
 
+<style>
+    .labeled {
+        border-width: 0px;
+    }
+
+        .labeled:hover {
+            border: 1px solid gray;
+        }
+
+    .no-border, no-border:hover {
+        border-style: none;
+        padding: 0px;
+    }
+</style>
 <div class="content-wrapper">
     <!-- START PAGE CONTENT-->
     <div class="page-heading">
@@ -66,14 +86,33 @@
                                         <tbody>
                                             @foreach (var rep in Model)
                                             {
-                                                <tr role="row" class="odd">
-                                                    <td>@rep.statuc</td>
-                                                    <td>@rep.datestatus.ToString("D")</td>
-                                                    <td><a href="/report/register/schedule/post/@rep.id">Просмотр<i class="fa fa-eye font-14"></i></a></td>
-                                                </tr>
+                                                if ((rep.municipalityid == munId && !isAdmin) || isAdmin)
+                                                {
+                                                    <tr role="row" class="odd">
+                                                        <td>@rep.statuc</td>
+                                                        <td>@rep.datestatus.ToString("D")</td>
+                                                        <td><a href="/report/register/schedule/post/@rep.id">Просмотр<i class="fa fa-eye font-14"></i></a></td>
+                                                    </tr>
+                                                }
                                             }
                                         </tbody>
                                     </table>
+                                    @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
+                                    {
+                                        <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
+                                            <button class="btn btn-default labeled">
+                                                <span class="btn-label"><i class="fa fa-backward"></i></span>
+                                            </button>
+                                        </a>
+                                    }
+                                    @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
+                                    {
+                                        <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                            <button class="btn btn-default labeled right">
+                                                <span class="btn-label"><i class="fa fa-forward"></i></span>
+                                            </button>
+                                        </a>
+                                    }
                                 </div>
                             </div>
 
