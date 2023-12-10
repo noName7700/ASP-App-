@@ -171,6 +171,7 @@
 <script src="~/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
 <script>
 let port = @(((IConfiguration)ViewData["config"]).GetValue("ServerPort", "44370"))
+let firstLoc = 0;
 $('#locality-div').hide();
 $('#organization-div').hide();
 $('#munname').change(function(e) {
@@ -196,37 +197,36 @@ $('#munname').change(function(e) {
                             text: locality.name
                         }));
                 })
+                let valLoc = `${firstLoc}`;
+                $('#organization-div').show();
+                $.ajax({
+                    url: `https://localhost:${port}/api/Organization/one/loc/` + valLoc,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        let orgs = $("#organization");
+                        orgs.empty();
+                        $.each(data, function(index, organization) {
+                            orgs.append($("<option />",
+                                {
+                                    value: organization.id,
+                                    text: organization.name
+                                }));
+                        })
+                    },
+                    error: function(result, status, err) {
+                        console.log("error:" + result + " status" + status + " err" + err)
+                    }
+                });
             },
             error: function(result, status, err) {
                 console.log("error:" + result + " status" + status + " err" + err)
             }
         });
-            let valLoc = $("#localityy option:selected").val();
-            console.log(valLoc);
-            $('#organization-div').show();
-            $.ajax({
-                url: `https://localhost:${port}/api/Organization/one/loc/` + valLoc,
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    let orgs = $("#organization");
-                    orgs.empty();
-                    $.each(data, function(index, organization) {
-                        orgs.append($("<option />",
-                            {
-                                value: organization.id,
-                                text: organization.name
-                            }));
-                    })
-                },
-                error: function(result, status, err) {
-                    console.log("error:" + result + " status" + status + " err" + err)
-                }
-            });
     }
     else {
         $('#locality-div').hide();

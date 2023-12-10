@@ -104,7 +104,10 @@
                                     <select class="form-control" id="@loc.name" name="@loc.name" required>
                                         @foreach (Organization org in (IEnumerable<Organization>)ViewData["orgs"])
                                         {
-                                            <option value="@org.id">@org.name</option>
+                                            @if (org.localityid == loc.id)
+                                            {
+                                                <option value="@org.id">@org.name</option>
+                                            }
                                         }
                                     </select>
                                 </div>
