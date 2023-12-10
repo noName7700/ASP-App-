@@ -20,7 +20,7 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         [Route("/animal/{id}")]
         public async Task<IActionResult> Index(int id, string search, string search1, string search2, string search3,
-            string search4, string search5, string search6, string search7, string search8, SortState sort = SortState.NameAsc)
+            string search4, string search5, string search6, string search7, string search8, SortState sort = SortState.NameAsc, int page = 1)
         {
             ViewData["id"] = id;
             var animals = await _service.GetAnimals(id);
@@ -102,7 +102,13 @@ namespace ASP_App_ПИС.Controllers
                 SortState.NumberDesc => animals.OrderByDescending(j => j.specsings)
             };
 
-            return View(animals);
+            // пагинация
+            int pageSize = 10; /* размер строк на одну стр */
+            var ansForPage = animals.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            PageViewModel pageViewModel = new PageViewModel(animals.Count(), page, pageSize);
+            ViewData["pageView"] = pageViewModel;
+
+            return View(ansForPage);
         }
 
         [HttpGet]
