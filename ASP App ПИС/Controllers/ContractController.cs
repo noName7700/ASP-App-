@@ -63,9 +63,9 @@ namespace ASP_App_ПИС.Controllers
 
 
             ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["NumberSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
-            ViewData["DateSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
-            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
+            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
+            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewData["DateActionSort"] = sort == SortState.DateActionAsc ? SortState.DateActionDesc : SortState.DateActionAsc;
             contracts = sort switch
             {
                 SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
