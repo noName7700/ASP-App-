@@ -139,14 +139,35 @@ $.ajax({
         let locs = $("#localityy");
         locs.empty();
         $.each(data, function(index, locality) {
-            locs.append($(`<div class="form-group row has-feedback">
+            $.ajax({
+                url: `https://localhost:${port}/api/Organization/one/loc/${locality.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                dataType: "json",
+                success: function(dataOrg) {
+                    let org = dataOrg[0];
+                    locs.append($(`<div class="form-group row has-feedback">
                             <label class="col-sm-2 col-form-label" for="${locality.id}">${locality.name}:</label>
                             <div class="col-sm-8">
                                 <input class="form-control" id="${locality.id}" type="number" name="${locality.id}" required>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
+                        </div>
+                        <div class="form-group row has-feedback">
+                            <label class="col-sm-2 col-form-label" for="${locality.name}">Организация (<span>${locality.name}</span>)</label>
+                            <select class="form-control" id="${locality.name}" name="${locality.name}" required>
+                                        <option value="${org.id}">${org.name}</option>
+                            </select>
                         </div>`));
-        })
+                },
+                error: function(result, status, err) {
+                console.log("error:" + result + " status" + status + " err" + err)
+            }
+            })
+        });
     },
     error: function(result, status, err) {
         console.log("error:" + result + " status" + status + " err" + err)
@@ -166,13 +187,34 @@ $('#munname').change(function(e) {
             let locs = $("#localityy");
             locs.empty();
             $.each(data, function(index, locality) {
-                locs.append($(`<div class="form-group row has-feedback">
+                $.ajax({
+                url: `https://localhost:${port}/api/Organization/one/loc/${locality.id}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                dataType: "json",
+                success: function(dataOrg) {
+                    let org = dataOrg[0];
+                    locs.append($(`<div class="form-group row has-feedback">
                             <label class="col-sm-2 col-form-label" for="${locality.id}">${locality.name}:</label>
                             <div class="col-sm-8">
                                 <input class="form-control" id="${locality.id}" type="number" name="${locality.id}" required>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
+                        </div>
+                        <div class="form-group row has-feedback">
+                            <label class="col-sm-2 col-form-label" for="${locality.name}">Организация (<span>${locality.name}</span>)</label>
+                            <select class="form-control" id="${locality.name}" name="${locality.name}" required>
+                                        <option value="${org.id}">${org.name}</option>
+                            </select>
                         </div>`));
+                },
+                error: function(result, status, err) {
+                console.log("error:" + result + " status" + status + " err" + err)
+            }
+            })
             })
         },
         error: function(result, status, err) {
