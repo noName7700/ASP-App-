@@ -78,12 +78,22 @@ namespace Server.Controllers
         public async Task Put(int id, [FromBody] Organization value)
         {
             var currentOrganization = await _context.organization.FirstOrDefaultAsync(t => t.id == id);
-            if (currentOrganization != null)
+            if (currentOrganization != null && long.TryParse(value.telephone, out long t) && value.telephone.Length != 11)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Номер телефона должен состоять только из 11 цифр.");
+            }    
+            else if (currentOrganization != null)
             {
                 currentOrganization.name = value.name;
                 currentOrganization.telephone = value.telephone;
                 currentOrganization.email = value.email;
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Введены неверные данные.");
             }
         }
 

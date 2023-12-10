@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
+using System.Text.RegularExpressions;
 
 namespace Server.Controllers
 {
@@ -49,8 +50,16 @@ namespace Server.Controllers
         [Route("/api/Role/add")]
         public async Task Post([FromBody] Role value)
         {
-            await _context.role.AddAsync(value);
-            await _context.SaveChangesAsync();
+            if (!Regex.IsMatch(value.name, @"^[а-яА-Я]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Название роли должно состоять только из букв.");
+            }
+            else
+            {
+                await _context.role.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
         }
 
         [HttpPut]
@@ -58,10 +67,20 @@ namespace Server.Controllers
         public async Task Put(int id, [FromBody] Role value)
         {
             var currentRole = await _context.role.FirstOrDefaultAsync(t => t.id == id);
-            if (currentRole != null)
+            if (currentRole != null && Regex.IsMatch(value.name, @"^[а-яА-Я]+$"))
             {
                 currentRole.name = value.name;
                 await _context.SaveChangesAsync();
+            }
+            else if (currentRole != null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Название роли должно состоять только из букв.");
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Введены неверные данные.");
             }
         }
 

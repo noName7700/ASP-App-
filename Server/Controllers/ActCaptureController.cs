@@ -139,12 +139,47 @@ namespace Server.Controllers
         {
             var currentLoc = await _context.actcapture.FirstOrDefaultAsync(l => l.id == id);
 
-            if (currentLoc != null)
+            var oldAct = await _context.actcapture
+                .Where(a => a.datecapture == value.datecapture && a.localityid == value.localityid && a.contractid == value.contractid)
+                .FirstOrDefaultAsync();
+
+            var schedule = await _context.schedule
+                .Where(s => s.id == value.scheduleid)
+                .FirstOrDefaultAsync();
+            TaskMonth taskmonth = new TaskMonth();
+            if (schedule != null)
+            {
+                taskmonth = await _context.taskmonth
+                    .Where(t => t.scheduleid == schedule.id && t.startdate <= value.datecapture && t.enddate >= value.datecapture)
+                    .FirstOrDefaultAsync();
+            }
+
+            if (currentLoc != null && schedule == null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} нет действующего контракта.");
+            }
+            else if (currentLoc != null && taskmonth == null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} по плану-графику не проводился отлов.");
+            }
+            else if (currentLoc != null && oldAct != null)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"В дату {value.datecapture.ToString("dd.MM.yyyy")} уже есть акт отлова.");
+            }
+            else if (currentLoc != null)
             {
                 currentLoc.datecapture = value.datecapture;
                 currentLoc.localityid = value.localityid;
                 currentLoc.contractid = value.contractid;
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Введены неверные данные.");
             }
         }
 
@@ -158,6 +193,11 @@ namespace Server.Controllers
             {
                 _context.actcapture.Remove(currentAct);
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Не выбран акт отлова.");
             }
         }
 

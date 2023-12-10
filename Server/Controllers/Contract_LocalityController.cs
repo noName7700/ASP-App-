@@ -7,7 +7,7 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Contract_Locality")]
-    public class Contract_LocalityController
+    public class Contract_LocalityController : Controller
     {
         ApplicationContext _context;
 
@@ -113,8 +113,26 @@ namespace Server.Controllers
         [Route("/api/Contract_Locality/add")]
         public async Task Post([FromBody] Contract_Locality value)
         {
-            await _context.contract_locality.AddAsync(value);
-            await _context.SaveChangesAsync();
+            if (value.contractid == 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Данного контракта не существует.");
+            }
+            else if (value.localityid == 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Данного населенного пункта не существует.");
+            }
+            else if (value.organizationid == 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Данной организации не существует.");
+            }
+            else
+            {
+                await _context.contract_locality.AddAsync(value);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
