@@ -68,10 +68,15 @@ namespace Server.Controllers
                 await _context.locality.AddAsync(value);
                 await _context.SaveChangesAsync();
             }
-            else
+            else if (countLoc != 0)
             {
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Населенный пункт с таким названием уже существует.");
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Введены неверные данные.");
             }
         }
 
@@ -79,11 +84,30 @@ namespace Server.Controllers
         [Route("/api/Locality/put/{id}")]
         public async Task Put(int id, [FromBody] Locality value)
         {
+            var countLoc = await _context.locality
+                .Where(l => l.municipalityid == value.municipalityid && l.name == value.name)
+                .CountAsync();
+
             var currentLoc = await _context.locality.FirstOrDefaultAsync(l => l.id == id);
-            if (currentLoc != null)
+            if (currentLoc != null && !Regex.IsMatch(value.name, @"^[а-яА-Я]+$"))
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Название населенного пункта должно содержать только буквы.");
+            }
+            else if (currentLoc != null && countLoc == 0)
             {
                 currentLoc.name = value.name;
                 await _context.SaveChangesAsync();
+            }
+            else if (currentLoc != null && countLoc != 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Населенный пункт с таким названием уже существует.");
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Введены неверные данные.");
             }
         }
 
@@ -96,6 +120,11 @@ namespace Server.Controllers
             {
                 _context.locality.Remove(currentLoc);
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Населенный пункт не выбран.");
             }
         }
     }

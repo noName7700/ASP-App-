@@ -138,6 +138,7 @@ namespace Server.Controllers
         public async Task Put(int id, [FromBody] ActCapture value)
         {
             var currentLoc = await _context.actcapture.FirstOrDefaultAsync(l => l.id == id);
+
             if (currentLoc != null)
             {
                 currentLoc.datecapture = value.datecapture;
