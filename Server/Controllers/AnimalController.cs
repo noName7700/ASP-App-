@@ -84,6 +84,11 @@ namespace Server.Controllers
                 currentAnimal.specsings = value.specsings;
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Выбраны неверные данные.");
+            }
         }
 
         // удалить животное
@@ -96,6 +101,11 @@ namespace Server.Controllers
             {
                 _context.animal.Remove(currentAnimal);
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Не выбрано животное.");
             }
         }
     }

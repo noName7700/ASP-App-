@@ -102,10 +102,11 @@ namespace Server.Controllers
                 currentContract.dateconclusion = value.dateconclusion;
                 await _context.SaveChangesAsync();
             }
-            //else
-            //{
-            //    ошибка
-            //}
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync("Нельзя добавить новый контракт, так как дата действия предыдущего еще не истекла");
+            }
         }
 
         // удалить контракт по id
@@ -117,6 +118,11 @@ namespace Server.Controllers
             {
                 _context.contract.Remove(currentCon);
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync("Контракт не выбран.");
             }
         }
     }
