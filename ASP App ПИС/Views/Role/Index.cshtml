@@ -4,6 +4,14 @@
     var claims = Context.Request.HttpContext.User.Claims;
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
+@{
+    SortState sortState = SortState.NameAsc;
+    string sort = Context.Request.QueryString.HasValue ? Context.Request.Query["sort"].ToString() : "";
+    if (sort == "NameAsc")
+        sortState = SortState.NameAsc;
+    else if (sort == "NameDesc")
+        sortState = SortState.NameDesc;
+}
 
 <style>
     .labeled {
@@ -85,7 +93,7 @@
                             </table>
                             @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
                             {
-                                <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled">
                                         <span class="btn-label"><i class="fa fa-backward"></i></span>
                                     </button>
@@ -93,7 +101,7 @@
                             }
                             @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                             {
-                                <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled right">
                                         <span class="btn-label"><i class="fa fa-forward"></i></span>
                                     </button>

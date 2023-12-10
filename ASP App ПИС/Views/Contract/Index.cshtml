@@ -12,12 +12,22 @@
 @{
     SortState sortState = SortState.NameAsc;
     string sort = Context.Request.QueryString.HasValue ? Context.Request.Query["sort"].ToString() : "";
-    if (sort == "NameSort") {
-        sortState = (SortState)ViewData["NameSort"] == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-    }
-    else if (sort == "NumberSort") {
-        sortState = (SortState)ViewData["NumberSort"] == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc; 
-    } // И ТАК ДАЛЕЕ
+    if (sort == "NameAsc")
+        sortState = SortState.NameAsc;
+    else if (sort == "NameDesc")
+        sortState = SortState.NameDesc;
+    else if (sort == "NumberAsc")
+        sortState = SortState.NumberAsc;
+    else if (sort == "NumberDesc")
+        sortState = SortState.NumberDesc;
+    else if (sort == "DateAsc")
+        sortState = SortState.DateAsc;
+    else if (sort == "DateDesc")
+        sortState = SortState.DateDesc;
+    else if (sort == "DateActionAsc")
+        sortState = SortState.DateActionAsc;
+    else if (sort == "DateActionDesc")
+        sortState = SortState.DateActionDesc;
 }
 
 <style>
@@ -165,7 +175,7 @@
                             }
                             @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                             {
-                                <a asp-action="Index" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled right">
                                         <span class="btn-label"><i class="fa fa-forward"></i></span>
                                     </button>
