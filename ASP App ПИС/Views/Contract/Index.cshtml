@@ -134,7 +134,7 @@
                             <tbody>
                             @foreach(var con in Model)
                             {
-                                if (con.municipalityid == munId)
+                                if ((con.municipalityid == munId && !isAdmin) || isAdmin)
                                 {
                                     <tr role="row" class="odd">
                                         <td>@con.Municipality.name</td>

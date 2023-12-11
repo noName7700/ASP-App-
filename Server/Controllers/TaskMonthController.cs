@@ -78,6 +78,11 @@ namespace Server.Controllers
                 Response.StatusCode = 403;
                 await Response.WriteAsync($"Дата начала не может быть позже даты окончания.");
             }
+            else if (value != null && value.countanimal <= 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Количество животных должно быть больше 0.");
+            }
             else if (contr.Contract.validityperiod < value.startdate || contr.Contract.validityperiod < value.enddate ||
                 contr.Contract.dateconclusion > value.startdate || contr.Contract.dateconclusion > value.enddate)
             {
@@ -111,7 +116,12 @@ namespace Server.Controllers
         public async Task Put(int id, [FromBody] TaskMonth value)
         {
             var currentTask = await _context.taskmonth.FirstOrDefaultAsync(t => t.id == id);
-            if (currentTask != null && value.startdate <= value.enddate)
+            if (currentTask != null && value.countanimal <= 0)
+            {
+                Response.StatusCode = 403;
+                await Response.WriteAsync($"Количество животных должно быть больше 0.");
+            }
+            else if (currentTask != null && value.startdate <= value.enddate)
             {
                 currentTask.startdate = value.startdate;
                 currentTask.enddate = value.enddate;
