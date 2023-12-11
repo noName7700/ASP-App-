@@ -43,6 +43,9 @@
                                         <thead>
                                             <tr role="row">
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
+                                                    Номер
+                                                </th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Муниципалитет
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
@@ -58,6 +61,7 @@
                                         </thead>
                                         <tbody>
                                                 <tr role="row" class="odd">
+                                                    <td>@Model.id</td>
                                                     <td>@Model.Municipality.name</td>
                                                     <td>с @Model.startdate.ToString("D") по @Model.enddate.ToString("D")</td>
                                                     <td>@Model.summ</td>

@@ -109,6 +109,16 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Reports/last")]
+        public async Task<Report> GetLast()
+        {
+            return await _context.report
+                .Include(r => r.Municipality)
+                .OrderBy(t => t.id)
+                .LastAsync();
+        }
+
+        [HttpGet]
         [Route("/api/Reports/register/money")]
         public async Task<IEnumerable<Report>> GetRegisterMoney()
         {
@@ -167,6 +177,7 @@ namespace Server.Controllers
                 currentRep.summ = value.summ;
                 currentRep.statuc = value.statuc;
                 currentRep.datestatus = value.datestatus;
+                currentRep.localityname = value.localityname;
                 await _context.SaveChangesAsync();
             }
         }

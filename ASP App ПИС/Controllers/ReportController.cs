@@ -158,6 +158,22 @@ namespace ASP_App_ПИС.Controllers
                 municipalityid = con.municipalityid
             };
             await _service.AddReport(rep);
+
+            var lastRep = await _service.GetLastReport();
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 10,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastRep.id,
+                description = $"Создан отчет о выполнении работы за контракт: {lastRep.statuc} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
+                $"{lastRep.startdate.ToString("dd.MM.yyyy")} - {lastRep.enddate.ToString("dd.MM.yyyy")} - {lastRep.summ}"
+            };
+            await _service.AddJournal(jo);
+
             return View(priceItog);
         }
 
@@ -203,6 +219,19 @@ namespace ASP_App_ПИС.Controllers
                 end = con.validityperiod;
                 munid = con.municipalityid;
                 status = "Доработка";
+
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+                var mun = await _service.GetMunicipalityForId(munid);
+
+                Journal jo = new Journal
+                {
+                    nametable = 10,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = id,
+                    description = $"Изменены данные отчета №{id}: {mun.name} - {con.dateconclusion.ToString("dd.MM.yyyy")} - {con.validityperiod.ToString("dd.MM.yyyy")} - {priceItog}"
+                };
+                await _service.AddJournal(jo);
             }
             else
             {
@@ -211,6 +240,19 @@ namespace ASP_App_ПИС.Controllers
                 priceItog = repCur.summ;
                 munid = repCur.municipalityid;
                 status = Request.Form["status"];
+
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+                var mun = await _service.GetMunicipalityForId(munid);
+
+                Journal jo = new Journal
+                {
+                    nametable = 10,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = id,
+                    description = $"Изменен статус отчета №{id}: {Request.Form["status"]}"
+                };
+                await _service.AddJournal(jo);
             }
             Report rep = new Report
             {
@@ -226,13 +268,6 @@ namespace ASP_App_ПИС.Controllers
                 municipalityid = munid
             };
             await _service.EditReport(id, rep);
-
-            // тут как-то на почту оператору омсу отправить уведомление что требуется доработка такого-то отчета
-            if (Request.Form["status"] == "Доработка")
-            {
-                // тут нужно отправить сообщение на почту оператору омсу, а в списке userов найти его так, чтобы муниципалитет
-                // юзера совпадал с муниципалитетом измененного отчета и отправить ему по почте
-            }
 
             return Redirect("/report/register/money");
         }
@@ -301,6 +336,21 @@ namespace ASP_App_ПИС.Controllers
             };
             await _service.AddReport(rep);
 
+            var lastRep = await _service.GetLastReport();
+
+            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            Journal jo = new Journal
+            {
+                nametable = 11,
+                usercaptureid = userid,
+                datetimechange = DateTime.Now,
+                idobject = lastRep.id,
+                description = $"Создан отчет о выполнении работы по планам-графикам: {lastRep.statuc} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
+                $"{lastRep.startdate.ToString("dd.MM.yyyy")} - {lastRep.enddate.ToString("dd.MM.yyyy")} - {lastRep.plancount} - {lastRep.factcount}"
+            };
+            await _service.AddJournal(jo);
+
             return View(countAnimals);
         }
 
@@ -337,7 +387,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
             var repCur = await _service.GetOneRegisterMoney(id);
-            int planCount; int factCount; DateTime start; DateTime end; int munid; string localityname;
+            int planCount; int factCount; DateTime start; DateTime end; int munid; string localityname; string status;
             if (repCur.statuc == "Доработка" && role == "Оператор ОМСУ")
             {
                 int idContract = int.Parse(Request.Form["contract"]);
@@ -350,6 +400,21 @@ namespace ASP_App_ПИС.Controllers
                 planCount = countAnimals.Keys.First();
                 factCount = countAnimals.Values.First();
                 localityname = (await _service.GetOneLocality(int.Parse(Request.Form["locality"]))).name;
+                status = "Доработка";
+
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+                var mun = await _service.GetMunicipalityForId(munid);
+
+                Journal jo = new Journal
+                {
+                    nametable = 11,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = id,
+                    description = $"Изменены данные отчета №{id}: {mun.name} - {localityname} - {con.dateconclusion.ToString("dd.MM.yyyy")}" +
+                    $" - {con.validityperiod.ToString("dd.MM.yyyy")} - {planCount} - {factCount}"
+                };
+                await _service.AddJournal(jo);
             }
             else
             {
@@ -359,11 +424,25 @@ namespace ASP_App_ПИС.Controllers
                 factCount = repCur.factcount;
                 localityname = repCur.localityname;
                 munid = repCur.municipalityid;
+                status = Request.Form["status"];
+
+                int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+                var mun = await _service.GetMunicipalityForId(munid);
+
+                Journal jo = new Journal
+                {
+                    nametable = 11,
+                    usercaptureid = userid,
+                    datetimechange = DateTime.Now,
+                    idobject = id,
+                    description = $"Изменен статус отчета №{id}: {Request.Form["status"]}"
+                };
+                await _service.AddJournal(jo);
             }
             Report rep = new Report
             {
                 numreport = 2,
-                statuc = Request.Form["status"],
+                statuc = status,
                 startdate = start,
                 enddate = end,
                 localityname = localityname,
