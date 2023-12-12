@@ -637,5 +637,17 @@ namespace ASP_App_ПИС.Services
             var response = await _client.GetAsync($"/api/Reports/last");
             return await response.ReadContentAsync<Report>();
         }
+
+        public async Task<IEnumerable<Status>> GetStatusesReports()
+        {
+            var response = await _client.GetAsync($"/api/Reports/status");
+            return await response.ReadContentAsync<IEnumerable<Status>>();
+        }
+
+        public async Task<Status> GetOneStatus(int id)
+        {
+            var response = await _client.GetAsync($"/api/Reports/status/one/{id}");
+            return await response.ReadContentAsync<Status>();
+        }
     }
 }

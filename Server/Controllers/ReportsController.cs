@@ -78,6 +78,23 @@ namespace Server.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Reports/status")]
+        public async Task<IEnumerable<Status>> GetStatus()
+        {
+            return await _context.status
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("/api/Reports/status/one/{id}")]
+        public async Task<Status> GetOneStatus(int id)
+        {
+            return await _context.status
+                .Where(s => s.id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        [HttpGet]
         [Route("/api/Reports/schedule/{conid}/{locid}")]
         public async Task<Dictionary<int, int>> Get(int conid, int locid)
         {
@@ -113,6 +130,7 @@ namespace Server.Controllers
         public async Task<Report> GetLast()
         {
             return await _context.report
+                .Include(r => r.Status)
                 .Include(r => r.Municipality)
                 .OrderBy(t => t.id)
                 .LastAsync();
@@ -123,6 +141,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<Report>> GetRegisterMoney()
         {
             return await _context.report
+                .Include(r => r.Status)
                 .Include(r => r.Municipality)
                 .Where(r => r.numreport == 1)
                 .ToListAsync();
@@ -133,7 +152,8 @@ namespace Server.Controllers
         public async Task<IEnumerable<Report>> GetRegister(int id)
         {
             return await _context.report
-                .Where(rep => rep.municipalityid == id && rep.statuc.ToLower() == "доработка")
+                .Include(r => r.Status)
+                .Where(rep => rep.municipalityid == id && rep.Status.name.ToLower() == "доработка")
                 .ToListAsync();
         }
 
@@ -142,6 +162,7 @@ namespace Server.Controllers
         public async Task<IEnumerable<Report>> GetRegisterSchedule()
         {
             return await _context.report
+                .Include(r => r.Status)
                 .Include(r => r.Municipality)
                 .Where(r => r.numreport == 2)
                 .ToListAsync();
@@ -152,6 +173,7 @@ namespace Server.Controllers
         public async Task<Report> GetOneRegisterMoney(int id)
         {
             return await _context.report
+                .Include(r => r.Status)
                 .Include(r => r.Municipality)
                 .Where(r => r.id == id)
                 .FirstOrDefaultAsync();
@@ -175,7 +197,7 @@ namespace Server.Controllers
                 currentRep.startdate = value.startdate;
                 currentRep.enddate = value.enddate;
                 currentRep.summ = value.summ;
-                currentRep.statuc = value.statuc;
+                currentRep.statusid = value.statusid;
                 currentRep.datestatus = value.datestatus;
                 currentRep.localityname = value.localityname;
                 await _context.SaveChangesAsync();

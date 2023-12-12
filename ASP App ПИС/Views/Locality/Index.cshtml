@@ -9,6 +9,7 @@
     if (sort == "NameAsc")
         sortState = SortState.NameAsc;
     else if (sort == "NameDesc")
+        sortState = SortState.NameDesc;
 }
 
 <style>
@@ -95,7 +96,7 @@
                 @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                 {
                             <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
-                        <button class="btn btn-default labeled right">Вперед  
+                        <button class="btn btn-default labeled right">
                             <span class="btn-label"><i class="fa fa-forward"></i></span>
                         </button>
                     </a>
@@ -115,5 +116,8 @@
                 }
             </div>
         </div>
+        </div>
+        </div>
+    </div>
     <!-- END PAGE CONTENT-->
 </div>

@@ -66,17 +66,30 @@
                     </div>
                     </div> *@
 
-                    @if (!(Model.statuc == "Доработка" && role == "Оператор ОМСУ"))
+                    @if (!(Model.Status.name == "Доработка" && role == "Оператор ОМСУ"))
                     {
                         <div class="form-group row">
                             <label for="status" class="col-sm-2 col-form-label">Статус:</label>
                             <div class="col-sm-8">
-                                <input class="form-control" id="status" type="text" name="status" value=@Model.statuc required />
+                                <select class="form-control" id="status" name="status" required>
+                                    @foreach (var st in (IEnumerable<Status>)ViewData["statuses"])
+                                    {
+                                        if (st.id == Model.statusid)
+                                        {
+                                            <option selected value="@st.id">@st.name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@st.id">@st.name</option>
+                                        }
+                                    }
+                                </select>
+                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
                         </div>
                     }
 
-                    @if (Model.statuc == "Доработка" && role == "Оператор ОМСУ")
+                    @if (Model.Status.name == "Доработка" && role == "Оператор ОМСУ")
                     {
                         <div class="form-group row">
                             <label for="namemun_ex" class="col-sm-2 col-form-label">Контракт:</label>

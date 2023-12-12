@@ -110,5 +110,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Usercapture> GetOneUser(int id);
         Task<IEnumerable<Report>> GetReportFromMun(int id);
         Task<Report> GetLastReport();
+        Task<IEnumerable<Status>> GetStatusesReports();
+        Task<Status> GetOneStatus(int id);
     }
 }
