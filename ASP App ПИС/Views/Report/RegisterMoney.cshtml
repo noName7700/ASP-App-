@@ -90,11 +90,11 @@
                                             <tr role="row">
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Статус
-                                                    <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                                    <a asp-action="RegisterMoney" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                                     Дата установки статуса
-                                                    <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                                    <a asp-action="RegisterMoney" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                                 </th>
                                                 <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Отчёт</th>
 
@@ -106,7 +106,7 @@
                                                 if ((rep.municipalityid == munId && !isAdmin) || isAdmin)
                                                 {
                                                     <tr role="row" class="odd">
-                                                        <td>@rep.statuc</td>
+                                                        <td>@rep.Status.name</td>
                                                         <td>@rep.datestatus.ToString("D")</td>
                                                         <td><a href="/report/register/money/post/@rep.id">Просмотр<i class="fa fa-eye font-14"></i></a></td>
                                                     </tr>

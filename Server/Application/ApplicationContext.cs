@@ -18,6 +18,7 @@ namespace Server.Application
         public DbSet<Journal> journal { get; set; } = null!;
         public DbSet<Role> role { get; set; } = null!;
         public DbSet<Report> report { get; set; } = null!;
+        public DbSet<Status> status { get; set; } = null!;
 
         public ApplicationContext()
         {

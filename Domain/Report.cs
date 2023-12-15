@@ -17,7 +17,8 @@ namespace Domain
         public int plancount { get; set; }
         public int factcount { get; set; }
         public DateTime datestatus { get; set; }
-        public string statuc { get; set; }
+        public int statusid { get; set; }
+        public Status? Status { get; set; }
         public int municipalityid { get; set; }
         public Municipality? Municipality { get; set; }
     }

@@ -75,7 +75,7 @@
                                                 <td>@Model.plancount</td>
                                                 <td>@Model.factcount</td>
                                                 <td>
-                                                    @if (Model.statuc.ToLower() != "согласован в омсу" && (role == "Оператор ОМСУ" ||
+                                                    @if (Model.Status.name.ToLower() != "согласован в омсу" && (role == "Оператор ОМСУ" ||
                                                     role == "Куратор ОМСУ" || role == "Подписант ОМСУ" || isAdmin))
                                                     {
                                                         <a href="/report/edit/schedule/@Model.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>

@@ -25,7 +25,7 @@ namespace ASP_App_ПИС.Controllers
             var regMoney = await _service.GetRegisterMoney();
             if (!string.IsNullOrEmpty(search))
             {
-                regMoney = regMoney.Where(m => m.statuc.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                regMoney = regMoney.Where(m => m.Status.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
             if (!string.IsNullOrEmpty(search1))
@@ -41,8 +41,8 @@ namespace ASP_App_ПИС.Controllers
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
             regMoney = sort switch
             {
-                SortState.NameAsc => regMoney.OrderBy(j => j.statuc),
-                SortState.NameDesc => regMoney.OrderByDescending(j => j.statuc),
+                SortState.NameAsc => regMoney.OrderBy(j => j.Status.name),
+                SortState.NameDesc => regMoney.OrderByDescending(j => j.Status.name),
                 SortState.DateAsc => regMoney.OrderBy(j => j.datestatus),
                 SortState.DateDesc => regMoney.OrderByDescending(j => j.datestatus)
             };
@@ -70,7 +70,7 @@ namespace ASP_App_ПИС.Controllers
             var regSchedule = await _service.GetRegisterSchedule();
             if (!string.IsNullOrEmpty(search))
             {
-                regSchedule = regSchedule.Where(m => m.statuc.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
+                regSchedule = regSchedule.Where(m => m.Status.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
                 ViewData["search"] = search;
             }
             if (!string.IsNullOrEmpty(search1))
@@ -86,8 +86,8 @@ namespace ASP_App_ПИС.Controllers
             ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
             regSchedule = sort switch
             {
-                SortState.NameAsc => regSchedule.OrderBy(j => j.statuc),
-                SortState.NameDesc => regSchedule.OrderByDescending(j => j.statuc),
+                SortState.NameAsc => regSchedule.OrderBy(j => j.Status.name),
+                SortState.NameDesc => regSchedule.OrderByDescending(j => j.Status.name),
                 SortState.DateAsc => regSchedule.OrderBy(j => j.datestatus),
                 SortState.DateDesc => regSchedule.OrderByDescending(j => j.datestatus)
             };
@@ -147,7 +147,7 @@ namespace ASP_App_ПИС.Controllers
             Report rep = new Report
             {
                 numreport = 1,
-                statuc = "Черновик",
+                statusid = 1, // черновик
                 startdate = con.dateconclusion,
                 enddate = con.validityperiod,
                 localityname = "0",
@@ -169,7 +169,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = lastRep.id,
-                description = $"Создан отчет о выполнении работы за контракт: {lastRep.statuc} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
+                description = $"Создан отчет о выполнении работы за контракт: {lastRep.Status.name} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
                 $"{lastRep.startdate.ToString("dd.MM.yyyy")} - {lastRep.enddate.ToString("dd.MM.yyyy")} - {lastRep.summ}"
             };
             await _service.AddJournal(jo);
@@ -197,6 +197,9 @@ namespace ASP_App_ПИС.Controllers
             }
             ViewData["cons"] = contracts;
 
+            var stat = await _service.GetStatusesReports();
+            ViewData["statuses"] = stat;
+
             var rep = await _service.GetOneRegisterMoney(id);
             return View(rep);
         }
@@ -208,8 +211,8 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
             var repCur = await _service.GetOneRegisterMoney(id);
-            double priceItog; DateTime start; DateTime end; int munid; string status;
-            if (repCur.statuc == "Доработка" && role == "Оператор ОМСУ")
+            double priceItog; DateTime start; DateTime end; int munid; int statusid;
+            if (repCur.Status.name == "Доработка" && role == "Оператор ОМСУ")
             {
                 int idContract = int.Parse(Request.Form["contract"]);
                 priceItog = await _service.GetReportsMoney(idContract);
@@ -218,7 +221,7 @@ namespace ASP_App_ПИС.Controllers
                 start = con.dateconclusion;
                 end = con.validityperiod;
                 munid = con.municipalityid;
-                status = "Доработка";
+                statusid = 3;
 
                 int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
                 var mun = await _service.GetMunicipalityForId(munid);
@@ -239,10 +242,11 @@ namespace ASP_App_ПИС.Controllers
                 end = repCur.enddate;
                 priceItog = repCur.summ;
                 munid = repCur.municipalityid;
-                status = Request.Form["status"];
+                statusid = int.Parse(Request.Form["status"]);
 
                 int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
                 var mun = await _service.GetMunicipalityForId(munid);
+                var st = await _service.GetOneStatus(statusid);
 
                 Journal jo = new Journal
                 {
@@ -250,14 +254,14 @@ namespace ASP_App_ПИС.Controllers
                     usercaptureid = userid,
                     datetimechange = DateTime.Now,
                     idobject = id,
-                    description = $"Изменен статус отчета №{id}: {Request.Form["status"]}"
+                    description = $"Изменен статус отчета №{id}: {st.name}"
                 };
                 await _service.AddJournal(jo);
             }
             Report rep = new Report
             {
                 numreport = 1,
-                statuc = status,
+                statusid = statusid,
                 startdate = start,
                 enddate = end,
                 localityname = "0",
@@ -324,7 +328,7 @@ namespace ASP_App_ПИС.Controllers
             Report rep = new Report
             {
                 numreport = 2,
-                statuc = "Черновик",
+                statusid = 1, // черновик
                 startdate = con.dateconclusion,
                 enddate = con.validityperiod,
                 localityname = loc.name,
@@ -346,7 +350,7 @@ namespace ASP_App_ПИС.Controllers
                 usercaptureid = userid,
                 datetimechange = DateTime.Now,
                 idobject = lastRep.id,
-                description = $"Создан отчет о выполнении работы по планам-графикам: {lastRep.statuc} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
+                description = $"Создан отчет о выполнении работы по планам-графикам: {lastRep.Status.name} - {lastRep.datestatus.ToString("dd.MM.yyyy")} - {lastRep.Municipality.name} - " +
                 $"{lastRep.startdate.ToString("dd.MM.yyyy")} - {lastRep.enddate.ToString("dd.MM.yyyy")} - {lastRep.plancount} - {lastRep.factcount}"
             };
             await _service.AddJournal(jo);
@@ -376,6 +380,10 @@ namespace ASP_App_ПИС.Controllers
             }
             ViewData["cons"] = contracts;
             ViewData["locs"] = localities;
+
+            var stat = await _service.GetStatusesReports();
+            ViewData["statuses"] = stat;
+
             var rep = await _service.GetOneRegisterMoney(id);
             return View(rep);
         }
@@ -387,8 +395,8 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
             var repCur = await _service.GetOneRegisterMoney(id);
-            int planCount; int factCount; DateTime start; DateTime end; int munid; string localityname; string status;
-            if (repCur.statuc == "Доработка" && role == "Оператор ОМСУ")
+            int planCount; int factCount; DateTime start; DateTime end; int munid; string localityname; int statusid;
+            if (repCur.Status.name == "Доработка" && role == "Оператор ОМСУ")
             {
                 int idContract = int.Parse(Request.Form["contract"]);
                 Dictionary<int, int> countAnimals = await _service.GetReportsSchedule(idContract, int.Parse(Request.Form["locality"]));
@@ -400,7 +408,7 @@ namespace ASP_App_ПИС.Controllers
                 planCount = countAnimals.Keys.First();
                 factCount = countAnimals.Values.First();
                 localityname = (await _service.GetOneLocality(int.Parse(Request.Form["locality"]))).name;
-                status = "Доработка";
+                statusid = 3;
 
                 int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
                 var mun = await _service.GetMunicipalityForId(munid);
@@ -424,10 +432,11 @@ namespace ASP_App_ПИС.Controllers
                 factCount = repCur.factcount;
                 localityname = repCur.localityname;
                 munid = repCur.municipalityid;
-                status = Request.Form["status"];
+                statusid = int.Parse(Request.Form["status"]);
 
                 int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
                 var mun = await _service.GetMunicipalityForId(munid);
+                var st = await _service.GetOneStatus(statusid);
 
                 Journal jo = new Journal
                 {
@@ -435,14 +444,14 @@ namespace ASP_App_ПИС.Controllers
                     usercaptureid = userid,
                     datetimechange = DateTime.Now,
                     idobject = id,
-                    description = $"Изменен статус отчета №{id}: {Request.Form["status"]}"
+                    description = $"Изменен статус отчета №{id}: {st.name}"
                 };
                 await _service.AddJournal(jo);
             }
             Report rep = new Report
             {
                 numreport = 2,
-                statuc = status,
+                statusid = statusid,
                 startdate = start,
                 enddate = end,
                 localityname = localityname,
@@ -453,13 +462,6 @@ namespace ASP_App_ПИС.Controllers
                 municipalityid = munid
             };
             await _service.EditReport(id, rep);
-
-            // тут как-то на почту оператору омсу отправить уведомление что требуется доработка такого-то отчета
-            if (Request.Form["status"] == "Доработка")
-            {
-                // тут нужно отправить сообщение на почту оператору омсу, а в списке userов найти его так, чтобы муниципалитет
-                // юзера совпадал с муниципалитетом измененного отчета и отправить ему по почте
-            }
 
             return Redirect("/report/register/schedule");
         }
