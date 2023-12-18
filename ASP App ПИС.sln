@@ -5,9 +5,9 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASP App ПИС", "ASP App ПИС\ASP App ПИС.csproj", "{F7FC5177-624F-47E2-B84C-B17F36073D54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{89ADF40D-DF9F-44C6-83DA-0156FA8AF5A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{89ADF40D-DF9F-44C6-83DA-0156FA8AF5A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{41E76016-8CE2-46DA-80A4-2371E6005602}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{41E76016-8CE2-46DA-80A4-2371E6005602}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AllProjects", "AllProjects", "{15DF301C-F647-4BF3-88EE-E53652752740}"
 EndProject

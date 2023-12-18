@@ -32,4 +32,10 @@ app.MapControllers();
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseWebSockets();
+
+app.UseWebSockets();
+
+app.Map("/muns", (ApplicationContext _context) => { return _context.municipality.ToList(); });
+
 app.Run();

@@ -11,6 +11,7 @@ builder.Services.AddAuthorization();
 var port = builder.Configuration.GetValue("ServerPort", "44370");
 
 builder.Services.AddHttpClient<IWebService, WebService>(c => c.BaseAddress = new Uri($"https://localhost:{port}/"));
+//builder.Services.AddHttpClient<IWebService, WebSocketService>(c => c.BaseAddress = new Uri($"https://localhost:{port}/muns"));
 
 var app = builder.Build();
 
@@ -30,9 +31,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Map("/muns", (IWebService _service) => { return _service.GetMunicipalities(); });
 
 app.Run();
