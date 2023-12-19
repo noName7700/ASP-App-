@@ -1,4 +1,5 @@
-﻿using ASP_App_ПИС.Models;
+﻿using ASP_App_ПИС.Helpers;
+using ASP_App_ПИС.Models;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +22,9 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/money")]
-        public async Task<IActionResult> RegisterMoney(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> RegisterMoney(string search, string search1, string sort = "datestatus", string dir = "desc", int page = 1)
         {
-            var regMoney = await _service.GetRegisterMoney();
+            var regMoney = (await _service.GetRegisterMoney()).ToList();
             if (!string.IsNullOrEmpty(search))
             {
                 regMoney = regMoney.Where(m => m.Status.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
@@ -38,15 +39,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            regMoney = sort switch
-            {
-                SortState.NameAsc => regMoney.OrderBy(j => j.Status.name),
-                SortState.NameDesc => regMoney.OrderByDescending(j => j.Status.name),
-                SortState.DateAsc => regMoney.OrderBy(j => j.datestatus),
-                SortState.DateDesc => regMoney.OrderByDescending(j => j.datestatus)
-            };
+            regMoney = dir == "asc" ? new SortByProp().SortAsc(regMoney, sort) : new SortByProp().SortDesc(regMoney, sort);
 
             int pageSize = 10;
             var repsForPage = regMoney.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -66,9 +59,9 @@ namespace ASP_App_ПИС.Controllers
 
         [HttpGet]
         [Route("/report/register/schedule")]
-        public async Task<IActionResult> RegisterSchedule(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> RegisterSchedule(string search, string search1, string sort = "datestatus", string dir = "desc", int page = 1)
         {
-            var regSchedule = await _service.GetRegisterSchedule();
+            var regSchedule = (await _service.GetRegisterSchedule()).ToList();
             if (!string.IsNullOrEmpty(search))
             {
                 regSchedule = regSchedule.Where(m => m.Status.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
@@ -83,15 +76,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            regSchedule = sort switch
-            {
-                SortState.NameAsc => regSchedule.OrderBy(j => j.Status.name),
-                SortState.NameDesc => regSchedule.OrderByDescending(j => j.Status.name),
-                SortState.DateAsc => regSchedule.OrderBy(j => j.datestatus),
-                SortState.DateDesc => regSchedule.OrderByDescending(j => j.datestatus)
-            };
+            regSchedule = dir == "asc" ? new SortByProp().SortAsc(regSchedule, sort) : new SortByProp().SortDesc(regSchedule, sort);
 
             int pageSize = 10;
             var repsForPage = regSchedule.Skip((page - 1) * pageSize).Take(pageSize).ToList();

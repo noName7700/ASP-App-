@@ -4,6 +4,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using ASP_App_ПИС.Models;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -20,7 +21,7 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         [Route("/animal/{id}")]
         public async Task<IActionResult> Index(int id, string search, string search1, string search2, string search3,
-            string search4, string search5, string search6, string search7, string search8, SortState sort = SortState.NameAsc, int page = 1)
+            string search4, string search5, string search6, string search7, string search8, string sort = "category", string dir = "desc", int page = 1)
         {
             ViewData["id"] = id;
             var claims = HttpContext.Request.HttpContext.User.Claims;
@@ -74,36 +75,8 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search8"] = search8;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
-            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
-            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
-            ViewData["UserRoleSort"] = sort == SortState.UserRoleAsc ? SortState.UserRoleDesc : SortState.UserRoleAsc;
-            ViewData["OrgTelSort"] = sort == SortState.OrgTelAsc ? SortState.OrgTelDesc : SortState.OrgTelAsc;
-            ViewData["OrgEmailSort"] = sort == SortState.OrgEmailAsc ? SortState.OrgEmailDesc : SortState.OrgEmailAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
-            animals = sort switch
-            {
-                SortState.NameAsc => animals.OrderBy(j => j.category),
-                SortState.NameDesc => animals.OrderByDescending(j => j.category),
-                SortState.UserTelAsc => animals.OrderBy(j => j.sex),
-                SortState.UserTelDesc => animals.OrderByDescending(j => j.sex),
-                SortState.UserEmailAsc => animals.OrderBy(j => j.breed),
-                SortState.UserEmailDesc => animals.OrderByDescending(j => j.breed),
-                SortState.OrgNameAsc => animals.OrderBy(j => j.size),
-                SortState.OrgNameDesc => animals.OrderByDescending(j => j.size),
-                SortState.UserRoleAsc => animals.OrderBy(j => j.wool),
-                SortState.UserRoleDesc => animals.OrderByDescending(j => j.wool),
-                SortState.OrgTelAsc => animals.OrderBy(j => j.color),
-                SortState.OrgTelDesc => animals.OrderByDescending(j => j.color),
-                SortState.OrgEmailAsc => animals.OrderBy(j => j.ears),
-                SortState.OrgEmailDesc => animals.OrderByDescending(j => j.ears),
-                SortState.DateAsc => animals.OrderBy(j => j.tail),
-                SortState.DateDesc => animals.OrderByDescending(j => j.tail),
-                SortState.NumberAsc => animals.OrderBy(j => j.specsings),
-                SortState.NumberDesc => animals.OrderByDescending(j => j.specsings)
-            };
+            animals = dir == "asc" ? new SortByProp().SortAsc(animals, sort)
+                : new SortByProp().SortDesc(animals, sort);
 
             // пагинация
             int pageSize = 10; /* размер строк на одну стр */

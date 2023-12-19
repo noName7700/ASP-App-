@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.Extensions.Primitives;
 using System.Drawing;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -20,14 +21,13 @@ namespace ASP_App_ПИС.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, string sort = "id", string dir = "desc", int page = 1)
         {
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
             IEnumerable<Domain.Contract> contracts = new List<Domain.Contract>();
             contracts = await _service.GetContracts(userid);
-
             if (!string.IsNullOrEmpty(search))
             {
                 contracts = contracts.Where(m => m.Municipality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
@@ -59,22 +59,8 @@ namespace ASP_App_ПИС.Controllers
                     ViewData["search3"] = search3;
                 }
             }
-
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["DescSort"] = sort == SortState.DescAsc ? SortState.DescDesc : SortState.DescAsc;
-            contracts = sort switch
-            {
-                SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
-                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name),
-                SortState.NumberAsc => contracts.OrderBy(j => j.id),
-                SortState.NumberDesc => contracts.OrderByDescending(j => j.id),
-                SortState.DateAsc => contracts.OrderBy(j => j.dateconclusion),
-                SortState.DateDesc => contracts.OrderByDescending(j => j.dateconclusion),
-                SortState.DescAsc => contracts.OrderBy(j => j.validityperiod),
-                SortState.DescDesc => contracts.OrderByDescending(j => j.validityperiod)
-            };
+            
+            contracts = dir == "asc" ? new SortByProp().SortAsc(contracts, sort) : new SortByProp().SortDesc(contracts, sort);
 
             int pageSize = 10;
             var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -85,7 +71,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/act/view/{id}")]
-        public async Task<IActionResult> ViewLocActs(int id, string search, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> ViewLocActs(int id, string search, string sort = "Locality", string dir = "desc", int page = 1)
         {
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
@@ -98,12 +84,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            conLoc = sort switch
-            {
-                SortState.NameAsc => conLoc.OrderBy(sc => sc.Locality.name),
-                SortState.NameDesc => conLoc.OrderByDescending(sc => sc.Locality.name)
-            };
+            conLoc = dir == "asc" ? new SortByProp().SortAsc(conLoc, sort) : new SortByProp().SortDesc(conLoc, sort);
 
             int pageSize = 10;
             var conlocsForPage = conLoc.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -114,7 +95,7 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/act/{id}")]
-        public async Task<IActionResult> ViewActs(int id, string search, SortState sort = SortState.DateAsc, int page = 1)
+        public async Task<IActionResult> ViewActs(int id, string search, string sort = "datecapture", string dir = "desc", int page = 1)
         {
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
@@ -135,12 +116,7 @@ namespace ASP_App_ПИС.Controllers
             var localityname = await _service.GetOneLocality(conloc.localityid);
             ViewData["localityname"] = localityname.name;
 
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            acts = sort switch
-            {
-                SortState.DateAsc => acts.OrderBy(sc => sc.datecapture),
-                SortState.DateDesc => acts.OrderByDescending(sc => sc.datecapture)
-            };
+            acts = dir == "asc" ? new SortByProp().SortAsc(acts, sort) : new SortByProp().SortDesc(acts, sort);
 
             int pageSize = 10;
             var actsForPage = acts.Skip((page - 1) * pageSize).Take(pageSize).ToList();

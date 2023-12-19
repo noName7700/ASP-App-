@@ -4,6 +4,7 @@ using Domain;
 using ASP_App_ПИС.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Primitives;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -18,9 +19,9 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [Route("/locality/{id}")]
-        public async Task<IActionResult> Index(int id, string search, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(int id, string search, string sort = "name", string dir = "desc", int page = 1)
         {
-            var localities = await _service.GetLocalitiesFromMunId(id);
+            var localities = (await _service.GetLocalitiesFromMunId(id)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -28,12 +29,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            localities = sort switch
-            {
-                SortState.NameAsc => localities.OrderBy(m => m.name),
-                SortState.NameDesc => localities.OrderByDescending(m => m.name)
-            };
+            localities = dir == "asc" ? new SortByProp().SortAsc(localities, sort) : new SortByProp().SortDesc(localities, sort);
 
             ViewData["id"] = id;
             var munname = await _service.GetMunicipalityForId(id);
@@ -45,7 +41,7 @@ namespace ASP_App_ПИС.Controllers
             PageViewModel pageViewModel = new PageViewModel(localities.Count(), page, pageSize);
             ViewData["pageView"] = pageViewModel;
 
-            return View(locsForPage); // !!!!!! тут передаю только 10 нас. пунктов, можешь потом удалить этот комментарий !!!!!!
+            return View(locsForPage);
         }
 
         [HttpGet]

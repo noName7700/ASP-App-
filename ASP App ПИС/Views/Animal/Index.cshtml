@@ -8,44 +8,12 @@
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
 }
 @{
-    SortState sortState = SortState.NameAsc;
     string sort = Context.Request.QueryString.HasValue ? Context.Request.Query["sort"].ToString() : "";
-    if (sort == "NameAsc")
-        sortState = SortState.NameAsc;
-    else if (sort == "NameDesc")
-        sortState = SortState.NameDesc;
-    else if (sort == "UserTelAsc")
-        sortState = SortState.UserTelAsc;
-    else if (sort == "UserTelDesc")
-        sortState = SortState.UserTelDesc;
-    else if (sort == "UserEmailAsc")
-        sortState = SortState.UserEmailAsc;
-    else if (sort == "UserEmailDesc")
-        sortState = SortState.UserEmailDesc;
-    else if (sort == "OrgNameAsc")
-        sortState = SortState.OrgNameAsc;
-    else if (sort == "OrgNameDesc")
-        sortState = SortState.OrgNameDesc;
-    else if (sort == "UserRoleAsc")
-        sortState = SortState.UserRoleAsc;
-    else if (sort == "UserRoleDesc")
-        sortState = SortState.UserRoleDesc;
-    else if (sort == "OrgTelAsc")
-        sortState = SortState.OrgTelAsc;
-    else if (sort == "OrgTelDesc")
-        sortState = SortState.OrgTelDesc;
-    else if (sort == "OrgEmailAsc")
-        sortState = SortState.OrgEmailAsc;
-    else if (sort == "OrgEmailDesc")
-        sortState = SortState.OrgEmailDesc;
-    else if (sort == "DateAsc")
-        sortState = SortState.DateAsc;
-    else if (sort == "DateDesc")
-        sortState = SortState.DateDesc;
-    else if (sort == "NumberAsc")
-        sortState = SortState.NumberAsc;
-    else if (sort == "NumberDesc")
-        sortState = SortState.NumberDesc;
+    string dir = Context.Request.QueryString.HasValue ? Context.Request.Query["dir"].ToString() : "";
+    if (dir == "asc")
+        dir = "desc";
+    else 
+        dir = "asc";
 }
 
 <style>
@@ -161,39 +129,39 @@
                         <tr role="row">
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Категория
-                                <a asp-action="Index" asp-route-sort="@ViewData["NameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="category" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Пол
-                                <a asp-action="Index" asp-route-sort="@ViewData["UserTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="sex" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Порода
-                                            <a asp-action="Index" asp-route-sort="@ViewData["UserEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="breed" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Размер
-                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgNameSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="size" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Шерсть
-                                            <a asp-action="Index" asp-route-sort="@ViewData["UserRoleSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="wool" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Окрас
-                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgTelSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="color" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Уши
-                                            <a asp-action="Index" asp-route-sort="@ViewData["OrgEmailSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="ears" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Хвост
-                                            <a asp-action="Index" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="tail" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                 Особые приметы
-                                            <a asp-action="Index" asp-route-sort="@ViewData["NumberSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                <a asp-action="Index" asp-route-sort="specsings" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                             </th>
                             <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">Действия</th>
                         </tr>
@@ -230,7 +198,7 @@
                             <!-- ПАГИНАЦИЯ (надо бы еще стили подправить) -->
                             @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
                             {
-                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sort)" asp-route-dir="@(dir == "asc" ? dir = "desc" : dir = "asc")" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled">
                                         <span class="btn-label"><i class="fa fa-backward"></i></span>
                                     </button>
@@ -238,7 +206,7 @@
                             }
                             @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                             {
-                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sort)" asp-route-dir="@(dir == "asc" ? dir = "desc" : dir = "asc")" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled right">
                                         <span class="btn-label"><i class="fa fa-forward"></i></span>
                                     </button>

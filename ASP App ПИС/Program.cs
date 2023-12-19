@@ -35,6 +35,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Map("/muns", (IWebService _service) => { return _service.GetMunicipalities(); });
-
 app.Run();

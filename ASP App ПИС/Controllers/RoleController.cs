@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -18,9 +19,9 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(string search, string sort = "name", string dir = "desc", int page = 1)
         {
-            var roles = await _service.GetRoles();
+            var roles = (await _service.GetRoles()).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -28,12 +29,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            roles = sort switch
-            {
-                SortState.NameAsc => roles.OrderBy(m => m.name),
-                SortState.NameDesc => roles.OrderByDescending(m => m.name)
-            };
+            roles = dir == "asc" ? new SortByProp().SortAsc(roles, sort) : new SortByProp().SortDesc(roles, sort);
 
             int pageSize = 10;
             var rolsForPage = roles.Skip((page - 1) * pageSize).Take(pageSize).ToList();

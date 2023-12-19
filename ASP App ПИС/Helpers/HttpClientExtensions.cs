@@ -16,7 +16,5 @@ namespace ASP_App_ПИС.Helpers
                 });
             return result;
         }
-
-
     }
 }
