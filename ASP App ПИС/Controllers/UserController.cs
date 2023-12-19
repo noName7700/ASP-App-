@@ -15,10 +15,12 @@ namespace ASP_App_ПИС.Controllers
     {
         private IWebService _service;
         private IConfiguration _configuration;
-        public UserController(IWebService service, IConfiguration configuration)
+        private ISort _sort;
+        public UserController(IWebService service, IConfiguration configuration, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _configuration = configuration;
+            _sort = sort;
         }
 
         [HttpGet]
@@ -105,7 +107,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search6"] = search6;
             }
 
-            users = dir == "asc" ? new SortByProp().SortAsc(users, sort) : new SortByProp().SortDesc(users, sort);
+            users = dir == "asc" ? _sort.SortAsc(users, sort) : _sort.SortDesc(users, sort);
 
             int pageSize = 10;
             var usersForPage = users.Skip((page - 1) * pageSize).Take(pageSize).ToList();

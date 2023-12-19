@@ -17,10 +17,12 @@ namespace ASP_App_ПИС.Controllers
     public class MunicipalityController : Controller
     {
         private IWebService _service;
+        private ISort _sort;
 
-        public MunicipalityController(IWebService service)
+        public MunicipalityController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         [HttpGet]
@@ -34,7 +36,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            municipalities = dir == "asc" ? new SortByProp().SortAsc(municipalities, sort) : new SortByProp().SortDesc(municipalities, sort);
+            municipalities = dir == "asc" ? _sort.SortAsc(municipalities, sort) : _sort.SortDesc(municipalities, sort);
 
             int pageSize = 10;
             var munsForPage = municipalities.Skip((page - 1) * pageSize).Take(pageSize).ToList();

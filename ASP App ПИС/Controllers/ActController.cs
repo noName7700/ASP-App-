@@ -15,10 +15,12 @@ namespace ASP_App_ПИС.Controllers
     public class ActController : Controller
     {
         private IWebService _service;
+        private ISort _sort;
 
-        public ActController(IWebService service)
+        public ActController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, string sort = "id", string dir = "desc", int page = 1)
@@ -60,7 +62,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
             
-            contracts = dir == "asc" ? new SortByProp().SortAsc(contracts, sort) : new SortByProp().SortDesc(contracts, sort);
+            contracts = dir == "asc" ? _sort.SortAsc(contracts, sort) : _sort.SortDesc(contracts, sort);
 
             int pageSize = 10;
             var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -84,7 +86,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            conLoc = dir == "asc" ? new SortByProp().SortAsc(conLoc, sort) : new SortByProp().SortDesc(conLoc, sort);
+            conLoc = dir == "asc" ? _sort.SortAsc(conLoc, sort) : _sort.SortDesc(conLoc, sort);
 
             int pageSize = 10;
             var conlocsForPage = conLoc.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -116,7 +118,7 @@ namespace ASP_App_ПИС.Controllers
             var localityname = await _service.GetOneLocality(conloc.localityid);
             ViewData["localityname"] = localityname.name;
 
-            acts = dir == "asc" ? new SortByProp().SortAsc(acts, sort) : new SortByProp().SortDesc(acts, sort);
+            acts = dir == "asc" ? _sort.SortAsc(acts, sort) : _sort.SortDesc(acts, sort);
 
             int pageSize = 10;
             var actsForPage = acts.Skip((page - 1) * pageSize).Take(pageSize).ToList();

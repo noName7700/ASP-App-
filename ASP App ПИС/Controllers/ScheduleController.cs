@@ -15,11 +15,13 @@ namespace ASP_App_ПИС.Controllers
     {
         private IWebService _service;
         private IConfiguration _configuration;
+        private ISort _sort;
 
-        public ScheduleController(IWebService service, IConfiguration config)
+        public ScheduleController(IWebService service, IConfiguration config, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _configuration = config;
+            _sort = sort;
         }
 
         public async Task<IActionResult> Index(string search, string search1, string sort = "Contract_Locality", string dir = "desc", int page = 1)
@@ -45,7 +47,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            schedules = dir == "asc" ? new SortByProp().SortAsc(schedules, sort) : new SortByProp().SortDesc(schedules, sort);
+            schedules = dir == "asc" ? _sort.SortAsc(schedules, sort) : _sort.SortDesc(schedules, sort);
 
             int pageSize = 10;
             var schsForPage = schedules.Skip((page - 1) * pageSize).Take(pageSize).ToList();

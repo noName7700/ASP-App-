@@ -14,10 +14,12 @@ namespace ASP_App_ПИС.Controllers
     {
         private IWebService _service;
         private IConfiguration _configuration;
-        public ReportController(IWebService service, IConfiguration configuration)
+        private ISort _sort;
+        public ReportController(IWebService service, IConfiguration configuration, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _configuration = configuration;
+            _sort = sort;
         }
 
         [HttpGet]
@@ -39,7 +41,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            regMoney = dir == "asc" ? new SortByProp().SortAsc(regMoney, sort) : new SortByProp().SortDesc(regMoney, sort);
+            regMoney = dir == "asc" ? _sort.SortAsc(regMoney, sort) : _sort.SortDesc(regMoney, sort);
 
             int pageSize = 10;
             var repsForPage = regMoney.Skip((page - 1) * pageSize).Take(pageSize).ToList();
@@ -76,7 +78,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            regSchedule = dir == "asc" ? new SortByProp().SortAsc(regSchedule, sort) : new SortByProp().SortDesc(regSchedule, sort);
+            regSchedule = dir == "asc" ? _sort.SortAsc(regSchedule, sort) : _sort.SortDesc(regSchedule, sort);
 
             int pageSize = 10;
             var repsForPage = regSchedule.Skip((page - 1) * pageSize).Take(pageSize).ToList();

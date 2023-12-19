@@ -1,3 +1,4 @@
+using ASP_App_ÏÈÑ.Helpers;
 using ASP_App_ÏÈÑ.Services;
 using ASP_App_ÏÈÑ.Services.Interfaces;
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("Cookies").AddCookie(options => options.LoginPath = "/login");
 builder.Services.AddAuthorization();
+builder.Services.AddSingleton<ISort, SortByProp>();
 
 var port = builder.Configuration.GetValue("ServerPort", "44370");
 

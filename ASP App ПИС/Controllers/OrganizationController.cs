@@ -16,10 +16,12 @@ namespace ASP_App_ПИС.Controllers
     {
         private IWebService _service;
         private IConfiguration _configuration;
-        public OrganizationController(IWebService service, IConfiguration configuration)
+        private ISort _sort;
+        public OrganizationController(IWebService service, IConfiguration configuration, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _configuration = configuration;
+            _sort = sort;
         }
 
         [HttpGet]
@@ -50,7 +52,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search3"] = search3;
             }
 
-            orgs = dir == "asc" ? new SortByProp().SortAsc(orgs, sort) : new SortByProp().SortDesc(orgs, sort);
+            orgs = dir == "asc" ? _sort.SortAsc(orgs, sort) : _sort.SortDesc(orgs, sort);
 
             int pageSize = 10;
             var orgsForPage = orgs.Skip((page - 1) * pageSize).Take(pageSize).ToList();

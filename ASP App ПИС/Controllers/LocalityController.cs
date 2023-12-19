@@ -12,10 +12,12 @@ namespace ASP_App_ПИС.Controllers
     public class LocalityController : Controller
     {
         private IWebService _service;
+        private ISort _sort;
 
-        public LocalityController(IWebService service)
+        public LocalityController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         [Route("/locality/{id}")]
@@ -29,7 +31,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            localities = dir == "asc" ? new SortByProp().SortAsc(localities, sort) : new SortByProp().SortDesc(localities, sort);
+            localities = dir == "asc" ? _sort.SortAsc(localities, sort) : _sort.SortDesc(localities, sort);
 
             ViewData["id"] = id;
             var munname = await _service.GetMunicipalityForId(id);

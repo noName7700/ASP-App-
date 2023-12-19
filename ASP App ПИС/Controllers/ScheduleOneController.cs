@@ -14,10 +14,12 @@ namespace ASP_App_ПИС.Controllers
     public class ScheduleOneController : Controller
     {
         private IWebService _service;
+        private ISort _sort;
 
-        public ScheduleOneController(IWebService service)
+        public ScheduleOneController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         // тут изменила - теперь это id cont_loc
@@ -52,7 +54,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            tasks = dir == "asc" ? new SortByProp().SortAsc(tasks, sort) : new SortByProp().SortDesc(tasks, sort);
+            tasks = dir == "asc" ? _sort.SortAsc(tasks, sort) : _sort.SortDesc(tasks, sort);
 
             ViewData["id"] = id;
             var conloc = await _service.GetOneContract_LocalityFromId(id);

@@ -12,10 +12,12 @@ namespace ASP_App_ПИС.Controllers
     public class AnimalController : Controller
     {
         private IWebService _service;
+        private ISort _sort;
 
-        public AnimalController(IWebService service)
+        public AnimalController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         [HttpGet]
@@ -75,8 +77,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search8"] = search8;
             }
 
-            animals = dir == "asc" ? new SortByProp().SortAsc(animals, sort)
-                : new SortByProp().SortDesc(animals, sort);
+            animals = dir == "asc" ? _sort.SortAsc(animals, sort) : _sort.SortDesc(animals, sort);
 
             // пагинация
             int pageSize = 10; /* размер строк на одну стр */

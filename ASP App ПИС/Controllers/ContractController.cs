@@ -15,11 +15,13 @@ namespace ASP_App_ПИС.Controllers
     {
         private IWebService _service;
         private IConfiguration _configuration;
+        private ISort _sort;
 
-        public ContractController(IWebService service, IConfiguration configuration)
+        public ContractController(IWebService service, IConfiguration configuration, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _configuration = configuration;
+            _sort = sort;
         }
 
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, 
@@ -64,7 +66,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            contracts = dir == "asc" ? new SortByProp().SortAsc(contracts, sort) : new SortByProp().SortDesc(contracts, sort);
+            contracts = dir == "asc" ? _sort.SortAsc(contracts, sort) : _sort.SortDesc(contracts, sort);
             
             int pageSize = 10;
             var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();

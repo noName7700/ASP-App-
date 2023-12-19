@@ -13,9 +13,11 @@ namespace ASP_App_ПИС.Controllers
     public class RoleController : Controller
     {
         private IWebService _service;
-        public RoleController(IWebService service)
+        private ISort _sort;
+        public RoleController(IWebService service, ISort sort)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _sort = sort;
         }
 
         [HttpGet]
@@ -29,7 +31,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            roles = dir == "asc" ? new SortByProp().SortAsc(roles, sort) : new SortByProp().SortDesc(roles, sort);
+            roles = dir == "asc" ? _sort.SortAsc(roles, sort) : _sort.SortDesc(roles, sort);
 
             int pageSize = 10;
             var rolsForPage = roles.Skip((page - 1) * pageSize).Take(pageSize).ToList();
