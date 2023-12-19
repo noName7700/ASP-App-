@@ -9,12 +9,12 @@
     var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
 }
 @{
-    SortState sortState = SortState.NameAsc;
     string sort = Context.Request.QueryString.HasValue ? Context.Request.Query["sort"].ToString() : "";
-    if (sort == "DateAsc")
-        sortState = SortState.DateAsc;
-    else if (sort == "DateDesc")
-        sortState = SortState.DateDesc;
+    string dir = Context.Request.QueryString.HasValue ? Context.Request.Query["dir"].ToString() : "";
+    if (dir == "asc")
+        dir = "desc";
+    else 
+        dir = "asc";
 }
 
 <style>
@@ -69,12 +69,11 @@
                                 <tr role="row">
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                         Дата отлова
-                                            <a asp-action="ViewActs" asp-route-sort="@ViewData["DateSort"]"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
+                                            <a asp-action="ViewActs" asp-route-sort="datecapture" asp-route-dir="@dir"><img src="/img/sorted.png" alt="Сортировка" width="20"></a>
                                     </th>
                                     <th class="sorting_asc" tabindex="0" aria-controls="example-table" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 252.7px;">
                                         Действия
-                                        </th>
-
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,7 +108,7 @@
                         </table>
                             @if (((PageViewModel)ViewData["pageView"]).HasPreviousPage)
                             {
-                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sort)" asp-route-dir="@(dir == "asc" ? dir = "desc" : dir = "asc")" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber - 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled">
                                         <span class="btn-label"><i class="fa fa-backward"></i></span>
                                     </button>
@@ -117,7 +116,7 @@
                             }
                             @if (((PageViewModel)ViewData["pageView"]).HasNextPage)
                             {
-                                <a asp-action="Index" asp-route-sort="@(sortState)" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
+                                <a asp-action="Index" asp-route-sort="@(sort)" asp-route-dir="@(dir == "asc" ? dir = "desc" : dir = "asc")" asp-route-page="@(((PageViewModel)ViewData["pageView"]).PageNumber + 1)" class="btn btn-outline-dark no-border">
                                     <button class="btn btn-default labeled right">
                                         <span class="btn-label"><i class="fa fa-forward"></i></span>
                                     </button>

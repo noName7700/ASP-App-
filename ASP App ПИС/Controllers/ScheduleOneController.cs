@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -21,9 +22,9 @@ namespace ASP_App_ПИС.Controllers
 
         // тут изменила - теперь это id cont_loc
         [Route("/scheduleone/{id}")]
-        public async Task<IActionResult> Index(int id, string search, string search1, string search2, SortState sort = SortState.DateAsc, int page = 1)
+        public async Task<IActionResult> Index(int id, string search, string search1, string search2, string sort = "startdate", string dir = "desc", int page = 1)
         {
-            var tasks = await _service.GetTaskMonth(id);
+            var tasks = (await _service.GetTaskMonth(id)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -48,18 +49,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
-            tasks = sort switch
-            {
-                SortState.DateAsc => tasks.OrderBy(sc => sc.startdate),
-                SortState.DateDesc => tasks.OrderByDescending(sc => sc.startdate),
-                SortState.NameAsc => tasks.OrderBy(j => j.enddate),
-                SortState.NameDesc => tasks.OrderByDescending(j => j.enddate),
-                SortState.NumberAsc => tasks.OrderBy(j => j.countanimal),
-                SortState.NumberDesc => tasks.OrderByDescending(j => j.countanimal)
-            };
+            tasks = dir == "asc" ? new SortByProp().SortAsc(tasks, sort) : new SortByProp().SortDesc(tasks, sort);
 
             ViewData["id"] = id;
             var conloc = await _service.GetOneContract_LocalityFromId(id);

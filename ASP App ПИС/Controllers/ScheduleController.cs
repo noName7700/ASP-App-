@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Xml;
 using Microsoft.Extensions.Primitives;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -21,9 +22,9 @@ namespace ASP_App_ПИС.Controllers
             _configuration = config;
         }
 
-        public async Task<IActionResult> Index(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(string search, string search1, string sort = "Contract_Locality", string dir = "desc", int page = 1)
         {
-            var schedules = await _service.GetSchedules();
+            var schedules = (await _service.GetSchedules()).ToList();
             var acts = await _service.GetActsCapture();
             ViewData["acts"] = acts;
 
@@ -41,15 +42,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            schedules = sort switch
-            {
-                SortState.NameAsc => schedules.OrderBy(sc => sc.Contract_Locality.Locality.name),
-                SortState.NameDesc => schedules.OrderByDescending(sc => sc.Contract_Locality.Locality.name),
-                SortState.DateAsc => schedules.OrderBy(sc => sc.dateapproval),
-                SortState.DateDesc => schedules.OrderByDescending(sc => sc.dateapproval)
-            };
+            schedules = dir == "asc" ? new SortByProp().SortAsc(schedules, sort) : new SortByProp().SortDesc(schedules, sort);
 
             int pageSize = 10;
             var schsForPage = schedules.Skip((page - 1) * pageSize).Take(pageSize).ToList();

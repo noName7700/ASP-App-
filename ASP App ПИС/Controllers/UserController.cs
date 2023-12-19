@@ -1,4 +1,5 @@
-﻿using ASP_App_ПИС.Models;
+﻿using ASP_App_ПИС.Helpers;
+using ASP_App_ПИС.Models;
 using ASP_App_ПИС.Services.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authentication;
@@ -64,9 +65,9 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         [Route("/user")]
         public new async Task<IActionResult> User(string search, string search1, string search2, string search3,
-            string search4, string search5, string search6, SortState sort = SortState.NameAsc, int page = 1)
+            string search4, string search5, string search6, string sort = "surname", string dir = "desc", int page = 1)
         {
-            var users = await _service.GetUsers();
+            var users = (await _service.GetUsers()).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -104,30 +105,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search6"] = search6;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
-            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
-            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
-            ViewData["UserRoleSort"] = sort == SortState.UserRoleAsc ? SortState.UserRoleDesc : SortState.UserRoleAsc;
-            ViewData["OrgTelSort"] = sort == SortState.OrgTelAsc ? SortState.OrgTelDesc : SortState.OrgTelAsc;
-            ViewData["OrgEmailSort"] = sort == SortState.OrgEmailAsc ? SortState.OrgEmailDesc : SortState.OrgEmailAsc;
-            users = sort switch
-            {
-                SortState.NameAsc => users.OrderBy(sc => $"{sc.surname} {sc.name} {sc.patronymic}"),
-                SortState.NameDesc => users.OrderByDescending(sc => $"{sc.surname} {sc.name} {sc.patronymic}"),
-                SortState.UserTelAsc => users.OrderBy(j => j.telephone),
-                SortState.UserTelDesc => users.OrderByDescending(j => j.telephone),
-                SortState.UserEmailAsc => users.OrderBy(j => j.email),
-                SortState.UserEmailDesc => users.OrderByDescending(j => j.email),
-                SortState.OrgNameAsc => users.OrderBy(j => j.Role.name),
-                SortState.OrgNameDesc => users.OrderByDescending(j => j.Role.name),
-                SortState.UserRoleAsc => users.OrderBy(j => j.Municipality.name),
-                SortState.UserRoleDesc => users.OrderByDescending(j => j.Municipality.name),
-                SortState.OrgTelAsc => users.OrderBy(j => j.Locality.name),
-                SortState.OrgTelDesc => users.OrderByDescending(j => j.Locality.name),
-                SortState.OrgEmailAsc => users.OrderBy(j => j.Organization.name),
-                SortState.OrgEmailDesc => users.OrderByDescending(j => j.Organization.name)
-            };
+            users = dir == "asc" ? new SortByProp().SortAsc(users, sort) : new SortByProp().SortDesc(users, sort);
 
             int pageSize = 10;
             var usersForPage = users.Skip((page - 1) * pageSize).Take(pageSize).ToList();

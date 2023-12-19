@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Extensions.Configuration;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -22,9 +23,9 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(string search, string search1, string search2, string search3, string sort = "name", string dir = "desc", int page = 1)
         {
-            var orgs = await _service.GetOrganizations();
+            var orgs = (await _service.GetOrganizations()).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -47,21 +48,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search3"] = search3;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["UserTelSort"] = sort == SortState.UserTelAsc ? SortState.UserTelDesc : SortState.UserTelAsc;
-            ViewData["UserEmailSort"] = sort == SortState.UserEmailAsc ? SortState.UserEmailDesc : SortState.UserEmailAsc;
-            ViewData["OrgNameSort"] = sort == SortState.OrgNameAsc ? SortState.OrgNameDesc : SortState.OrgNameAsc;
-            orgs = sort switch
-            {
-                SortState.NameAsc => orgs.OrderBy(m => m.name),
-                SortState.NameDesc => orgs.OrderByDescending(m => m.name),
-                SortState.UserTelAsc => orgs.OrderBy(j => j.telephone),
-                SortState.UserTelDesc => orgs.OrderByDescending(j => j.telephone),
-                SortState.UserEmailAsc => orgs.OrderBy(j => j.email),
-                SortState.UserEmailDesc => orgs.OrderByDescending(j => j.email),
-                SortState.OrgNameAsc => orgs.OrderBy(j => j.Locality.name),
-                SortState.OrgNameDesc => orgs.OrderByDescending(j => j.Locality.name)
-            };
+            orgs = dir == "asc" ? new SortByProp().SortAsc(orgs, sort) : new SortByProp().SortDesc(orgs, sort);
 
             int pageSize = 10;
             var orgsForPage = orgs.Skip((page - 1) * pageSize).Take(pageSize).ToList();

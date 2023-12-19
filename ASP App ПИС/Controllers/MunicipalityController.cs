@@ -9,6 +9,7 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Primitives;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -23,9 +24,9 @@ namespace ASP_App_ПИС.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string search, SortState sort = SortState.NameAsc, int page = 1)
+        public async Task<IActionResult> Index(string search, string sort = "name", string dir = "desc", int page = 1)
         {
-            var municipalities = await _service.GetMunicipalities();
+            List<Municipality> municipalities = (await _service.GetMunicipalities()).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -33,12 +34,7 @@ namespace ASP_App_ПИС.Controllers
                 ViewData["search"] = search;
             }
 
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            municipalities = sort switch
-            {
-                SortState.NameAsc => municipalities.OrderBy(m => m.name),
-                SortState.NameDesc => municipalities.OrderByDescending(m => m.name)
-            };
+            municipalities = dir == "asc" ? new SortByProp().SortAsc(municipalities, sort) : new SortByProp().SortDesc(municipalities, sort);
 
             int pageSize = 10;
             var munsForPage = municipalities.Skip((page - 1) * pageSize).Take(pageSize).ToList();

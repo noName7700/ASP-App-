@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using ASP_App_ПИС.Helpers;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -22,10 +23,10 @@ namespace ASP_App_ПИС.Controllers
         }
 
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, 
-            SortState sort = SortState.NameAsc, int page = 1)
+            string sort = "id", string dir = "desc", int page = 1)
         {
             // получаю все контракты
-            var contracts = await _service.GetContracts();
+            var contracts = (await _service.GetContracts()).ToList();
 
             // получаю все contract_locality
             var con_loc = await _service.GetContract_Localities();
@@ -61,22 +62,7 @@ namespace ASP_App_ПИС.Controllers
                 }
             }
 
-
-            ViewData["NameSort"] = sort == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            ViewData["NumberSort"] = sort == SortState.NumberAsc ? SortState.NumberDesc : SortState.NumberAsc;
-            ViewData["DateSort"] = sort == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
-            ViewData["DateActionSort"] = sort == SortState.DateActionAsc ? SortState.DateActionDesc : SortState.DateActionAsc;
-            contracts = sort switch
-            {
-                SortState.NameAsc => contracts.OrderBy(sc => sc.Municipality.name),
-                SortState.NameDesc => contracts.OrderByDescending(sc => sc.Municipality.name),
-                SortState.NumberAsc => contracts.OrderBy(j => j.id),
-                SortState.NumberDesc => contracts.OrderByDescending(j => j.id),
-                SortState.DateAsc => contracts.OrderBy(j => j.dateconclusion),
-                SortState.DateDesc => contracts.OrderByDescending(j => j.dateconclusion),
-                SortState.DateActionAsc => contracts.OrderBy(j => j.validityperiod),
-                SortState.DateActionDesc => contracts.OrderByDescending(j => j.validityperiod)
-            };
+            contracts = dir == "asc" ? new SortByProp().SortAsc(contracts, sort) : new SortByProp().SortDesc(contracts, sort);
             
             int pageSize = 10;
             var consForPage = contracts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
