@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Domain;
+using Domain.NonDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
@@ -8,22 +10,31 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Organization")]
-    public class OrganizationController : Controller
+    public class OrganizationController : Controller, IRegister<Organization>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<Organization> proxy;
         public OrganizationController(ApplicationContext context)
         {
             _context = context;
+            proxy = new OrganizationFilterProxy(this);
         }
 
-        // вывести все организации
-        [HttpGet]
-        public async Task<IEnumerable<Organization>> Get()
+        public async Task<List<Organization>> GetAll(Usercapture user, int id = 1)
         {
             return await _context.organization
                 .Include(o => o.Locality)
                 .ToListAsync();
+        }
+
+        // вывести все организации
+        [HttpGet("{userid}")]
+        public async Task<IEnumerable<Organization>> Get(int userid)
+        {
+            var user = await _context.usercapture
+               .Where(u => u.id == userid)
+               .FirstOrDefaultAsync();
+            return await proxy.GetAll(user);
         }
 
         [HttpGet]

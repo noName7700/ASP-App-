@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Domain;
+using Domain.NonDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
@@ -8,13 +10,24 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Animal")]
-    public class AnimalController : Controller
+    public class AnimalController : Controller, IRegister<Animal>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<Animal> proxy;
         public AnimalController(ApplicationContext context)
         {
             _context = context;
+            proxy = new AnimalFilterProxy(this);
+        }
+
+        public async Task<List<Animal>> GetAll(Usercapture user, int id)
+        {
+            return await _context.animal
+                .Include(a => a.ActCapture)
+                .ThenInclude(a => a.Locality)
+                .Where(a => a.actcaptureid == id)
+                .Select(a => a)
+                .ToListAsync();
         }
 
         [HttpGet]
@@ -24,15 +37,13 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/Animal/{id}")]
-        public async Task<IEnumerable<Animal>> Get(int id)
+        [Route("/api/Animal/{id}/{userid}")]
+        public async Task<IEnumerable<Animal>> Get(int id, int userid)
         {
-            return await _context.animal
-                .Include(a => a.ActCapture)
-                .ThenInclude(a => a.Locality)
-                .Where(a => a.actcaptureid == id)
-                .Select(a => a)
-                .ToListAsync();
+            var user = await _context.usercapture
+               .Where(u => u.id == userid)
+               .FirstOrDefaultAsync();
+            return await proxy.GetAll(user, id);
         }
 
         [HttpGet]

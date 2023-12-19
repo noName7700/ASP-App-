@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Domain;
+using Domain.NonDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
@@ -8,12 +10,29 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/ActCapture")]
-    public class ActCaptureController : Controller
+    public class ActCaptureController : Controller, IRegister<ActCapture>
     {
         ApplicationContext _context;
+        private readonly IRegister<ActCapture> proxy;
         public ActCaptureController(ApplicationContext context)
         {
             _context = context;
+            proxy = new ActCaptureFilterProxy(this);
+        }
+
+        public async Task<List<ActCapture>> GetAll(Usercapture user, int id = 1)
+        {
+            var con_loc = await _context.contract_locality
+                .Include(cl => cl.Contract)
+                .Include(cl => cl.Locality)
+                .Where(cl => cl.id == id)
+                .FirstOrDefaultAsync();
+
+            return await _context.actcapture
+                .Include(a => a.Locality)
+                .Where(a => a.contractid == con_loc.Contract.id && a.localityid == con_loc.Locality.id)
+                .Select(a => a)
+                .ToListAsync();
         }
 
         [HttpGet]
@@ -35,20 +54,13 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("/api/ActCapture/all/{conlocid}")]
-        public async Task<IEnumerable<ActCapture>> GetAll(int conlocid)
+        [Route("/api/ActCapture/all/{conlocid}/{userid}")]
+        public async Task<IEnumerable<ActCapture>> GetAll(int conlocid, int userid)
         {
-            var con_loc = await _context.contract_locality
-                .Include(cl => cl.Contract)
-                .Include(cl => cl.Locality)
-                .Where(cl => cl.id == conlocid)
+            var user = await _context.usercapture
+                .Where(u => u.id == userid)
                 .FirstOrDefaultAsync();
-
-            return await _context.actcapture
-                .Include(a => a.Locality)
-                .Where(a => a.contractid == con_loc.Contract.id && a.localityid == con_loc.Locality.id)
-                .Select(a => a)
-                .ToListAsync();
+            return await proxy.GetAll(user, conlocid);
         }
 
         [HttpGet]

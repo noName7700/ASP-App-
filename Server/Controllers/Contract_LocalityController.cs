@@ -2,42 +2,52 @@
 using Server.Application;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Domain.NonDomain;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Contract_Locality")]
-    public class Contract_LocalityController : Controller
+    public class Contract_LocalityController : Controller, IRegister<Contract_Locality>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<Contract_Locality> proxy;
         public Contract_LocalityController(ApplicationContext context)
         {
             _context = context;
+            proxy = new Contract_LocalityFilterProxy(this);
+        }
+
+        public async Task<List<Contract_Locality>> GetAll(Usercapture user, int id = 1)
+        {
+            return await _context.contract_locality
+                 .Include(cl => cl.Organization)
+                 .Include(cl => cl.Contract)
+                 .Include(cl => cl.Locality)
+                 .Where(cl => cl.contractid == id)
+                 .Select(cl => cl)
+                 .ToListAsync();
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Contract_Locality>> Get()
+        public async Task<IEnumerable<Contract_Locality>> GetAll()
         {
             return await _context.contract_locality
-                .Include(cl => cl.Organization)
-                .Include(cl => cl.Contract)
-                .Include(cl => cl.Locality)
-                .Select(cl => cl)
-                .ToListAsync();
+                 .Include(cl => cl.Organization)
+                 .Include(cl => cl.Contract)
+                 .Include(cl => cl.Locality)
+                 .Select(cl => cl)
+                 .ToListAsync();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<Contract_Locality>> Get(int id)
+        [HttpGet]
+        [Route("/api/Contract_Locality/{id}/{userid}")]
+        public async Task<IEnumerable<Contract_Locality>> Get(int id, int userid)
         {
-            var t = await _context.contract_locality
-                .Include(cl => cl.Organization)
-                .Include(cl => cl.Locality)
-                .Include(cl => cl.Contract)
-                .Where(cl => cl.contractid == id)
-                .Select(cl => cl)
-                .ToListAsync();
-            return t;
+            var user = await _context.usercapture
+                .Where(u => u.id == userid)
+                .FirstOrDefaultAsync();
+            return await proxy.GetAll(user, id);
         }
 
         [HttpGet]

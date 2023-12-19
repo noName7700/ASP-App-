@@ -23,7 +23,10 @@ namespace ASP_App_ПИС.Controllers
 
         public async Task<IActionResult> Index(string search, string search1, SortState sort = SortState.NameAsc, int page = 1)
         {
-            var schedules = await _service.GetSchedules();
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            var schedules = await _service.GetSchedules(userid);
             var acts = await _service.GetActsCapture();
             ViewData["acts"] = acts;
 

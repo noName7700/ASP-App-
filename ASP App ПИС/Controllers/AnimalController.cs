@@ -23,7 +23,10 @@ namespace ASP_App_ПИС.Controllers
             string search4, string search5, string search6, string search7, string search8, SortState sort = SortState.NameAsc, int page = 1)
         {
             ViewData["id"] = id;
-            var animals = await _service.GetAnimals(id);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            var animals = await _service.GetAnimals(id, userid);
 
             if (!string.IsNullOrEmpty(search))
             {

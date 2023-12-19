@@ -9,11 +9,11 @@ namespace ASP_App_ПИС.Services.Interfaces
     {
         Task<IEnumerable<Municipality>> GetMunicipalities();
         Task<IEnumerable<Locality>> GetLocalActs();
-        Task<IEnumerable<Animal>> GetAnimals(int id);
-        Task<IEnumerable<Contract>> GetContracts();
+        Task<IEnumerable<Animal>> GetAnimals(int id, int userid);
+        Task<IEnumerable<Contract>> GetContracts(int userid);
         Task<IEnumerable<Locality>> GetLocalities();
         Task<IEnumerable<Locality>> GetLocalitiesFromMunId(int id);
-        Task<IEnumerable<Schedule>> GetSchedules();
+        Task<IEnumerable<Schedule>> GetSchedules(int userid);
         Task<IEnumerable<Usercapture>> GetUsers();
         Task<Schedule> GetScheduleFromTaskMonthId(int id);
         Task<Municipality> GetMunicipalityFromLocalityId(int id);
@@ -25,11 +25,11 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Animal> GetLastAnimal();
         Task<Locality> GetLastLocality();
         Task<IEnumerable<ActCapture>> GetAct(int locid);
-        Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid);
+        Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid, int userid);
         Task<Animal> GetAnimal(int id);
         Task<Locality> GetLocality(int id);
         Task<Locality> GetOneLocality(int id);
-        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id);
+        Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int userid);
         Task<TaskMonth> GetTaskMonthOne(int id);
         Task<Contract> GetContractOne(int id);
         Task<Animal> GetAnimalOne(int id);
@@ -77,7 +77,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<Contract_Locality> GetOneContract_Locality(int id);
 
         Task<HttpResponseMessage> EditTariphLocality(int id, Contract_Locality value);
-        Task<IEnumerable<Organization>> GetOrganizations();
+        Task<IEnumerable<Organization>> GetOrganizations(int userid);
         Task<Organization> GetOneOrganization(int id);
         Task<HttpResponseMessage> AddOrganization(Organization value);
         Task<HttpResponseMessage> EditOrganization (int id, Organization value);
@@ -95,7 +95,7 @@ namespace ASP_App_ПИС.Services.Interfaces
         Task<HttpResponseMessage> EditRole(int id, Role value);
         Task<HttpResponseMessage> DeleteRole(int id);
         Task<IEnumerable<Contract_Locality>> GetContract_Localities();
-        Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id);
+        Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id, int userid);
         Task<Contract_Locality> GetDateContract_LocalityForDate(int id, string datecapture);
         Task<IEnumerable<Contract>> GetContractsFromMunId(int id);
         Task<Schedule> GetOneScheduleFromLocDate(int conlocid);

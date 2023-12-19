@@ -24,7 +24,9 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
         {
-            var orgs = await _service.GetOrganizations();
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            var orgs = await _service.GetOrganizations(userid);
 
             if (!string.IsNullOrEmpty(search))
             {

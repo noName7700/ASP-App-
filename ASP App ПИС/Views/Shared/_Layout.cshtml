@@ -6,6 +6,7 @@
     var surname = claims.Where(c => c.Type == ClaimTypes.Surname).First();
     var login = claims.Where(c => c.Type == ClaimTypes.NameIdentifier).First();
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -146,7 +147,7 @@
                             <li>
                                 <a href="/organization/">Список организаций</a>
                             </li>
-                            @if (isAdmin)
+                            @if (isAdmin || role.ToLower() == "оператор омсу")
                             {
                             <li>
                                     <a href="/organization/add">Добавить<br>организацию</a>

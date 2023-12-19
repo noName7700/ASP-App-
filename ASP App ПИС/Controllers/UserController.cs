@@ -141,13 +141,15 @@ namespace ASP_App_ПИС.Controllers
         [Route("/user/add")]
         public new async Task<IActionResult> Add()
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             if (Request.Query.TryGetValue("err", out StringValues err))
             {
                 ViewData["err"] = err;
             }
             ViewData["muns"] = await _service.GetMunicipalities();
             ViewData["locs"] = await _service.GetLocalities();
-            ViewData["orgs"] = await _service.GetOrganizations();
+            ViewData["orgs"] = await _service.GetOrganizations(userid);
             ViewData["roles"] = await _service.GetRoles();
             ViewData["config"] = _configuration;
             return View();

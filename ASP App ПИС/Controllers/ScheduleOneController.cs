@@ -23,7 +23,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/scheduleone/{id}")]
         public async Task<IActionResult> Index(int id, string search, string search1, string search2, SortState sort = SortState.DateAsc, int page = 1)
         {
-            var tasks = await _service.GetTaskMonth(id);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            var tasks = await _service.GetTaskMonth(id, userid);
 
             if (!string.IsNullOrEmpty(search))
             {

@@ -96,9 +96,6 @@
                             <tbody>
                             @foreach(var sch in Model)
                             {
-                                if ((role == "Оператор по отлову" && sch.Contract_Locality.localityid == locId && !isAdmin) || isAdmin ||
-                                        (role != "Оператор по отлову" && sch.Contract_Locality.Locality.municipalityid == munId))
-                                {
                                     <tr role="row" class="odd">
                                     <td>@sch.Contract_Locality.Locality.name</td>
                                     <td>@sch.dateapproval.ToShortDateString()</td>
@@ -123,7 +120,6 @@
                                     </td>
                                     <td><a href="/scheduleone/@sch.contract_localityid">Просмотр <i class="fa fa-eye font-14"></i></a></td>
                                     </tr>
-                                }
                             }
                             </tbody>
                         </table>

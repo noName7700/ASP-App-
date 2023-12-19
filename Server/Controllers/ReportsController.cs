@@ -1,27 +1,12 @@
 ﻿using Domain;
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
-using Aspose.Cells;
-using Aspose.Cells.Utility;
-using System.Net;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Text.Json;
-using System.Security.Cryptography;
-using Newtonsoft.Json;
-using System.Text;
-using System.Formats.Asn1;
-//using CsvHelper;
 using ClosedXML.Excel;
-using System.IO;
-using System.Globalization;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.Data;
-using DocumentFormat.OpenXml.Office2010.Drawing;
+using Domain.NonDomain;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2010.Excel;
 //using closedxml.excel;
 
 namespace Server.Controllers
@@ -31,7 +16,6 @@ namespace Server.Controllers
     public class ReportsController : Controller
     {
         ApplicationContext _context;
-
         public ReportsController(ApplicationContext context)
         {
             _context = context;
@@ -45,10 +29,6 @@ namespace Server.Controllers
             var needLocalities = await _context.locality.Select(l => l).Where(m => m.municipalityid == munid).Select(h => h.id).ToListAsync();
             //DateTime startdate = DateTime.Parse(startDate);
             //DateTime enddate = DateTime.Parse(endDate);
-
-            var check = await _context.contract_locality
-                .Where(cl => cl.contractid == conid)
-                .ToListAsync();
 
             // тут словарь: нас пункт id - тариф
             var loc_tar = await _context.contract_locality
@@ -65,12 +45,12 @@ namespace Server.Controllers
 
             // то что фактически получилось, я пробегаюсь по всем актам отлова из этого нас пункта и считаю цену потом складываю
             double summ = 0;
-            foreach (var act in _context.actcapture)
+            foreach (var act in _context.animal.Include(a => a.ActCapture))
             {
-                if (act.datecapture >= conLoc.dateconclusion && act.datecapture <= conLoc.validityperiod 
-                    && needLocalities.Contains(act.localityid))
+                if (act.ActCapture.datecapture >= conLoc.dateconclusion && act.ActCapture.datecapture <= conLoc.validityperiod 
+                    && needLocalities.Contains(act.ActCapture.localityid))
                 {
-                    summ += loc_tar[act.localityid];
+                    summ += loc_tar[act.ActCapture.localityid];
                 }
             }
 

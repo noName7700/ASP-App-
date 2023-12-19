@@ -4,6 +4,7 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.Extensions.Primitives;
 
 namespace ASP_App_ПИС.Controllers
 {
@@ -115,16 +116,10 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var municipalities = await _service.GetMunicipalities();
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-            int munid; IEnumerable<Contract> contracts;
-            if (isAdmin)
-            {
-                contracts = await _service.GetContracts();
-            }
-            else
-            {
-                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-                contracts = await _service.GetContractsFromMunId(munid);
-            }
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            IEnumerable<Contract> contracts = await _service.GetContracts(userid);
+
             return View(contracts);
         }
 
@@ -184,17 +179,10 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            IEnumerable<Contract> contracts;
-            if (isAdmin)
-            {
-                contracts = await _service.GetContracts();
-            }
-            else
-            {
-                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-                contracts = await _service.GetContractsFromMunId(munid);
-            }
+            IEnumerable<Contract> contracts = await _service.GetContracts(userid);
+
             ViewData["cons"] = contracts;
 
             var stat = await _service.GetStatusesReports();
@@ -290,16 +278,9 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var municipalities = await _service.GetMunicipalities();
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-            int munid; IEnumerable<Contract> contracts;
-            if (isAdmin)
-            {
-                contracts = await _service.GetContracts();
-            }
-            else
-            {
-                munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-                contracts = await _service.GetContractsFromMunId(munid);
-            }
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            IEnumerable<Contract> contracts = await _service.GetContracts(userid);
 
             IEnumerable<Locality> locs = await _service.GetLocalities();
             ViewData["locs"] = locs;
@@ -365,17 +346,18 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             int munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
             IEnumerable<Contract> contracts;IEnumerable<Locality> localities;
             if (isAdmin)
             {
-                contracts = await _service.GetContracts();
+                contracts = await _service.GetContracts(userid);
                 localities = await _service.GetLocalities();
             }
             else
             {
                 munid = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-                contracts = await _service.GetContractsFromMunId(munid);
+                contracts = await _service.GetContracts(userid);
                 localities = await _service.GetLocalitiesFromMunId(munid);
             }
             ViewData["cons"] = contracts;

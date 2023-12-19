@@ -32,15 +32,15 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Locality>>();
         }
 
-        public async Task<IEnumerable<Animal>> GetAnimals(int id)
+        public async Task<IEnumerable<Animal>> GetAnimals(int id, int userid)
         {
-            var response = await _client.GetAsync($"/api/Animal/{id}");
+            var response = await _client.GetAsync($"/api/Animal/{id}/{userid}");
             return await response.ReadContentAsync<List<Animal>>();
         }
 
-        public async Task<IEnumerable<Contract>> GetContracts()
+        public async Task<IEnumerable<Contract>> GetContracts(int userid)
         {
-            var response = await _client.GetAsync("/api/Contract");
+            var response = await _client.GetAsync($"/api/Contract/user/{userid}");
             return await response.ReadContentAsync<List<Contract>>();
         }
 
@@ -50,9 +50,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<List<Locality>>();
         }
 
-        public async Task<IEnumerable<Schedule>> GetSchedules()
+        public async Task<IEnumerable<Schedule>> GetSchedules(int userid)
         {
-            var response = await _client.GetAsync("/api/Schedule");
+            var response = await _client.GetAsync($"/api/Schedule/user/{userid}");
             return await response.ReadContentAsync<List<Schedule>>();
         }
 
@@ -92,9 +92,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
-        public async Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid)
+        public async Task<IEnumerable<ActCapture>> GetActsFromConLocId(int conlocid, int userid)
         {
-            var response = await _client.GetAsync($"/api/ActCapture/all/{conlocid}");
+            var response = await _client.GetAsync($"/api/ActCapture/all/{conlocid}/{userid}");
             return await response.ReadContentAsync<IEnumerable<ActCapture>>();
         }
 
@@ -122,9 +122,9 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<Locality>();
         }
 
-        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id)
+        public async Task<IEnumerable<TaskMonth>> GetTaskMonth(int id, int userid)
         {
-            var response = await _client.GetAsync($"/api/TaskMonth/{id}");
+            var response = await _client.GetAsync($"/api/TaskMonth/{id}/{userid}");
             return await response.ReadContentAsync<IEnumerable<TaskMonth>>();
         }
 
@@ -394,9 +394,9 @@ namespace ASP_App_ПИС.Services
             return await _client.PutAsync($"/api/Contract_Locality/put/{id}", content);
         }
 
-        public async Task<IEnumerable<Organization>> GetOrganizations()
+        public async Task<IEnumerable<Organization>> GetOrganizations(int userid)
         {
-            var response = await _client.GetAsync("/api/Organization");
+            var response = await _client.GetAsync($"/api/Organization/{userid}");
             return await response.ReadContentAsync<IEnumerable<Organization>>();
         }
 
@@ -525,13 +525,13 @@ namespace ASP_App_ПИС.Services
 
         public async Task<IEnumerable<Contract_Locality>> GetContract_Localities()
         {
-            var response = await _client.GetAsync("/api/Contract_Locality");
+            var response = await _client.GetAsync($"/api/Contract_Locality");
             return await response.ReadContentAsync<List<Contract_Locality>>();
         }
 
-        public async Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id)
+        public async Task<IEnumerable<Contract_Locality>> GetContract_LocalityFromConId(int id, int userid)
         {
-            var response = await _client.GetAsync($"/api/Contract_Locality/{id}");
+            var response = await _client.GetAsync($"/api/Contract_Locality/{id}/{userid}");
             return await response.ReadContentAsync<List<Contract_Locality>>();
         }
 
@@ -573,7 +573,7 @@ namespace ASP_App_ПИС.Services
             return await response.ReadContentAsync<IEnumerable<Animal>>();
         }
 
-        public async Task<IEnumerable<Report>> GetRegisterMoney()
+        public async Task<IEnumerable<Report>> GetRegisterMoney() 
         {
             var response = await _client.GetAsync($"/api/Reports/register/money");
             return await response.ReadContentAsync<IEnumerable<Report>>();

@@ -24,8 +24,10 @@ namespace ASP_App_ПИС.Controllers
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, 
             SortState sort = SortState.NameAsc, int page = 1)
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             // получаю все контракты
-            var contracts = await _service.GetContracts();
+            var contracts = await _service.GetContracts(userid);
 
             // получаю все contract_locality
             var con_loc = await _service.GetContract_Localities();
@@ -89,6 +91,8 @@ namespace ASP_App_ПИС.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             if (Request.Query.TryGetValue("err", out StringValues err))
             {
                 ViewData["err"] = err;
@@ -96,7 +100,7 @@ namespace ASP_App_ПИС.Controllers
             var muns = await _service.GetMunicipalities();
             var locs = await _service.GetLocalities();
 
-            var orgInLoc = await _service.GetOrganizations();
+            var orgInLoc = await _service.GetOrganizations(userid);
             ViewData["locs"] = locs;
             ViewData["config"] = _configuration;
             ViewData["orgs"] = orgInLoc;
@@ -111,7 +115,8 @@ namespace ASP_App_ПИС.Controllers
             var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
             var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
             var munidRes = isAdmin ? int.Parse(Request.Form["municipality"]) : munId;
-            var countContract = (await _service.GetContracts())
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+            var countContract = (await _service.GetContracts(userid))
                 .Where(c => c.municipalityid == munidRes && c.validityperiod >= DateTime.Parse(Request.Form["validityperiod"]))
                 .Count();
 
@@ -150,7 +155,6 @@ namespace ASP_App_ПИС.Controllers
                 
             }
 
-            int userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             Journal jo = new Journal
             {
                 nametable = 2,
@@ -168,9 +172,12 @@ namespace ASP_App_ПИС.Controllers
         [Route("/contract/edit/{id}/{munid}")]
         public async Task<IActionResult> Edit(int id, int munid)
         {
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
             Contract con = await _service.GetContractOne(id);
             ViewData["munid"] = munid;
-            ViewData["con_locs"] = await _service.GetContract_LocalityFromConId(id);
+            ViewData["con_locs"] = await _service.GetContract_LocalityFromConId(id, userid);
             return View(con);
         }
 
@@ -188,7 +195,7 @@ namespace ASP_App_ПИС.Controllers
             Contract contractEdit = await _service.GetContractOne(id);
 
             // изменяю записи в contract_locality
-            var con_locs = await _service.GetContract_LocalityFromConId(id);
+            var con_locs = await _service.GetContract_LocalityFromConId(id, userid);
             foreach (var cl in con_locs)
             {
                 var locid = cl.localityid;

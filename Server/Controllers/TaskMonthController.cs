@@ -1,4 +1,6 @@
-﻿using Domain;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Domain;
+using Domain.NonDomain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Application;
@@ -7,13 +9,26 @@ namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/TaskMonth")]
-    public class TaskMonthController : Controller
+    public class TaskMonthController : Controller, IRegister<TaskMonth>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<TaskMonth> proxy;
         public TaskMonthController(ApplicationContext context)
         {
             _context = context;
+            proxy = new TaskMonthFilterProxy(this);
+        }
+
+        public async Task<List<TaskMonth>> GetAll(Usercapture user, int id)
+        {
+            var t = await _context.taskmonth
+                .Include(t => t.Schedule)
+                .ThenInclude(s => s.Contract_Locality)
+                .ThenInclude(cl => cl.Contract)
+                .Where(t => t.Schedule.Contract_Locality.id == id)
+                .Select(t => t)
+                .ToListAsync();
+            return t;
         }
 
         [HttpGet]
@@ -22,15 +37,13 @@ namespace Server.Controllers
             return await _context.taskmonth.ToListAsync();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<TaskMonth>> Get(int id)
+        [HttpGet("/api/TaskMonth/{id}/{userid}")]
+        public async Task<IEnumerable<TaskMonth>> Get(int id, int userid)
         {
-            return await _context.taskmonth
-                .Include(t => t.Schedule)
-                .ThenInclude(s => s.Contract_Locality)
-                .Where(t => t.Schedule.Contract_Locality.id == id)
-                .Select(t => t)
-                .ToListAsync();
+            var user = await _context.usercapture
+                .Where(u => u.id == userid)
+                .FirstOrDefaultAsync();
+            return await proxy.GetAll(user, id);
         }
 
         [HttpGet]

@@ -80,8 +80,8 @@
                             <tbody>
                             @foreach(var act in Model)
                             {
-                                        @if (act.localityid == locId && !isAdmin || isAdmin)
-                                        {
+                                        // @if (act.localityid == locId && !isAdmin || isAdmin)
+                                        // {
                                             <tr role="row" class="odd">
                                                 <td>@act.datecapture.ToShortDateString()</td>
                                                 <td>
@@ -102,7 +102,7 @@
                                                     <button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Просмотр"><a href="/animal/@act.id"><i class="fa fa-eye font-14"></i></a></button>
                                                 </td>
                                             </tr>
-                                        }
+                                        // }
 
                                     }
                             </tbody>

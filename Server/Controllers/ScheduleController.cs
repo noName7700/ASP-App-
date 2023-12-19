@@ -3,23 +3,24 @@ using Server.Application;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
+using Domain.NonDomain;
+using Domain.ApplicationClasses;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Schedule")]
-    public class ScheduleController : ControllerBase
+    public class ScheduleController : ControllerBase, IRegister<Schedule>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<Schedule> proxy;
         public ScheduleController(ApplicationContext context)
         {
             _context = context;
+            proxy = new ScheduleFilterProxy(this);
         }
 
-        // получить все планы-графики
-        [HttpGet]
-        public async Task<IEnumerable<Schedule>> Get()
+        public async Task<List<Schedule>> GetAll(Usercapture user, int id = 1)
         {
             return await _context.schedule
                 .Include(s => s.Contract_Locality)
@@ -30,6 +31,17 @@ namespace Server.Controllers
                 .OrderByDescending(sch => sch.Key.name)
                 .Select(f => f.First())
                 .ToListAsync();
+        }
+
+        // получить все планы-графики
+        [HttpGet]
+        [Route("/api/Schedule/user/{userid}")]
+        public async Task<IEnumerable<Schedule>> GetAll(int userid)
+        {
+            var user = await _context.usercapture
+                .Where(u => u.id == userid)
+                .FirstOrDefaultAsync();
+            return await proxy.GetAll(user);
         }
 
         [HttpGet("{id}")]

@@ -22,22 +22,11 @@ namespace ASP_App_ПИС.Controllers
 
         public async Task<IActionResult> Index(string search, string search1, string search2, string search3, SortState sort = SortState.NameAsc, int page = 1)
         {
-            // поменять - тут я нахожу все контракты по id пользователя и вывожу их
-            // при нажатии на кнопку просмотр открывается страница ViewLocActs на которой населенные пункты по этому контракту (из contract_locality)
-            // на ней кнопка просмотр по которой открывается страница ViewActs в которой выводятся акты отлова по этому контракту и нас пункту
-            // на ней кнопка просмотр есть, по которой уже открываются животные
             var claims = HttpContext.Request.HttpContext.User.Claims;
-            var isAdmin = bool.Parse(HttpContext.Request.HttpContext.User.FindFirst("IsAdmin").Value);
-            
-            IEnumerable<Domain.Contract> contracts = new List<Domain.Contract>();
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            if (!isAdmin)
-            {
-                var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
-                contracts = await _service.GetContractsFromMunId(munId);
-            }
-            else
-                contracts = await _service.GetContracts();
+            IEnumerable<Domain.Contract> contracts = new List<Domain.Contract>();
+            contracts = await _service.GetContracts(userid);
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -98,9 +87,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/act/view/{id}")]
         public async Task<IActionResult> ViewLocActs(int id, string search, SortState sort = SortState.NameAsc, int page = 1)
         {
-            // назожу все строки из contract_locality и вывожу
-            var conLoc = await _service.GetContract_LocalityFromConId(id);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
+            var conLoc = await _service.GetContract_LocalityFromConId(id, userid);
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -126,7 +116,10 @@ namespace ASP_App_ПИС.Controllers
         [Route("/act/{id}")]
         public async Task<IActionResult> ViewActs(int id, string search, SortState sort = SortState.DateAsc, int page = 1)
         {
-            var acts = await _service.GetActsFromConLocId(id);
+            var claims = HttpContext.Request.HttpContext.User.Claims;
+            var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
+
+            var acts = await _service.GetActsFromConLocId(id, userid);
 
             if (!string.IsNullOrEmpty(search))
             {

@@ -2,27 +2,39 @@
 using Server.Application;
 using Domain;
 using Microsoft.EntityFrameworkCore;
+using Domain.NonDomain;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Server.Controllers
 {
     [ApiController]
     [Route("/api/Contract")]
-    public class ContractController : Controller
+    public class ContractController : Controller, IRegister<Contract>
     {
         ApplicationContext _context;
-
+        private readonly IRegister<Contract> proxy;
         public ContractController(ApplicationContext context)
         {
             _context = context;
+            proxy = new ContractFilterProxy(this);
         }
 
-        // получить все контракты
-        [HttpGet]
-        public async Task<IEnumerable<Contract>> Get()
+        public async Task<List<Contract>> GetAll(Usercapture user, int id = 1)
         {
             return await _context.contract
                 .Include(c => c.Municipality)
                 .ToListAsync();
+        }
+
+        // получить все контракты
+        [HttpGet]
+        [Route("/api/Contract/user/{userid}")]
+        public async Task<IEnumerable<Contract>> GetAllUser(int userid)
+        {
+            var user = await _context.usercapture
+                .Where(u => u.id == userid)
+                .FirstOrDefaultAsync();
+            return await proxy.GetAll(user);
         }
 
         [HttpGet("{id}")]

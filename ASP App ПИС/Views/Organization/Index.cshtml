@@ -1,8 +1,12 @@
 ﻿@using Domain;
 @model IEnumerable<Organization>
+@using System.Security.Claims
 @{
     var claims = Context.Request.HttpContext.User.Claims;
     var isAdmin = bool.Parse(Context.Request.HttpContext.User.FindFirst("IsAdmin").Value);
+    var role = claims.Where(c => c.Type == ClaimTypes.Role).First().Value.ToString();
+    var munId = int.Parse(claims.Where(c => c.Type == ClaimTypes.StateOrProvince).First().Value);
+    var locId = int.Parse(claims.Where(c => c.Type == ClaimTypes.Locality).First().Value);
 }
 @{
     SortState sortState = SortState.NameAsc;
@@ -125,19 +129,19 @@
                                 <tbody>
                                     @foreach (var org in Model)
                                     {
-                                        <tr role="row" class="odd">
-                                            <td>@org.name</td>
-                                            <td>@org.telephone</td>
-                                            <td>@org.email</td>
-                                            <td>@org.Locality.name</td>
-                                            <td>
-                                                @if (isAdmin)
-                                                {
-                                                    <a href="/organization/edit/@org.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
-                                                    <a class="delete" href="/organization/delete/@org.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
-                                                }
-                                            </td>
-                                        </tr>
+                                            <tr role="row" class="odd">
+                                                <td>@org.name</td>
+                                                <td>@org.telephone</td>
+                                                <td>@org.email</td>
+                                                <td>@org.Locality.name</td>
+                                                <td>
+                                                    @if (isAdmin || role.ToLower() == "оператор омсу")
+                                                    {
+                                                        <a href="/organization/edit/@org.id"><button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Изменить"><i class="fa fa-pencil font-14"></i></button></a>
+                                                        <a class="delete" href="/organization/delete/@org.id"><button class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Удалить"><i class="fa fa-trash font-14"></i></button></a>
+                                                    }
+                                                </td>
+                                            </tr>
                                     }
                                 </tbody>
                             </table>
