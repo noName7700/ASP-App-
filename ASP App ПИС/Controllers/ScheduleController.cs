@@ -27,7 +27,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            var schedules = await _service.GetSchedules(userid);
+            var schedules = (await _service.GetSchedules(userid)).ToList();
             var acts = await _service.GetActsCapture();
             ViewData["acts"] = acts;
 

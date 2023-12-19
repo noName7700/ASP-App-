@@ -28,7 +28,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
             // получаю все контракты
-            var contracts = await _service.GetContracts(userid);
+            var contracts = (await _service.GetContracts(userid)).ToList();
 
             // получаю все contract_locality
             var con_loc = await _service.GetContract_Localities();

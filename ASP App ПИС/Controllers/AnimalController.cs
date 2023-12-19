@@ -27,7 +27,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            var animals = await _service.GetAnimals(id, userid);
+            var animals = (await _service.GetAnimals(id, userid)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {

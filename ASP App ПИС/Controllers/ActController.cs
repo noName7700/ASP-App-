@@ -26,8 +26,8 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            IEnumerable<Domain.Contract> contracts = new List<Domain.Contract>();
-            contracts = await _service.GetContracts(userid);
+            var contracts = (await _service.GetContracts(userid)).ToList();
+
             if (!string.IsNullOrEmpty(search))
             {
                 contracts = contracts.Where(m => m.Municipality.name.Contains(search, StringComparison.InvariantCultureIgnoreCase)).Select(m => m).ToList();
@@ -76,7 +76,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            var conLoc = await _service.GetContract_LocalityFromConId(id, userid);
+            var conLoc = (await _service.GetContract_LocalityFromConId(id, userid)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -100,7 +100,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            var acts = await _service.GetActsFromConLocId(id, userid);
+            var acts = (await _service.GetActsFromConLocId(id, userid)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {

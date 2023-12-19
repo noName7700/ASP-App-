@@ -27,7 +27,7 @@ namespace ASP_App_ПИС.Controllers
             var claims = HttpContext.Request.HttpContext.User.Claims;
             var userid = int.Parse(claims.Where(c => c.Type == ClaimTypes.Actor).First().Value);
 
-            var tasks = await _service.GetTaskMonth(id, userid);
+            var tasks = (await _service.GetTaskMonth(id, userid)).ToList();
 
             if (!string.IsNullOrEmpty(search))
             {
